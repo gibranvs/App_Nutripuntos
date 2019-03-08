@@ -1,6 +1,6 @@
-# nutripuntos
+# nutripuntos_app
 
-A new Flutter application.
+Nutripuntos App con Flutter
 
 ## Getting Started
 
