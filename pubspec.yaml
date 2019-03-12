@@ -51,14 +51,21 @@ flutter:
   assets:
     - assets/images/fondo.jpg
     - assets/images/logo.png
-    - assets/icons/recurso_1.png  # puntos logo
-    - assets/icons/recurso_2.png  # icono médico hombre
-    - assets/icons/recurso_3.png  # icono médico mujer
-    - assets/icons/recurso_4.png  # fondo foto usuario
-    - assets/icons/recurso_5.png  # nuevas recetas
-    - assets/icons/recurso_6.png  # metas
-    - assets/icons/recurso_7.png  # nuevo plan
-    - assets/icons/recurso_8.png  # restaurantes zona
+    - assets/images/perfil.jpg
+    - assets/icons/recurso_1.png   # puntos logo
+    - assets/icons/recurso_2.png   # icono médico hombre
+    - assets/icons/recurso_3.png   # icono médico mujer
+    - assets/icons/recurso_4.png   # fondo foto usuario
+    - assets/icons/recurso_5.png   # nuevas recetas
+    - assets/icons/recurso_6.png   # metas
+    - assets/icons/recurso_7.png   # nuevo plan
+    - assets/icons/recurso_8.png   # restaurantes zona
+    - assets/icons/recurso_9.png   # menu restaurantes
+    - assets/icons/recurso_10.png  # menu nutriochat
+    - assets/icons/recurso_11.png  # menu plan
+    - assets/icons/recurso_12.png  # menu agenda
+    - assets/icons/recurso_13.png  # menu progreso
+    - assets/icons/recurso_14.png  # menu recetas
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

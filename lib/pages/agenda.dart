@@ -1,19 +1,42 @@
 import 'package:flutter/material.dart';
-import 'menu.dart';
 
-class AgendaPage extends StatefulWidget {
-  @override
-  _AgendaPageState createState() => new _AgendaPageState();
+void main() {
+  runApp(AgendaPage());
 }
 
-class _AgendaPageState extends State<AgendaPage> {
+class AgendaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('Agenda'),
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: TabBar(
+              tabs: [
+                Tab(text: "Calendario",),
+                Tab(text: "Citas",),
+              ],
+            ),
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF35B9C5),
+                    Color(0xFF348CB4),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              Icon(Icons.directions_car),
+              Icon(Icons.directions_transit),
+            ],
+          ),
+        ),
       ),
-      drawer: new Menu(),
     );
   }
 }
