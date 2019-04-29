@@ -15,8 +15,8 @@ class ProgresoPage extends StatelessWidget {
             title: TabBar(
               tabs: [
                 Tab(text: "Peso",),
-                Tab(text: "Calorías",),
-                Tab(text: "Retos",),
+                Tab(text: "Historial\nde grasa",),
+                Tab(text: "Metas",),
               ],
             ),
             flexibleSpace: Container(
@@ -32,9 +32,48 @@ class ProgresoPage extends StatelessWidget {
           ),
           body: TabBarView(
             children: [
-              Icon(Icons.directions_car),
-              Icon(Icons.directions_transit),
-              Icon(Icons.directions_bike),
+              Container(
+                decoration: new BoxDecoration(
+                  color: const Color(0x00FFCC00),
+                  image: new DecorationImage(
+                    image: new AssetImage("assets/images/fondo.jpg"),
+                    colorFilter: new ColorFilter.mode(
+                        Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Center(
+                  child: Image.asset("assets/images/gr_peso.png"),
+                ),
+              ),
+              Container(
+                decoration: new BoxDecoration(
+                  color: const Color(0x00FFCC00),
+                  image: new DecorationImage(
+                    image: new AssetImage("assets/images/fondo.jpg"),
+                    colorFilter: new ColorFilter.mode(
+                        Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Center(
+                  child: Image.asset("assets/images/gr_grasa.png"),
+                ),
+              ),
+              Container(
+                decoration: new BoxDecoration(
+                  color: const Color(0x00FFCC00),
+                  image: new DecorationImage(
+                    image: new AssetImage("assets/images/fondo.jpg"),
+                    colorFilter: new ColorFilter.mode(
+                        Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Center(
+                  child: Image.asset("assets/images/gr_metas.png"),
+                ),
+              ),
             ],
           ),
         ),

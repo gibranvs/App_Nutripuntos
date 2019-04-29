@@ -140,60 +140,6 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   FlatButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RecetasPage()));
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(left: 50),
-                      child: Column(
-                        children: <Widget>[
-                          Image.asset(
-                            "assets/icons/recurso_5.png",
-                            width: MediaQuery.of(context).size.width * 0.2,
-                          ),
-                          Text(
-                            "Nuevas recetas disponibles",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  FlatButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => RestaurantesPage()));
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(right: 50),
-                      child: Column(
-                        children: <Widget>[
-                          Image.asset(
-                            "assets/icons/recurso_6.png",
-                            width: MediaQuery.of(context).size.width * 0.2,
-                          ),
-                          Text(
-                            "Restaurantes disponibles en tu zona",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.normal,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  FlatButton(
-                    onPressed: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => PlanPage()));
                     },
@@ -236,6 +182,60 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Text(
                             "meta cumplida",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RecetasPage()));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(left: 50),
+                      child: Column(
+                        children: <Widget>[
+                          Image.asset(
+                            "assets/icons/recurso_5.png",
+                            width: MediaQuery.of(context).size.width * 0.2,
+                          ),
+                          Text(
+                            "Nuevas recetas disponibles",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RestaurantesPage()));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(right: 50),
+                      child: Column(
+                        children: <Widget>[
+                          Image.asset(
+                            "assets/icons/recurso_6.png",
+                            width: MediaQuery.of(context).size.width * 0.2,
+                          ),
+                          Text(
+                            "Restaurantes disponibles en tu zona",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 16.0,

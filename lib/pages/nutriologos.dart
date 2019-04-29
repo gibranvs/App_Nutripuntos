@@ -84,12 +84,12 @@ class _NutriologosPageState extends State<NutriologosPage> {
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.only(right: 15),
-                                      child: Image.asset(
+                                      child: /*Image.asset(
                                         _setImage(snapshot.data[index].sexo),
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.18,
-                                      ),
+                                      ),*/Text(""),
                                     ),
                                     Column(
                                       crossAxisAlignment:
@@ -143,7 +143,7 @@ class _NutriologosPageState extends State<NutriologosPage> {
 
 Future<List<Nutriologo>> fetchUsersFromGitHub() async {
   final response =
-      await http.get('http://c0720441.ferozo.com/nutriologos.json');
+      await http.get('http://c1370875.ferozo.com/aplicacion/api/get_doctores');
   List responseJson = json.decode(utf8.decode(response.bodyBytes));
   List<Nutriologo> nutriList = createNutriList(responseJson);
   return nutriList;
