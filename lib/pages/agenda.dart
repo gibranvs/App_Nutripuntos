@@ -16,9 +16,10 @@ void main() {
   runApp(AgendaPage());
 }
 
-class AgendaPage extends StatelessWidget {
-  @override
+class AgendaPage extends StatelessWidget {  
+  @override  
   Widget build(BuildContext context) {
+    //getAllCitas(global.token);
     global.list_citas = null;    
     return MaterialApp(
       home: DefaultTabController(

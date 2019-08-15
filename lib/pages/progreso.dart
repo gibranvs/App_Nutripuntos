@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+import 'package:nutripuntos_app/globals.dart' as global;
 
 void main() {
   runApp(ProgresoPage());

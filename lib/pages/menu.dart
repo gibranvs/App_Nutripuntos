@@ -118,7 +118,7 @@ class MenuState extends State<Menu> {
         title: new Text(widget.drawerItems[global.selected_index].title),
         centerTitle: true,
         elevation:
-            global.selected_index == 1 || global.selected_index == 2 ? 0 : 4,
+              global.selected_index == 4 || global.selected_index == 5 ? 4 : 0,            
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
