@@ -78,7 +78,7 @@ class _PlanPageState extends State<PlanPage> {
                     ),
                     Container(
                       margin: EdgeInsets.only(top:30, left:20),
-                      child: Image.asset("../assets/icons/Recurso_24.png"),
+                      child: Image.asset("assets/icons/Recurso_24.png"),
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 140, left: 20),
