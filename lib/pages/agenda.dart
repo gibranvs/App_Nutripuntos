@@ -641,7 +641,7 @@ Future<List<Citas>> getAllCitas(_token) async {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "consultas", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    //print(datos);
+    print(datos);
     List<Citas> list_citas = new List<Citas>();
     _markedDates.clear();
     for (int i = 0; i < datos["response"].length; i++) {
