@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'pages/login.dart';
+import 'pages/login.dart' as login;
+import 'pages/recetas.dart' as recetas;
+import 'pages/menu.dart' as menu;
+import 'globals.dart' as global;
+import 'pages/home.dart';
+import 'src/DBManager.dart' as db;
 
 void main() {
   runApp(new MaterialApp(
     home: new MyApp(),
     routes: <String, WidgetBuilder>{
-      '/HomeScreen': (BuildContext context) => new LoginPage()
+      '/HomeScreen': (BuildContext context) => new login.LoginPage()
     },
     theme: ThemeData(
       primaryColor: Color(0xFF059696),
@@ -25,17 +30,20 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   startTime() async {
-    var _duration = new Duration(seconds: 2);
+    
+    var _duration = new Duration(seconds: 5);
     return new Timer(_duration, navigationPage);
   }
 
   void navigationPage() {
-    Navigator.of(context).pushReplacementNamed('/HomeScreen');
+    db.DBManager.instance.getUsuario(context);
   }
 
   @override
   void initState() {
-    super.initState();
+    super.initState();      
+    login.fetchDoctores();
+    recetas.getRecetas();    
     startTime();
   }
 
