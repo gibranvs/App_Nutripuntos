@@ -75,10 +75,30 @@ class _PlanPageState extends State<PlanPage> {
                           fontWeight: FontWeight.bold, fontSize: 17,
                         ),
                       ),
+                    ),                    
+                    Container(
+                      height: 70,     
+                      //alignment: Alignment.topLeft,                 
+                      margin: EdgeInsets.only(top: 50, left: 20),
+                      child: Image.asset("assets/icons/Recurso_24.png"),                      
                     ),
                     Container(
-                      margin: EdgeInsets.only(top:30, left:20),
-                      child: Image.asset("assets/icons/Recurso_24.png"),
+                      height: 70,     
+                      //alignment: Alignment.topLeft,                 
+                      margin: EdgeInsets.only(top: 50, left: 105),
+                      child: Image.asset("assets/icons/Recurso_23.png"),                      
+                    ),
+                    Container(
+                      height: 70,     
+                      //alignment: Alignment.topLeft,                 
+                      margin: EdgeInsets.only(top: 50, left: 185),
+                      child: Image.asset("assets/icons/Recurso_22.png"),                      
+                    ),
+                    Container(
+                      height: 70,     
+                      //alignment: Alignment.topLeft,                 
+                      margin: EdgeInsets.only(top: 50, left: 270),
+                      child: Image.asset("assets/icons/Recurso_21.png"),                      
                     ),
                     Container(
                       margin: EdgeInsets.only(top: 140, left: 20),
