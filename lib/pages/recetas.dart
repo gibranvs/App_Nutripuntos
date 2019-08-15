@@ -36,16 +36,19 @@ class _RecetasPageState extends State<RecetasPage> {
               margin: new EdgeInsets.symmetric(vertical: 5, horizontal: 15),
               child: ListTile(
                 leading:
-                /*
+                
                 Container(
-                  height: 20,
-                  child: new Image.asset("assets/images/Recurso_26.png"),
+                  margin: EdgeInsets.only(left:10),         
+                  height: 80,
+                  child: new Image.asset("assets/icons/Recurso_26.png"),
                 ),
-                */
+                
+                /*
                 Container(
                   margin: new EdgeInsets.only(top: 0, left: 20),
                   child: Icon(Icons.fastfood, color: hexToColor("#3f95ac"), size: 30,),
                 ),
+                */
                 
                 title: new Text(
                   receta.nombre,
