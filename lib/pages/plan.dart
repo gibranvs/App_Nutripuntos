@@ -67,27 +67,9 @@ class _PlanPageState extends State<PlanPage> {
                 child: Stack(
                   children: <Widget>[
                     titulo1("Desayuno En Puntos"),
-                    Container(
-                      height: 70,
-                      margin: EdgeInsets.only(top: 50, left: 20),
-                      child: Image.asset("assets/icons/Recurso_24.png"),
-                    ),
-                    Container(
-                      height: 70,
-                      margin: EdgeInsets.only(top: 50, left: 105),
-                      child: Image.asset("assets/icons/Recurso_23.png"),
-                    ),
-                    Container(
-                      height: 70,
-                      margin: EdgeInsets.only(top: 50, left: 185),
-                      child: Image.asset("assets/icons/Recurso_22.png"),
-                    ),
-                    Container(
-                      height: 70,
-                      margin: EdgeInsets.only(top: 50, left: 270),
-                      child: Image.asset("assets/icons/Recurso_21.png"),
-                    ),
+                    botones_puntos("desayuno"),
                     titulo2("Sugerencias De Desayuno"),
+                    list_sugerencias("desayuno"),
                   ],
                 ),
               ),
@@ -198,10 +180,43 @@ class titulo2 extends StatelessWidget {
 class botones_puntos extends StatelessWidget {
   final String tipo;
   botones_puntos(this.tipo);
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          height: 70,
+          margin: EdgeInsets.only(top: 50, left: 20),
+          child: Image.asset("assets/icons/Recurso_24.png"),
+        ),
+        Container(
+          height: 70,
+          margin: EdgeInsets.only(top: 50, left: 105),
+          child: Image.asset("assets/icons/Recurso_23.png"),
+        ),
+        Container(
+          height: 70,
+          margin: EdgeInsets.only(top: 50, left: 185),
+          child: Image.asset("assets/icons/Recurso_22.png"),
+        ),
+        Container(
+          height: 70,
+          margin: EdgeInsets.only(top: 50, left: 270),
+          child: Image.asset("assets/icons/Recurso_21.png"),
+        ),
+      ],
+    );
+  }
+}
+
+class list_sugerencias extends StatelessWidget
+{
+  final String tipo;
+  list_sugerencias(this.tipo);
   @override 
-  Widget build(BuildContext context)
+  Widget build (BuildContext context)
   {
-    
+    return Center(child:Text("Sugerencias"));
   }
 }
 
