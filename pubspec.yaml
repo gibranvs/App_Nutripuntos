@@ -10,7 +10,7 @@ description: Nutripuntos App con Flutter
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -21,6 +21,15 @@ dependencies:
   cupertino_icons: ^0.1.2
   http: ^0.12.0+1
   flutter_launcher_icons: ^0.6.1
+  image_picker: ^0.4.10
+  url_launcher: ^5.0.2
+  date_utils: ^0.1.0
+  path_provider: ^0.5.0+1
+  expandable: ^3.0.0+1
+  intl: ^0.15.8
+  #cloud_firestore: ^0.8.0
+  sqflite: ^1.0.0
+  
 
 flutter_icons:
   image_path: "assets/launchers/web_hi_res_512.png"
@@ -51,7 +60,7 @@ flutter:
   assets:
     - assets/images/fondo.jpg
     - assets/images/logo.png
-    - assets/images/perfil.jpg
+    - assets/images/photo.jpg
     - assets/icons/recurso_1.png   # puntos logo
     - assets/icons/recurso_2.png   # icono médico hombre
     - assets/icons/recurso_3.png   # icono médico mujer
@@ -66,6 +75,13 @@ flutter:
     - assets/icons/recurso_12.png  # menu agenda
     - assets/icons/recurso_13.png  # menu progreso
     - assets/icons/recurso_14.png  # menu recetas
+    - assets/icons/Recurso_25.png  # menu recetas
+    - assets/icons/Recurso_26.png  # menu recetas
+    - assets/images/gr_peso.png
+    - assets/images/gr_grasa.png
+    - assets/images/gr_metas.png
+    - assets/images/gr_recetas.png
+    - assets/images/gr_restaurantes.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
