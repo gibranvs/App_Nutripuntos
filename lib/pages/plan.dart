@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
+import 'package:nutripuntos_app/src/HexToColor.dart';
 
 class PlanPage extends StatefulWidget {
   @override
@@ -17,14 +18,24 @@ class _PlanPageState extends State<PlanPage> {
       home: DefaultTabController(
         length: 5,
         child: Scaffold(
-          appBar: AppBar(            
+          appBar: AppBar(
             title: TabBar(
               tabs: [
-                Tab(text: "Desayunos",),
-                Tab(text: "CM",),
-                Tab(text: "Almuerzos",),
-                Tab(text: "CV",),
-                Tab(text: "Cenas",),
+                Tab(
+                  text: "Desayunos",
+                ),
+                Tab(
+                  text: "CM",
+                ),
+                Tab(
+                  text: "Almuerzos",
+                ),
+                Tab(
+                  text: "CV",
+                ),
+                Tab(
+                  text: "Cenas",
+                ),
               ],
             ),
             flexibleSpace: Container(
@@ -52,11 +63,40 @@ class _PlanPageState extends State<PlanPage> {
                         Colors.black.withOpacity(0.2), BlendMode.dstATop),
                     fit: BoxFit.cover,
                   ),
-                ),                
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(top: 20, left: 20),
+                      child: Text(
+                        "Desayuno En Puntos",
+                        style: TextStyle(
+                          color: hexToColor("#059696"),
+                          fontWeight: FontWeight.bold, fontSize: 17,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top:30, left:20),
+                      child: Image.asset("../assets/icons/Recurso_24.png"),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 140, left: 20),
+                      child: Text(
+                        "Sugerencias De Desayuno",
+                        style: TextStyle(
+                          color: hexToColor("#059696"),
+                          fontWeight: FontWeight.bold, fontSize: 17,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+
               ///
               /// TAB CM
-              ///              
+              ///
               Container(
                 decoration: new BoxDecoration(
                   color: const Color(0x00FFCC00),
@@ -67,8 +107,8 @@ class _PlanPageState extends State<PlanPage> {
                     fit: BoxFit.cover,
                   ),
                 ),
-                
               ),
+
               ///
               /// TAB ALMUERZOS
               ///
@@ -81,8 +121,9 @@ class _PlanPageState extends State<PlanPage> {
                         Colors.black.withOpacity(0.2), BlendMode.dstATop),
                     fit: BoxFit.cover,
                   ),
-                ),                
+                ),
               ),
+
               ///
               /// TAB CV
               ///
@@ -97,6 +138,7 @@ class _PlanPageState extends State<PlanPage> {
                   ),
                 ),
               ),
+
               /// TAB CENAS
               Container(
                 decoration: new BoxDecoration(

@@ -75,6 +75,10 @@ flutter:
     - assets/icons/recurso_12.png  # menu agenda
     - assets/icons/recurso_13.png  # menu progreso
     - assets/icons/recurso_14.png  # menu recetas
+    - assets/icons/Recurso_21.png
+    - assets/icons/Recurso_22.png
+    - assets/icons/Recurso_23.png
+    - assets/icons/Recurso_24.png
     - assets/icons/Recurso_25.png  # menu recetas
     - assets/icons/Recurso_26.png  # menu recetas
     - assets/images/gr_peso.png
