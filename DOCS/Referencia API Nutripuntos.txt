@@ -1,0 +1,34 @@
+API Nutripuntos
+
+tipo "login"
+parámetros: usr, doc
+
+tipo "consultas"
+parámetros: token
+
+tipo "dieta"
+parámetros: token
+
+tipo "detalle_platillo"
+parámetros: platillo
+
+tipo "record"
+parámetros: platillo
+
+tipo "restaurantes"
+parámetros: ninguno
+
+tipo "restaurante"
+parámetros: restaurante
+
+tipo "platillos_restaurante"
+parámetros: id_restaurante
+
+tipo "busqueda"
+parámetros: texto
+
+tipo "get_recetas"
+parámetros: ninguno
+
+tipo "detalle_recetas"
+parámetros: id_receta

@@ -1,0 +1,28 @@
+-FUNCIÓN
+*tipo 
++parámetros
+
+http://c1370875.ferozo.com/aplicacion/api
+
+LOGIN	
+	tipo:"login"
+	usr:correo
+	doc:int
+
+BÚSQUEDA ESPECIAISTAS
+
+	tipo:"busqueda"
+	texto:string
+
+LISTA RECETAS
+	
+	tipo:"get_recetas"
+	
+DETALLE RECETAS
+	
+	tipo:"detalle_receta"
+	id_receta:int
+
+
+
+
