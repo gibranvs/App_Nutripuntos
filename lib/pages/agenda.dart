@@ -19,9 +19,7 @@ void main() {
 class AgendaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    global.list_citas = null;
-    //_markedDates.add(DateTime(2000,1,1));
-    //getCitas(global.token);
+    global.list_citas = null;    
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
@@ -739,8 +737,7 @@ Future<List<Citas>> getCitasProximas(_token) async {
                 .format(DateTime.parse(datos["response"][i]["fecha"]))
                 .toString()
                 .toUpperCase()));
-      }
-      //FieldValue.serverTimestamp();
+      }      
     }
     return list_citas;
   } catch (e) {
