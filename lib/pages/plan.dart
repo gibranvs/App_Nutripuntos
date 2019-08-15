@@ -66,17 +66,7 @@ class _PlanPageState extends State<PlanPage> {
                 ),
                 child: Stack(
                   children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(top: 20, left: 20),
-                      child: Text(
-                        "Desayuno En Puntos",
-                        style: TextStyle(
-                          color: hexToColor("#059696"),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
+                    titulo1("Desayuno En Puntos"),
                     Container(
                       height: 70,
                       margin: EdgeInsets.only(top: 50, left: 20),
@@ -97,17 +87,7 @@ class _PlanPageState extends State<PlanPage> {
                       margin: EdgeInsets.only(top: 50, left: 270),
                       child: Image.asset("assets/icons/Recurso_21.png"),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 140, left: 20),
-                      child: Text(
-                        "Sugerencias De Desayuno",
-                        style: TextStyle(
-                          color: hexToColor("#059696"),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
+                    titulo2("Sugerencias De Desayuno"),
                   ],
                 ),
               ),
@@ -174,6 +154,54 @@ class _PlanPageState extends State<PlanPage> {
         ),
       ),
     );
+  }
+}
+
+class titulo1 extends StatelessWidget {
+  final String titulo;
+  titulo1(this.titulo);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 20, left: 20),
+      child: Text(
+        titulo,
+        style: TextStyle(
+          color: hexToColor("#059696"),
+          fontWeight: FontWeight.bold,
+          fontSize: 17,
+        ),
+      ),
+    );
+  }
+}
+
+class titulo2 extends StatelessWidget {
+  final String titulo;
+  titulo2(this.titulo);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(top: 140, left: 20),
+      child: Text(
+        titulo,
+        style: TextStyle(
+          color: hexToColor("#059696"),
+          fontWeight: FontWeight.bold,
+          fontSize: 17,
+        ),
+      ),
+    );
+  }
+}
+
+class botones_puntos extends StatelessWidget {
+  final String tipo;
+  botones_puntos(this.tipo);
+  @override 
+  Widget build(BuildContext context)
+  {
+    
   }
 }
 

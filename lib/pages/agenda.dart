@@ -16,11 +16,11 @@ void main() {
   runApp(AgendaPage());
 }
 
-class AgendaPage extends StatelessWidget {  
-  @override  
+class AgendaPage extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     //getAllCitas(global.token);
-    global.list_citas = null;    
+    global.list_citas = null;
     return MaterialApp(
       home: DefaultTabController(
         length: 2,
@@ -50,7 +50,7 @@ class AgendaPage extends StatelessWidget {
           body: TabBarView(
             children: [
               ///
-              /// CALENDARIO
+              /// TAB CALENDARIO
               ///
               Stack(
                 children: <Widget>[
@@ -75,60 +75,13 @@ class AgendaPage extends StatelessWidget {
                     color: hexToColor("#ffffff"),
                     margin: EdgeInsets.only(top: 65),
                   ),
-                  calendar.CalendarCarousel(
-                    leftButtonIcon: Icon(Icons.arrow_back,
-                        color: hexToColor("#059696"), size: 20),
-                    rightButtonIcon: Icon(Icons.arrow_forward,
-                        color: hexToColor("#059696"), size: 20),
-                    childAspectRatio: 1.5,
-                    showHeader: true,
-                    markedDateShowIcon: false,
-                    markedDates: _markedDates,
-                    markedDateWidget: Container(
-                      margin: EdgeInsets.only(top: 22, left: 18),
-                      child: Icon(
-                        Icons.brightness_1,
-                        size: 9,
-                        color: hexToColor("#059696"),
-                      ),
-                    ),
-                    headerMargin: EdgeInsets.only(top: 0),
-                    width: MediaQuery.of(context).size.width,
-                    todayBorderColor: hexToColor("#059696"),
-                    todayButtonColor: hexToColor("#059696"),
-                    weekendTextStyle:
-                        TextStyle(fontSize: 12, color: hexToColor("#666666")),
-                    iconColor: hexToColor("#059696"),
-                    selectedDayButtonColor: hexToColor("#059696"),
-                    headerTextStyle: TextStyle(
-                        fontSize: 18,
-                        color: hexToColor("#059696"),
-                        fontWeight: FontWeight.bold),
-                    weekdayTextStyle: TextStyle(
-                      fontSize: 14,
-                      color: hexToColor("#059696"),
-                    ),
-                    daysTextStyle: TextStyle(
-                      fontSize: 14,
-                      color: hexToColor("#666666"),
-                    ),
-                    nextDaysTextStyle:
-                        TextStyle(fontSize: 14, color: Colors.transparent),
-                    prevDaysTextStyle:
-                        TextStyle(fontSize: 14, color: Colors.transparent),
-                  ),
-                  Container(
-                    height: 120,
-                    alignment: Alignment.topCenter,
-                    margin: const EdgeInsets.only(top: 290),
-                    padding: EdgeInsets.all(10),
-                    child: Card_Proxima(),
-                  ),
+                  Calendario(),
+                  Card_Proxima(),
                 ],
               ),
 
               ///
-              /// CITAS
+              /// TAB CITAS
               ///
               Stack(
                 children: <Widget>[
@@ -160,10 +113,60 @@ class AgendaPage extends StatelessWidget {
   }
 }
 
+class Calendario extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return calendar.CalendarCarousel(
+      leftButtonIcon:
+          Icon(Icons.arrow_back, color: hexToColor("#059696"), size: 20),
+      rightButtonIcon:
+          Icon(Icons.arrow_forward, color: hexToColor("#059696"), size: 20),
+      childAspectRatio: 1.5,
+      showHeader: true,
+      markedDateShowIcon: false,
+      markedDates: _markedDates,
+      markedDateWidget: Container(
+        margin: EdgeInsets.only(top: 22, left: 18),
+        child: Icon(
+          Icons.brightness_1,
+          size: 9,
+          color: hexToColor("#059696"),
+        ),
+      ),
+      headerMargin: EdgeInsets.only(top: 0),
+      width: MediaQuery.of(context).size.width,
+      todayBorderColor: hexToColor("#059696"),
+      todayButtonColor: hexToColor("#059696"),
+      weekendTextStyle: TextStyle(fontSize: 12, color: hexToColor("#666666")),
+      iconColor: hexToColor("#059696"),
+      selectedDayButtonColor: hexToColor("#059696"),
+      headerTextStyle: TextStyle(
+          fontSize: 18,
+          color: hexToColor("#059696"),
+          fontWeight: FontWeight.bold),
+      weekdayTextStyle: TextStyle(
+        fontSize: 14,
+        color: hexToColor("#059696"),
+      ),
+      daysTextStyle: TextStyle(
+        fontSize: 14,
+        color: hexToColor("#666666"),
+      ),
+      nextDaysTextStyle: TextStyle(fontSize: 14, color: Colors.transparent),
+      prevDaysTextStyle: TextStyle(fontSize: 14, color: Colors.transparent),
+    );
+  }
+}
+
 class Card_Proxima extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Citas>>(
+    return Container(
+      height: 120,
+      alignment: Alignment.topCenter,
+      margin: const EdgeInsets.only(top: 290),
+      padding: EdgeInsets.all(10),
+      child: FutureBuilder<List<Citas>>(
         future: getCitasProximas(global.token),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -247,7 +250,9 @@ class Card_Proxima extends StatelessWidget {
               ),
             );
           }
-        });
+        },
+      ),
+    );
   }
 }
 
@@ -738,7 +743,7 @@ Future<List<Citas>> getCitasProximas(_token) async {
                 .format(DateTime.parse(datos["response"][i]["fecha"]))
                 .toString()
                 .toUpperCase()));
-      }      
+      }
     }
     return list_citas;
   } catch (e) {
