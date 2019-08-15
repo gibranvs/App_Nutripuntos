@@ -67,9 +67,9 @@ class _PlanPageState extends State<PlanPage> {
                 child: Stack(
                   children: <Widget>[
                     titulo1("Desayuno En Puntos"),
-                    botones_puntos("desayuno"),
+                    botones_puntos("desayunos"),
                     titulo2("Sugerencias De Desayuno"),
-                    list_sugerencias("desayuno"),
+                    list_sugerencias("desayunos"),
                   ],
                 ),
               ),
@@ -87,6 +87,14 @@ class _PlanPageState extends State<PlanPage> {
                     fit: BoxFit.cover,
                   ),
                 ),
+                child: Stack(
+                  children: <Widget>[
+                    titulo1("CM En Puntos"),
+                    botones_puntos("cm"),
+                    titulo2("Sugerencias De CM"),
+                    list_sugerencias("cm"),
+                  ],
+                ),
               ),
 
               ///
@@ -101,6 +109,14 @@ class _PlanPageState extends State<PlanPage> {
                         Colors.black.withOpacity(0.2), BlendMode.dstATop),
                     fit: BoxFit.cover,
                   ),
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    titulo1("Almuerzo En Puntos"),
+                    botones_puntos("almuerzos"),
+                    titulo2("Sugerencias De Almuerzo"),
+                    list_sugerencias("almuerzos"),
+                  ],
                 ),
               ),
 
@@ -117,6 +133,14 @@ class _PlanPageState extends State<PlanPage> {
                     fit: BoxFit.cover,
                   ),
                 ),
+                child: Stack(
+                  children: <Widget>[
+                    titulo1("CV En Puntos"),
+                    botones_puntos("cv"),
+                    titulo2("Sugerencias De CV"),
+                    list_sugerencias("cv"),
+                  ],
+                ),
               ),
 
               /// TAB CENAS
@@ -129,6 +153,14 @@ class _PlanPageState extends State<PlanPage> {
                         Colors.black.withOpacity(0.2), BlendMode.dstATop),
                     fit: BoxFit.cover,
                   ),
+                ),
+                child: Stack(
+                  children: <Widget>[
+                    titulo1("Cena En Puntos"),
+                    botones_puntos("cenas"),
+                    titulo2("Sugerencias De Cena"),
+                    list_sugerencias("cenas"),
+                  ],
                 ),
               ),
             ],
