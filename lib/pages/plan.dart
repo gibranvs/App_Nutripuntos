@@ -13,7 +13,7 @@ class PlanPage extends StatefulWidget {
 class _PlanPageState extends State<PlanPage> {
   @override
   Widget build(BuildContext context) {
-    getDieta(global.token);
+    getOpcionesDieta(global.token, "desayunos");
     return MaterialApp(
       home: DefaultTabController(
         length: 5,
@@ -252,13 +252,34 @@ class list_sugerencias extends StatelessWidget
   }
 }
 
-getDieta(_token) async {
+getOpcionesDieta(_token, _tipo) async {
   try {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "dieta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    print(datos);
+    if(datos["status"] == 1)
+    {
+      for(int i = 0; i < datos["response"].length; i++)
+      {        
+        var dieta = json.decode(datos["response"][i]["dieta"]);
+        print(dieta["dieta"].length);
+
+      }
+
+    }
   } catch (e) {
     print("Error getDieta" + e.toString());
   }
+}
+
+class Receta_Dieta 
+{
+  int id;
+  String nombre;
+  String azul;
+  String verde;
+  String naranja;
+  String amarillo;
+
+  Receta_Dieta({this.id, this.nombre, this.azul, this.verde, this.naranja, this.amarillo});
 }
