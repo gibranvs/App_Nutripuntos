@@ -241,45 +241,87 @@ class botones_puntos extends StatelessWidget {
   }
 }
 
-class list_sugerencias extends StatelessWidget
-{
+class list_sugerencias extends StatelessWidget {
   final String tipo;
   list_sugerencias(this.tipo);
-  @override 
-  Widget build (BuildContext context)
-  {
-    return Center(child:Text("Sugerencias"));
+  @override
+  Widget build(BuildContext context) {
+    return Center(child: Text("Sugerencias"));
   }
 }
 
-getOpcionesDieta(_token, _tipo) async {
+ Future <List<Receta_Dieta>> getOpcionesDieta(_token, _tipo) async {
   try {
+    List<Receta_Dieta> list = new List<Receta_Dieta>();
+    int index_comida = 0;
+    int counter_comida = 1;
+    switch (_tipo) {
+      case 'desayunos':
+        index_comida = 1;
+        break;
+      case 'cm':
+        index_comida = 2;
+        break;
+      case 'almuerzos':
+        index_comida = 3;
+        break;
+      case 'cv':
+        index_comida = 4;
+        break;
+      case 'cenas':
+        index_comida = 5;
+        break;
+    }
+
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "dieta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    if(datos["status"] == 1)
-    {
-      for(int i = 0; i < datos["response"].length; i++)
-      {        
-        var dieta = json.decode(datos["response"][i]["dieta"]);
-        print(dieta["dieta"].length);
+    print(datos);
+    if (datos["status"] == 1) {
+      String weekday = "d" + DateTime.now().weekday.toString();
+      //print(datos["response"]["d1"]);
+      print(datos["response"][weekday]);
+      for (int comidasdia = 0;
+          comidasdia < datos["response"][weekday].length;
+          comidasdia++) {
+            print(datos["response"][weekday][comidasdia]);
+        for (int comida = 0;
+            comida < datos["response"][weekday][comidasdia].length;
+            comida++) {
+              print(datos["response"][weekday][comidasdia][comida]);
+              //list.add(Receta_Dieta(id));
+          
+        }
 
+        if (counter_comida == index_comida) 
+          break;
+        else
+          counter_comida++;      
       }
-
+      return list;
     }
   } catch (e) {
     print("Error getDieta" + e.toString());
   }
 }
 
-class Receta_Dieta 
-{
+class Receta_Dieta {
   int id;
+  String cantidad;
+  String unidad;
   String nombre;
   String azul;
   String verde;
   String naranja;
   String amarillo;
 
-  Receta_Dieta({this.id, this.nombre, this.azul, this.verde, this.naranja, this.amarillo});
+  Receta_Dieta(
+      {this.id,
+      this.cantidad,
+      this.unidad,
+      this.nombre,
+      this.azul,
+      this.verde,
+      this.naranja,
+      this.amarillo});
 }
