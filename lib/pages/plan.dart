@@ -248,7 +248,7 @@ class list_sugerencias extends StatelessWidget {
   Widget build(BuildContext context) {
     return //Center(child: Text("Sugerencias"));
         Flexible(
-      child: FutureBuilder<List<Receta_Dieta>>(
+      child: FutureBuilder<List<opciones_Dieta>>(
           future: getOpcionesDieta(global.token, tipo),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -262,7 +262,7 @@ class list_sugerencias extends StatelessWidget {
             } else if (snapshot.hasData) {
               if (snapshot.data.length > 0) {
                 return new ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
+                    //physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
@@ -293,7 +293,7 @@ class list_sugerencias extends StatelessWidget {
                                   child: Container(
                                     width: 180,
                                     child: Text(
-                                      snapshot.data[index].nombre.toString(),
+                                      snapshot.data[index].nombre.toString(),                                      
                                       style: TextStyle(
                                           fontSize: 14,
                                           color: hexToColor("#505050"),
@@ -334,11 +334,12 @@ class list_sugerencias extends StatelessWidget {
   }
 }
 
-Future<List<Receta_Dieta>> getOpcionesDieta(_token, _tipo) async {
+Future<List<opciones_Dieta>> getOpcionesDieta(_token, _tipo) async {
   try {
-    List<Receta_Dieta> list = new List<Receta_Dieta>();
+    List<opciones_Dieta> list = new List<opciones_Dieta>();
     int index_comida = 0;
     int counter_opciones = 1;
+
     switch (_tipo) {
       case 'desayunos':
         index_comida = 1;
@@ -362,7 +363,62 @@ Future<List<Receta_Dieta>> getOpcionesDieta(_token, _tipo) async {
     var datos = json.decode(utf8.decode(response.bodyBytes));
     //print(datos);
     if (datos["status"] == 1) {
-      String weekday = "d" + DateTime.now().weekday.toString();      
+      String weekday = "d" + DateTime.now().weekday.toString();
+      //print(datos["response"][weekday]);
+      for (int opciones = 0;
+          opciones < datos["response"][weekday].length;
+          opciones++) {
+        //print(datos["response"][weekday][opciones]);
+        for (int comida = 0;
+            comida < datos["response"][weekday][opciones].length;
+            comida++) {              
+          //print(datos["response"][weekday][opciones][comida]["id"]);
+
+          list.add(opciones_Dieta(id: datos["response"][weekday][opciones][comida]["id"].toString(),
+          nombre: "OPCIÓN " + (comida + 1).toString()));                  
+        }        
+        if (counter_opciones == index_comida)
+          break;
+        else
+          counter_opciones++;
+      }      
+      return list;
+    }
+  } catch (e) {
+    print("Error getOpcionesDieta " + e.toString());
+  }
+}
+
+Future<List<opciones_Dieta>> getDetallesOpcion(_token, _tipo) async {
+  try {
+    List<opciones_Dieta> list = new List<opciones_Dieta>();
+    int index_comida = 0;
+    int counter_opciones = 1;
+
+    switch (_tipo) {
+      case 'desayunos':
+        index_comida = 1;
+        break;
+      case 'cm':
+        index_comida = 2;
+        break;
+      case 'almuerzos':
+        index_comida = 3;
+        break;
+      case 'cv':
+        index_comida = 4;
+        break;
+      case 'cenas':
+        index_comida = 5;
+        break;
+    }
+
+    var response = await http.post(global.server + "/aplicacion/api",
+        body: {"tipo": "dieta", "token": _token});
+    var datos = json.decode(utf8.decode(response.bodyBytes));
+    //print(datos);
+    if (datos["status"] == 1) {
+      String weekday = "d" + DateTime.now().weekday.toString();
       //print(datos["response"][weekday]);
       for (int opciones = 0;
           opciones < datos["response"][weekday].length;
@@ -371,18 +427,109 @@ Future<List<Receta_Dieta>> getOpcionesDieta(_token, _tipo) async {
         for (int comida = 0;
             comida < datos["response"][weekday][opciones].length;
             comida++) {
-          print(datos["response"][weekday][opciones][comida]);
-          list.add(Receta_Dieta(
-              id: datos["response"][weekday][opciones][comida]["id"],
-              cantidad: datos["response"][weekday][opciones]["porcion"],
-              unidad: datos["response"][weekday][opciones][comida]["medida"],
-              nombre: datos["response"][weekday][opciones][comida]["nombre"],
-              azul: datos["response"][weekday][opciones][comida]["azul"],
-              verde: datos["response"][weekday][opciones][comida]["verde"],
-              naranja: datos["response"][weekday][opciones][comida]
-                  ["naranja"],
-              amarillo: datos["response"][weekday][opciones][comida]
-                  ["amarillo"]));
+          //print(datos["response"][weekday][opciones][comida]["id"]);
+/*
+String azul = "0";
+    String verde = "0";
+    String naranja = "0";
+    String amarillo = "0";
+
+          if (datos["response"][weekday][opciones][comida]["azul"].toString() !=
+              null) {
+            if (datos["response"][weekday][opciones][comida]["azul"]
+                    .toString()
+                    .contains('.') ==
+                true) {
+              if (datos["response"][weekday][opciones][comida]["azul"]
+                      .split('.')[1] ==
+                  "0")
+                azul = datos["response"][weekday][opciones][comida]["azul"]
+                    .split('.')[0];
+              else
+                azul = datos["response"][weekday][opciones][comida]["azul"]
+                    .toString();
+            } else
+              azul = datos["response"][weekday][opciones][comida]["azul"]
+                  .toString();
+          } else
+            azul = "0";
+
+          if (datos["response"][weekday][opciones][comida]["verde"] != null) {
+            if (datos["response"][weekday][opciones][comida]["verde"]
+                    .toString()
+                    .contains('.') ==
+                true) {
+              if (datos["response"][weekday][opciones][comida]["verde"]
+                      .split('.')[1] ==
+                  "0")
+                verde = datos["response"][weekday][opciones][comida]["verde"]
+                    .split('.')[0];
+              else
+                verde = datos["response"][weekday][opciones][comida]["verde"]
+                    .toString();
+            } else
+              verde = datos["response"][weekday][opciones][comida]["verde"]
+                  .toString();
+          } else
+            verde = "0";
+
+          if (datos["response"][weekday][opciones][comida]["naranja"] != null) {
+            if (datos["response"][weekday][opciones][comida]["naranja"]
+                    .toString()
+                    .contains('.') ==
+                true) {
+              if (datos["response"][weekday][opciones][comida]["naranja"]
+                      .split('.')[1] ==
+                  "0")
+                naranja = datos["response"][weekday][opciones][comida]
+                        ["naranja"]
+                    .split('.')[0];
+              else
+                naranja = datos["response"][weekday][opciones][comida]
+                        ["naranja"]
+                    .toString();
+            } else
+              naranja = datos["response"][weekday][opciones][comida]["naranja"]
+                  .toString();
+          } else
+            naranja = "0";
+
+          if (datos["response"][weekday][opciones][comida]["amarillo"] !=
+              null) {
+            if (datos["response"][weekday][opciones][comida]["amarillo"]
+                    .toString()
+                    .contains('.') ==
+                true) {
+              if (datos["response"][weekday][opciones][comida]["amarillo"]
+                      .split('.')[1] ==
+                  "0")
+                amarillo = datos["response"][weekday][opciones][comida]
+                        ["amarillo"]
+                    .split('.')[0];
+              else
+                amarillo = datos["response"][weekday][opciones][comida]
+                        ["amarillo"]
+                    .toString();
+            } else
+              amarillo = datos["response"][weekday][opciones][comida]
+                      ["amarillo"]
+                  .toString();
+          } else
+            amarillo = "0";
+            
+
+          list.add(receta_Dieta(
+              id: datos["response"][weekday][opciones][comida]["id"].toString(),
+              //cantidad: datos["response"][weekday][opciones]["porcion"].toString(),
+              unidad: datos["response"][weekday][opciones][comida]["medida"]
+                  .toString(),
+              nombre: datos["response"][weekday][opciones][comida]["nombre"]
+                  .toString(),
+              azul: azul,
+              verde: verde,
+              naranja: naranja,
+              amarillo: amarillo));
+              */
         }
 
         if (counter_opciones == index_comida)
@@ -393,12 +540,19 @@ Future<List<Receta_Dieta>> getOpcionesDieta(_token, _tipo) async {
       return list;
     }
   } catch (e) {
-    print("Error getDieta" + e.toString());
+    print("Error getDetallesOpcion " + e.toString());
   }
 }
 
-class Receta_Dieta {
-  int id;
+class opciones_Dieta {
+  String id;
+  String nombre;
+
+  opciones_Dieta({this.id, this.nombre});
+}
+
+class receta_Dieta {
+  String id;
   String cantidad;
   String unidad;
   String nombre;
@@ -407,7 +561,7 @@ class Receta_Dieta {
   String naranja;
   String amarillo;
 
-  Receta_Dieta(
+  receta_Dieta(
       {this.id,
       this.cantidad,
       this.unidad,
