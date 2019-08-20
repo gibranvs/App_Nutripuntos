@@ -338,7 +338,7 @@ Future<List<Receta_Dieta>> getOpcionesDieta(_token, _tipo) async {
   try {
     List<Receta_Dieta> list = new List<Receta_Dieta>();
     int index_comida = 0;
-    int counter_comida = 1;
+    int counter_opciones = 1;
     switch (_tipo) {
       case 'desayunos':
         index_comida = 1;
@@ -364,31 +364,31 @@ Future<List<Receta_Dieta>> getOpcionesDieta(_token, _tipo) async {
     if (datos["status"] == 1) {
       String weekday = "d" + DateTime.now().weekday.toString();      
       //print(datos["response"][weekday]);
-      for (int comidasdia = 0;
-          comidasdia < datos["response"][weekday].length;
-          comidasdia++) {
-        //print(datos["response"][weekday][comidasdia]);
+      for (int opciones = 0;
+          opciones < datos["response"][weekday].length;
+          opciones++) {
+        //print(datos["response"][weekday][opciones]);
         for (int comida = 0;
-            comida < datos["response"][weekday][comidasdia].length;
+            comida < datos["response"][weekday][opciones].length;
             comida++) {
-          print(datos["response"][weekday][comidasdia][comida]);
+          print(datos["response"][weekday][opciones][comida]);
           list.add(Receta_Dieta(
-              id: datos["response"][weekday][comidasdia][comida]["id"],
-              cantidad: datos["response"][weekday][comidasdia]["porcion"],
-              unidad: datos["response"][weekday][comidasdia][comida]["medida"],
-              nombre: datos["response"][weekday][comidasdia][comida]["nombre"],
-              azul: datos["response"][weekday][comidasdia][comida]["azul"],
-              verde: datos["response"][weekday][comidasdia][comida]["verde"],
-              naranja: datos["response"][weekday][comidasdia][comida]
+              id: datos["response"][weekday][opciones][comida]["id"],
+              cantidad: datos["response"][weekday][opciones]["porcion"],
+              unidad: datos["response"][weekday][opciones][comida]["medida"],
+              nombre: datos["response"][weekday][opciones][comida]["nombre"],
+              azul: datos["response"][weekday][opciones][comida]["azul"],
+              verde: datos["response"][weekday][opciones][comida]["verde"],
+              naranja: datos["response"][weekday][opciones][comida]
                   ["naranja"],
-              amarillo: datos["response"][weekday][comidasdia][comida]
+              amarillo: datos["response"][weekday][opciones][comida]
                   ["amarillo"]));
         }
 
-        if (counter_comida == index_comida)
+        if (counter_opciones == index_comida)
           break;
         else
-          counter_comida++;
+          counter_opciones++;
       }
       return list;
     }
