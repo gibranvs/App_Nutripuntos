@@ -69,7 +69,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("Desayuno En Puntos"),
                     botones_puntos("desayunos"),
                     titulo2("Sugerencias De Desayuno"),
-                    list_sugerencias("desayunos"),
+                    //list_sugerencias("desayunos"),
                   ],
                 ),
               ),
@@ -92,7 +92,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("CM En Puntos"),
                     botones_puntos("cm"),
                     titulo2("Sugerencias De CM"),
-                    list_sugerencias("cm"),
+                    //list_sugerencias("cm"),
                   ],
                 ),
               ),
@@ -115,7 +115,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("Almuerzo En Puntos"),
                     botones_puntos("almuerzos"),
                     titulo2("Sugerencias De Almuerzo"),
-                    list_sugerencias("almuerzos"),
+                    //list_sugerencias("almuerzos"),
                   ],
                 ),
               ),
@@ -138,7 +138,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("CV En Puntos"),
                     botones_puntos("cv"),
                     titulo2("Sugerencias De CV"),
-                    list_sugerencias("cv"),
+                    //list_sugerencias("cv"),
                   ],
                 ),
               ),
@@ -159,7 +159,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("Cena En Puntos"),
                     botones_puntos("cenas"),
                     titulo2("Sugerencias De Cena"),
-                    list_sugerencias("cenas"),
+                    //list_sugerencias("cenas"),
                   ],
                 ),
               ),
@@ -246,11 +246,95 @@ class list_sugerencias extends StatelessWidget {
   list_sugerencias(this.tipo);
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text("Sugerencias"));
+    return //Center(child: Text("Sugerencias"));
+        Flexible(
+      child: FutureBuilder<List<Receta_Dieta>>(
+          future: getOpcionesDieta(global.token, tipo),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  semanticsLabel: "Loading",
+                  backgroundColor: hexToColor("#cdcdcd"),
+                ),
+              );
+            } else if (snapshot.hasData) {
+              if (snapshot.data.length > 0) {
+                return new ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        elevation: 0,
+                        child: Row(
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 15, left: 15, bottom: 15),
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: 10),
+                                    height: 80,
+                                    child: new Image.asset(
+                                        "assets/icons/Recurso_26.png"),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(top: 0, left: 25),
+                                  child: Container(
+                                    width: 180,
+                                    child: Text(
+                                      snapshot.data[index].nombre.toString(),
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: hexToColor("#505050"),
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    });
+              } else {
+                return new Text("No hay sugerencias de $tipo.",
+                    style: TextStyle(color: hexToColor("#606060")));
+              }
+            } else if (snapshot.hasError) {
+              return Card(
+                child: Row(
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 4, left: 25, bottom: 12),
+                          child: Text("Error al obtener sugerencias de $tipo."),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }
+          }),
+    );
   }
 }
 
- Future <List<Receta_Dieta>> getOpcionesDieta(_token, _tipo) async {
+Future<List<Receta_Dieta>> getOpcionesDieta(_token, _tipo) async {
   try {
     List<Receta_Dieta> list = new List<Receta_Dieta>();
     int index_comida = 0;
@@ -276,27 +360,35 @@ class list_sugerencias extends StatelessWidget {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "dieta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    print(datos);
+    //print(datos);
     if (datos["status"] == 1) {
-      String weekday = "d" + DateTime.now().weekday.toString();
-      //print(datos["response"]["d1"]);
-      print(datos["response"][weekday]);
+      String weekday = "d" + DateTime.now().weekday.toString();      
+      //print(datos["response"][weekday]);
       for (int comidasdia = 0;
           comidasdia < datos["response"][weekday].length;
           comidasdia++) {
-            print(datos["response"][weekday][comidasdia]);
+        //print(datos["response"][weekday][comidasdia]);
         for (int comida = 0;
             comida < datos["response"][weekday][comidasdia].length;
             comida++) {
-              print(datos["response"][weekday][comidasdia][comida]);
-              //list.add(Receta_Dieta(id));
-          
+          print(datos["response"][weekday][comidasdia][comida]);
+          list.add(Receta_Dieta(
+              id: datos["response"][weekday][comidasdia][comida]["id"],
+              cantidad: datos["response"][weekday][comidasdia]["porcion"],
+              unidad: datos["response"][weekday][comidasdia][comida]["medida"],
+              nombre: datos["response"][weekday][comidasdia][comida]["nombre"],
+              azul: datos["response"][weekday][comidasdia][comida]["azul"],
+              verde: datos["response"][weekday][comidasdia][comida]["verde"],
+              naranja: datos["response"][weekday][comidasdia][comida]
+                  ["naranja"],
+              amarillo: datos["response"][weekday][comidasdia][comida]
+                  ["amarillo"]));
         }
 
-        if (counter_comida == index_comida) 
+        if (counter_comida == index_comida)
           break;
         else
-          counter_comida++;      
+          counter_comida++;
       }
       return list;
     }
