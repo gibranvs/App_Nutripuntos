@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
 import 'package:nutripuntos_app/src/HexToColor.dart';
+import '../src/ColorCirclesWidget.dart';
 import 'dart:convert';
+
+Valores_Puntos valores_puntos;
 
 class OpcionDetallePage extends StatelessWidget {
   final String token;
@@ -32,10 +35,14 @@ class OpcionDetallePage extends StatelessWidget {
             ),
           ),
           Container(
-            alignment: Alignment.topCenter,
+            margin: EdgeInsets.only(top: 30, left: MediaQuery.of(context).size.width * 0.52 ),
             child:
-                //Text("Hola")),
-                list_recetas(index_comida, opcion),
+          ColorCirclesWidget("0", "", "", ""),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 90),
+            alignment: Alignment.topCenter,
+            child: list_recetas(index_comida, opcion),
           ),
         ],
       ),
@@ -46,7 +53,6 @@ class OpcionDetallePage extends StatelessWidget {
 class list_recetas extends StatelessWidget {
   final int index_comida;
   final String opcion;
-
   list_recetas(this.index_comida, this.opcion);
 
   @override
@@ -80,7 +86,7 @@ class list_recetas extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return Card(
                               color: hexToColor("#f2f2f2"),
-                              margin: EdgeInsets.only(top: 8, bottom: 8),
+                              margin: EdgeInsets.only(top: 0, bottom: 15),
                               elevation: 0,
                               child: Row(
                                 children: <Widget>[
@@ -145,7 +151,7 @@ class list_recetas extends StatelessWidget {
                                                 fontSize: 13,
                                                 color: hexToColor("#78c826"),
                                                 fontStyle: FontStyle.italic,
-                                                fontWeight: FontWeight.bold),                                                
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ),
                                       ),
@@ -160,22 +166,8 @@ class list_recetas extends StatelessWidget {
                           style: TextStyle(color: hexToColor("#606060")));
                     }
                   } else if (snapshot.hasError) {
-                    return Card(
-                      child: Row(
-                        children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: 4, left: 25, bottom: 12),
-                                child: Text(
-                                    "Error al obtener sugerencias de comida."),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                    return Center(
+                      child: Text("Error al obtener sugerencias de comida."),
                     );
                   }
                 }),
@@ -186,119 +178,123 @@ class list_recetas extends StatelessWidget {
   }
 }
 
-Future<List<Detalle_Opcion>> getDetallesOpcion(
+Future<Valores_Puntos> getColorCirclesWidgetValues(
     _token, _index_comida, _dia) async {
-  try {
-    List<Detalle_Opcion> list = new List<Detalle_Opcion>();
-    Valores_Puntos valores_puntos;
-    String preparacion;
+  String azul = "0";
+  String verde = "0";
+  String naranja = "0";
+  String amarillo = "0";
 
-    var response = await http.post(global.server + "/aplicacion/api",
-        body: {"tipo": "dieta", "token": _token});
-    var datos = json.decode(utf8.decode(response.bodyBytes));
-    //print(datos);
-    if (datos["status"] == 1) {
-      for (int receta = 0;
-          receta < datos["response"]["d$_dia"][_index_comida].length;
-          receta++) {
-        //print(datos["response"]["d$_dia"][_index_comida][receta]);
+  var response = await http.post(global.server + "/aplicacion/api",
+      body: {"tipo": "dieta", "token": _token});
+  var datos = json.decode(utf8.decode(response.bodyBytes));
 
-        if (datos["response"]["d$_dia"][_index_comida][receta]["receta"] !=
-            null) {
-          preparacion = datos["response"]["d$_dia"][_index_comida][receta]
-                  ["receta"]
-              .toString();
-        } else {
-          preparacion = "";
-        }
-
-        list.add(Detalle_Opcion(
-          id: datos["response"]["d$_dia"][_index_comida][receta]["id"]
-              .toString(),
-          index: datos["response"]["d$_dia"][_index_comida][receta]["index"]
-              .toString(),
-          cantidad: datos["response"]["d$_dia"][_index_comida][receta]
-                  ["porcion"]
-              .toString(),
-          unidad: datos["response"]["d$_dia"][_index_comida][receta]["medida"]
-              .toString(),
-          nombre: datos["response"]["d$_dia"][_index_comida][receta]["nombre"]
-              .toString(),
-          preparacion: preparacion,
-        ));
-      }
-
-      String azul = "0";
-      String verde = "0";
-      String naranja = "0";
-      String amarillo = "0";
-
-      if (datos["response"]["d$_dia"][0][0]["azul"] != null) {
-        if (datos["response"]["d$_dia"][0][0]["azul"]
-                .toString()
-                .contains('.') ==
-            true) {
-          if (datos["response"]["d$_dia"][0][0]["azul"].split('.')[1] == "0")
-            azul = datos["response"]["d$_dia"][0][0]["azul"].split('.')[0];
-          else
-            azul = datos["response"]["d$_dia"][0][0]["azul"].toString();
-        } else
+  if (datos["status"] == 1) {
+    if (datos["response"]["d$_dia"][0][0]["azul"] != null) {
+      if (datos["response"]["d$_dia"][0][0]["azul"].toString().contains('.') ==
+          true) {
+        if (datos["response"]["d$_dia"][0][0]["azul"].split('.')[1] == "0")
+          azul = datos["response"]["d$_dia"][0][0]["azul"].split('.')[0];
+        else
           azul = datos["response"]["d$_dia"][0][0]["azul"].toString();
       } else
-        azul = "0";
+        azul = datos["response"]["d$_dia"][0][0]["azul"].toString();
+    } else
+      azul = "0";
 
-      if (datos["response"]["d$_dia"][0][0]["verde"] != null) {
-        if (datos["response"]["d$_dia"][0][0]["verde"]
-                .toString()
-                .contains('.') ==
-            true) {
-          if (datos["response"]["d$_dia"][0][0]["verde"].split('.')[1] == "0")
-            verde = datos["response"]["d$_dia"][0][0]["verde"].split('.')[0];
-          else
-            verde = datos["response"]["d$_dia"][0][0]["verde"].toString();
-        } else
+    if (datos["response"]["d$_dia"][0][0]["verde"] != null) {
+      if (datos["response"]["d$_dia"][0][0]["verde"].toString().contains('.') ==
+          true) {
+        if (datos["response"]["d$_dia"][0][0]["verde"].split('.')[1] == "0")
+          verde = datos["response"]["d$_dia"][0][0]["verde"].split('.')[0];
+        else
           verde = datos["response"]["d$_dia"][0][0]["verde"].toString();
       } else
-        verde = "0";
+        verde = datos["response"]["d$_dia"][0][0]["verde"].toString();
+    } else
+      verde = "0";
 
-      if (datos["response"]["d$_dia"][0][0]["naranja"] != null) {
-        if (datos["response"]["d$_dia"][0][0]["naranja"]
-                .toString()
-                .contains('.') ==
-            true) {
-          if (datos["response"]["d$_dia"][0][0]["naranja"].split('.')[1] == "0")
-            naranja =
-                datos["response"]["d$_dia"][0][0]["naranja"].split('.')[0];
-          else
-            naranja = datos["response"]["d$_dia"][0][0]["naranja"].toString();
-        } else
+    if (datos["response"]["d$_dia"][0][0]["naranja"] != null) {
+      if (datos["response"]["d$_dia"][0][0]["naranja"]
+              .toString()
+              .contains('.') ==
+          true) {
+        if (datos["response"]["d$_dia"][0][0]["naranja"].split('.')[1] == "0")
+          naranja = datos["response"]["d$_dia"][0][0]["naranja"].split('.')[0];
+        else
           naranja = datos["response"]["d$_dia"][0][0]["naranja"].toString();
       } else
-        naranja = "0";
+        naranja = datos["response"]["d$_dia"][0][0]["naranja"].toString();
+    } else
+      naranja = "0";
 
-      if (datos["response"]["d$_dia"][0][0]["amarillo"] != null) {
-        if (datos["response"]["d$_dia"][0][0]["amarillo"]
-                .toString()
-                .contains('.') ==
-            true) {
-          if (datos["response"]["d$_dia"][0][0]["amarillo"].split('.')[1] ==
-              "0")
-            amarillo =
-                datos["response"]["d$_dia"][0][0]["amarillo"].split('.')[0];
-          else
-            amarillo = datos["response"]["d$_dia"][0][0]["amarillo"].toString();
-        } else
+    if (datos["response"]["d$_dia"][0][0]["amarillo"] != null) {
+      if (datos["response"]["d$_dia"][0][0]["amarillo"]
+              .toString()
+              .contains('.') ==
+          true) {
+        if (datos["response"]["d$_dia"][0][0]["amarillo"].split('.')[1] == "0")
+          amarillo =
+              datos["response"]["d$_dia"][0][0]["amarillo"].split('.')[0];
+        else
           amarillo = datos["response"]["d$_dia"][0][0]["amarillo"].toString();
       } else
-        amarillo = "0";
+        amarillo = datos["response"]["d$_dia"][0][0]["amarillo"].toString();
+    } else
+      amarillo = "0";
 
-      valores_puntos = new Valores_Puntos(
-          azul: azul, verde: verde, naranja: naranja, amarillo: amarillo);
-    }
-    return list;
-  } catch (e) {
-    print("Error getDetallesOpcion " + e.toString());
+    valores_puntos = new Valores_Puntos(
+        azul: azul, verde: verde, naranja: naranja, amarillo: amarillo);
+
+    return valores_puntos;    
   }
+}
+
+Future<List<Detalle_Opcion>> getDetallesOpcion(
+    _token, _index_comida, _dia) async {
+  //try {
+  List<Detalle_Opcion> list = new List<Detalle_Opcion>();
+
+  String preparacion;
+
+  var response = await http.post(global.server + "/aplicacion/api",
+      body: {"tipo": "dieta", "token": _token});
+  var datos = json.decode(utf8.decode(response.bodyBytes));
+  //print(datos);
+  if (datos["status"] == 1) {
+    for (int receta = 0;
+        receta < datos["response"]["d$_dia"][_index_comida].length;
+        receta++) {
+      //print(datos["response"]["d$_dia"][_index_comida][receta]);
+
+      if (datos["response"]["d$_dia"][_index_comida][receta]["receta"] !=
+          null) {
+        preparacion = datos["response"]["d$_dia"][_index_comida][receta]
+                ["receta"]
+            .toString();
+      } else {
+        preparacion = "";
+      }
+
+      list.add(Detalle_Opcion(
+        id: datos["response"]["d$_dia"][_index_comida][receta]["id"].toString(),
+        index: datos["response"]["d$_dia"][_index_comida][receta]["index"]
+            .toString(),
+        cantidad: datos["response"]["d$_dia"][_index_comida][receta]["porcion"]
+            .toString(),
+        unidad: datos["response"]["d$_dia"][_index_comida][receta]["medida"]
+            .toString(),
+        nombre: datos["response"]["d$_dia"][_index_comida][receta]["nombre"]
+            .toString(),
+        preparacion: preparacion,
+      ));
+    }
+  }
+  return list;
+  //} catch (e) {
+  //  print("Error getDetallesOpcion " + e.toString());
+  //  return null;
+  //}
 }
 
 class Valores_Puntos {
