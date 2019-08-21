@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nutripuntos_app/pages/home.dart';
 import '../globals.dart' as global;
-import 'dart:async';
 import 'plan.dart';
 import 'progreso.dart';
 import 'agenda.dart';
