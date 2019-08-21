@@ -13,7 +13,7 @@ class PlanPage extends StatefulWidget {
 class _PlanPageState extends State<PlanPage> {
   @override
   Widget build(BuildContext context) {
-    getOpcionesDieta(global.token, "desayunos");
+    //getOpcionesDieta(global.token, "desayunos");
     return MaterialApp(
       home: DefaultTabController(
         length: 5,
@@ -69,7 +69,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("Desayuno En Puntos"),
                     botones_puntos("desayunos"),
                     titulo2("Sugerencias De Desayuno"),
-                    //list_sugerencias("desayunos"),
+                    list_sugerencias("desayunos"),
                   ],
                 ),
               ),
@@ -92,7 +92,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("CM En Puntos"),
                     botones_puntos("cm"),
                     titulo2("Sugerencias De CM"),
-                    //list_sugerencias("cm"),
+                    list_sugerencias("cm"),
                   ],
                 ),
               ),
@@ -115,7 +115,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("Almuerzo En Puntos"),
                     botones_puntos("almuerzos"),
                     titulo2("Sugerencias De Almuerzo"),
-                    //list_sugerencias("almuerzos"),
+                    list_sugerencias("almuerzos"),
                   ],
                 ),
               ),
@@ -138,7 +138,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("CV En Puntos"),
                     botones_puntos("cv"),
                     titulo2("Sugerencias De CV"),
-                    //list_sugerencias("cv"),
+                    list_sugerencias("cv"),
                   ],
                 ),
               ),
@@ -159,7 +159,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("Cena En Puntos"),
                     botones_puntos("cenas"),
                     titulo2("Sugerencias De Cena"),
-                    //list_sugerencias("cenas"),
+                    list_sugerencias("cenas"),
                   ],
                 ),
               ),
@@ -247,141 +247,126 @@ class list_sugerencias extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return //Center(child: Text("Sugerencias"));
-        Flexible(
-      child: FutureBuilder<List<opciones_Dieta>>(
-          future: getOpcionesDieta(global.token, tipo),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  semanticsLabel: "Loading",
-                  backgroundColor: hexToColor("#cdcdcd"),
-                ),
-              );
-            } else if (snapshot.hasData) {
-              if (snapshot.data.length > 0) {
-                return new ListView.builder(
-                    //physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        elevation: 0,
-                        child: Row(
-                          children: <Widget>[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 15, left: 15, bottom: 15),
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 10),
-                                    height: 80,
-                                    child: new Image.asset(
-                                        "assets/icons/Recurso_26.png"),
+        Container(
+      padding: EdgeInsets.only(top: 170),
+      child: SingleChildScrollView(
+        child: Align(
+          alignment: Alignment.center,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: FutureBuilder<List<Opciones_Dieta>>(
+                future: getOpcionesDieta(global.token, tipo),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        semanticsLabel: "Loading",
+                        backgroundColor: hexToColor("#cdcdcd"),
+                      ),
+                    );
+                  } else if (snapshot.hasData) {
+                    if (snapshot.data.length > 0) {
+                      return new ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              margin: EdgeInsets.only(bottom: 15),
+                              elevation: 4,
+                              child: Row(
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 5, left: 5, bottom: 3),
+                                        child: Container(
+                                          margin: EdgeInsets.only(left: 5),
+                                          height: 80,
+                                          child: new Image.asset(
+                                              "assets/icons/Recurso_26.png"),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(top: 0, left: 25),
-                                  child: Container(
-                                    width: 180,
-                                    child: Text(
-                                      snapshot.data[index].nombre.toString(),                                      
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          color: hexToColor("#505050"),
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 0, left: 20),
+                                        child: Container(
+                                          width: 180,
+                                          child: Text(
+                                            snapshot.data[index].nombre
+                                                .toString()
+                                                .toUpperCase(),
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: hexToColor("#505050"),
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      );
-                    });
-              } else {
-                return new Text("No hay sugerencias de $tipo.",
-                    style: TextStyle(color: hexToColor("#606060")));
-              }
-            } else if (snapshot.hasError) {
-              return Card(
-                child: Row(
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: 4, left: 25, bottom: 12),
-                          child: Text("Error al obtener sugerencias de $tipo."),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            }
-          }),
+                                ],
+                              ),
+                            );
+                          });
+                    } else {
+                      return new Text("No hay sugerencias de $tipo.",
+                          style: TextStyle(color: hexToColor("#606060")));
+                    }
+                  } else if (snapshot.hasError) {
+                    return Card(
+                      child: Row(
+                        children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: 4, left: 25, bottom: 12),
+                                child: Text(
+                                    "Error al obtener sugerencias de $tipo."),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                }),
+          ),
+        ),
+      ),
     );
   }
 }
 
-Future<List<opciones_Dieta>> getOpcionesDieta(_token, _tipo) async {
+Future<List<Opciones_Dieta>> getOpcionesDieta(_token, _tipo) async {
   try {
-    List<opciones_Dieta> list = new List<opciones_Dieta>();
-    int index_comida = 0;
-    int counter_opciones = 1;
-
-    switch (_tipo) {
-      case 'desayunos':
-        index_comida = 1;
-        break;
-      case 'cm':
-        index_comida = 2;
-        break;
-      case 'almuerzos':
-        index_comida = 3;
-        break;
-      case 'cv':
-        index_comida = 4;
-        break;
-      case 'cenas':
-        index_comida = 5;
-        break;
-    }
+    List<Opciones_Dieta> list = new List<Opciones_Dieta>();
 
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "dieta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
     //print(datos);
     if (datos["status"] == 1) {
-      String weekday = "d" + DateTime.now().weekday.toString();
-      //print(datos["response"][weekday]);
-      for (int opciones = 0;
-          opciones < datos["response"][weekday].length;
-          opciones++) {
-        //print(datos["response"][weekday][opciones]);
-        for (int comida = 0;
-            comida < datos["response"][weekday][opciones].length;
-            comida++) {              
-          //print(datos["response"][weekday][opciones][comida]["id"]);
+      for (int dias = 0; dias < datos["response"].length; dias++) {
+        list.add(Opciones_Dieta(
+            id: (dias + 1).toString(),
+            nombre: "Día " + (dias + 1).toString(),
+            contenido: datos["response"]["d" + (dias + 1).toString()]));
+      }
 
-          list.add(opciones_Dieta(id: datos["response"][weekday][opciones][comida]["id"].toString(),
-          nombre: "OPCIÓN " + (comida + 1).toString()));                  
-        }        
-        if (counter_opciones == index_comida)
-          break;
-        else
-          counter_opciones++;
-      }      
+      //print(list[2].contenido);
       return list;
     }
   } catch (e) {
@@ -389,9 +374,9 @@ Future<List<opciones_Dieta>> getOpcionesDieta(_token, _tipo) async {
   }
 }
 
-Future<List<opciones_Dieta>> getDetallesOpcion(_token, _tipo) async {
+Future<List<Opciones_Dieta>> getDetallesOpcion(_token, _tipo) async {
   try {
-    List<opciones_Dieta> list = new List<opciones_Dieta>();
+    List<Opciones_Dieta> list = new List<Opciones_Dieta>();
     int index_comida = 0;
     int counter_opciones = 1;
 
@@ -544,11 +529,12 @@ String azul = "0";
   }
 }
 
-class opciones_Dieta {
+class Opciones_Dieta {
   String id;
   String nombre;
+  dynamic contenido;
 
-  opciones_Dieta({this.id, this.nombre});
+  Opciones_Dieta({this.id, this.nombre, this.contenido});
 }
 
 class receta_Dieta {
