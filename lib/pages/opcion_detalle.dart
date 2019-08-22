@@ -7,6 +7,7 @@ import '../src/ColorCirclesWidget.dart';
 import 'dart:convert';
 
 Valores_Puntos valores_puntos = new Valores_Puntos();
+Container container_circles;
 
 void main() {
   runApp(OpcionDetallePage("", 0, ""));
@@ -108,7 +109,7 @@ class OpcionDetallePage extends StatelessWidget {
             ///
             /// CIRCLE WIDGET
             ///
-            circle_widget(),
+            circle_widget(index_comida, opcion),
 
             ///
             /// LIST RECETAS
@@ -141,13 +142,46 @@ class label_titulo extends StatelessWidget {
 }
 
 class circle_widget extends StatelessWidget {
+  final int index_comida;
+  final String opcion;
+  circle_widget(this.index_comida, this.opcion);
   @override
   Widget build(BuildContext context) {
-    return Container(
+    container_circles = new Container(
       margin: EdgeInsets.only(
           top: 30, left: MediaQuery.of(context).size.width * 0.52),
-      child: ColorCirclesWidget(valores_puntos.azul, valores_puntos.verde, valores_puntos.naranja, valores_puntos.amarillo),
+      child: FutureBuilder<Valores_Puntos>(
+          future:
+              getColorCirclesWidgetValues(global.token, index_comida, opcion),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  semanticsLabel: "Loading",
+                  backgroundColor: hexToColor("#cdcdcd"),
+                ),
+              );
+            } else if (snapshot.hasData) {
+              if (snapshot.data != null) {
+                return ColorCirclesWidget(
+                    snapshot.data.azul,
+                    snapshot.data.verde,
+                    snapshot.data.naranja,
+                    snapshot.data.amarillo);
+              } else {
+                return new Text("No hay puntajes.",
+                    style: TextStyle(color: hexToColor("#606060")));
+              }
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text("Error al obtener puntajes."),
+              );
+            }
+          }),
     );
+
+    return container_circles;
   }
 }
 
@@ -279,94 +313,118 @@ class list_recetas extends StatelessWidget {
   }
 }
 
-getColorCirclesWidgetValues(
+Future<Valores_Puntos> getColorCirclesWidgetValues(
     _token, _index_comida, _dia) async {
+  try {
+    String azul = "0";
+    String verde = "0";
+    String naranja = "0";
+    String amarillo = "0";
 
-      try{
-  String azul = "0";
-  String verde = "0";
-  String naranja = "0";
-  String amarillo = "0";
+    var response = await http.post(global.server + "/aplicacion/api",
+        body: {"tipo": "dieta", "token": _token});
+    var datos = json.decode(utf8.decode(response.bodyBytes));
 
-  var response = await http.post(global.server + "/aplicacion/api",
-      body: {"tipo": "dieta", "token": _token});
-  var datos = json.decode(utf8.decode(response.bodyBytes));
-  //print(datos["response"]["d$_dia"][_index_comida]);
-/*
-  print(datos["response"]["d$_dia"][_index_comida][1]["azul"]);
-  print(datos["response"]["d$_dia"][_index_comida][1]["verde"]);
-  print(datos["response"]["d$_dia"][_index_comida][1]["naranja"]);
-  print(datos["response"]["d$_dia"][_index_comida][1]["amarillo"]);
-*/
-  if (datos["status"] == 1) {
-    int receta = datos["response"]["d$_dia"][_index_comida].length - 1;
-    
-    if (datos["response"]["d$_dia"][_index_comida][receta]["azul"] != null) {
-      if (datos["response"]["d$_dia"][_index_comida][receta]["azul"].toString().contains('.') ==
-          true) {
-        if (datos["response"]["d$_dia"][_index_comida][receta]["azul"].split('.')[1] == "0")
-          azul = datos["response"]["d$_dia"][_index_comida][receta]["azul"].split('.')[0];
-        else
-          azul = datos["response"]["d$_dia"][_index_comida][receta]["azul"].toString();
+    if (datos["status"] == 1) {
+      int receta = datos["response"]["d$_dia"][_index_comida].length - 1;
+
+      if (datos["response"]["d$_dia"][_index_comida][receta]["azul"] != null) {
+        if (datos["response"]["d$_dia"][_index_comida][receta]["azul"]
+                .toString()
+                .contains('.') ==
+            true) {
+          if (datos["response"]["d$_dia"][_index_comida][receta]["azul"]
+                  .split('.')[1] ==
+              "0")
+            azul = datos["response"]["d$_dia"][_index_comida][receta]["azul"]
+                .split('.')[0];
+          else
+            azul = datos["response"]["d$_dia"][_index_comida][receta]["azul"]
+                .toString();
+        } else
+          azul = datos["response"]["d$_dia"][_index_comida][receta]["azul"]
+              .toString();
       } else
-        azul = datos["response"]["d$_dia"][_index_comida][receta]["azul"].toString();
-    } else
-      azul = "0";
+        azul = "0";
 
-    if (datos["response"]["d$_dia"][_index_comida][receta]["verde"] != null) {
-      if (datos["response"]["d$_dia"][_index_comida][receta]["verde"].toString().contains('.') ==
-          true) {
-        if (datos["response"]["d$_dia"][_index_comida][receta]["verde"].split('.')[1] == "0")
-          verde = datos["response"]["d$_dia"][_index_comida][receta]["verde"].split('.')[0];
-        else
-          verde = datos["response"]["d$_dia"][_index_comida][receta]["verde"].toString();
+      if (datos["response"]["d$_dia"][_index_comida][receta]["verde"] != null) {
+        if (datos["response"]["d$_dia"][_index_comida][receta]["verde"]
+                .toString()
+                .contains('.') ==
+            true) {
+          if (datos["response"]["d$_dia"][_index_comida][receta]["verde"]
+                  .split('.')[1] ==
+              "0")
+            verde = datos["response"]["d$_dia"][_index_comida][receta]["verde"]
+                .split('.')[0];
+          else
+            verde = datos["response"]["d$_dia"][_index_comida][receta]["verde"]
+                .toString();
+        } else
+          verde = datos["response"]["d$_dia"][_index_comida][receta]["verde"]
+              .toString();
       } else
-        verde = datos["response"]["d$_dia"][_index_comida][receta]["verde"].toString();
-    } else
-      verde = "0";
+        verde = "0";
 
-    if (datos["response"]["d$_dia"][_index_comida][receta]["naranja"] != null) {
-      if (datos["response"]["d$_dia"][_index_comida][receta]["naranja"]
-              .toString()
-              .contains('.') ==
-          true) {
-        if (datos["response"]["d$_dia"][_index_comida][receta]["naranja"].split('.')[1] == "0")
-          naranja = datos["response"]["d$_dia"][_index_comida][receta]["naranja"].split('.')[0];
-        else
-          naranja = datos["response"]["d$_dia"][_index_comida][receta]["naranja"].toString();
+      if (datos["response"]["d$_dia"][_index_comida][receta]["naranja"] !=
+          null) {
+        if (datos["response"]["d$_dia"][_index_comida][receta]["naranja"]
+                .toString()
+                .contains('.') ==
+            true) {
+          if (datos["response"]["d$_dia"][_index_comida][receta]["naranja"]
+                  .split('.')[1] ==
+              "0")
+            naranja = datos["response"]["d$_dia"][_index_comida][receta]
+                    ["naranja"]
+                .split('.')[0];
+          else
+            naranja = datos["response"]["d$_dia"][_index_comida][receta]
+                    ["naranja"]
+                .toString();
+        } else
+          naranja = datos["response"]["d$_dia"][_index_comida][receta]
+                  ["naranja"]
+              .toString();
       } else
-        naranja = datos["response"]["d$_dia"][_index_comida][receta]["naranja"].toString();
-    } else
-      naranja = "0";
+        naranja = "0";
 
-    if (datos["response"]["d$_dia"][_index_comida][receta]["amarillo"] != null) {
-      if (datos["response"]["d$_dia"][_index_comida][receta]["amarillo"]
-              .toString()
-              .contains('.') ==
-          true) {
-        if (datos["response"]["d$_dia"][_index_comida][receta]["amarillo"].split('.')[1] == "0")
-          amarillo =
-              datos["response"]["d$_dia"][_index_comida][receta]["amarillo"].split('.')[0];
-        else
-          amarillo = datos["response"]["d$_dia"][_index_comida][receta]["amarillo"].toString();
+      if (datos["response"]["d$_dia"][_index_comida][receta]["amarillo"] !=
+          null) {
+        if (datos["response"]["d$_dia"][_index_comida][receta]["amarillo"]
+                .toString()
+                .contains('.') ==
+            true) {
+          if (datos["response"]["d$_dia"][_index_comida][receta]["amarillo"]
+                  .split('.')[1] ==
+              "0")
+            amarillo = datos["response"]["d$_dia"][_index_comida][receta]
+                    ["amarillo"]
+                .split('.')[0];
+          else
+            amarillo = datos["response"]["d$_dia"][_index_comida][receta]
+                    ["amarillo"]
+                .toString();
+        } else
+          amarillo = datos["response"]["d$_dia"][_index_comida][receta]
+                  ["amarillo"]
+              .toString();
       } else
-        amarillo = datos["response"]["d$_dia"][_index_comida][receta]["amarillo"].toString();
-    } else
-      amarillo = "0";
+        amarillo = "0";
 
-    valores_puntos = new Valores_Puntos(
-        azul: azul, verde: verde, naranja: naranja, amarillo: amarillo);  
-  }
-  }
-    catch(ex)
-  {
+      valores_puntos = new Valores_Puntos(
+          azul: azul, verde: verde, naranja: naranja, amarillo: amarillo);
+
+      return valores_puntos;
+    }
+  } catch (ex) {
     print("Error getColorCirclesWidgetValues: $ex");
-  }  
+  }
 }
 
 Future<List<Detalle_Opcion>> getDetallesOpcion(
     _token, _index_comida, _dia) async {
-  //try {
+  try {
   List<Detalle_Opcion> list = new List<Detalle_Opcion>();
 
   String preparacion;
@@ -379,8 +437,6 @@ Future<List<Detalle_Opcion>> getDetallesOpcion(
     for (int receta = 0;
         receta < datos["response"]["d$_dia"][_index_comida].length;
         receta++) {
-      //print(datos["response"]["d$_dia"][_index_comida][receta]);
-
       if (datos["response"]["d$_dia"][_index_comida][receta]["receta"] !=
           null) {
         preparacion = datos["response"]["d$_dia"][_index_comida][receta]
@@ -405,10 +461,10 @@ Future<List<Detalle_Opcion>> getDetallesOpcion(
     }
   }
   return list;
-  //} catch (e) {
-  //  print("Error getDetallesOpcion " + e.toString());
-  //  return null;
-  //}
+  } catch (e) {
+    print("Error getDetallesOpcion " + e.toString());
+    return null;
+  }
 }
 
 class Valores_Puntos {

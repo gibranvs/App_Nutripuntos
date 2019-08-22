@@ -122,23 +122,11 @@ class _RestaurantesPageState extends State<RestaurantesPage> {
 
 void restaurante_press(context, _idRestaurante) {
   //print(_idRestaurante);
-  global.list_platillos_restaurante = null;
-  restaurante.getPlatillos(_idRestaurante);
-  next_window_restaurante(context, _idRestaurante);
-}
-
-void next_window_restaurante(_context, _recetaID) {
-  if (global.list_platillos_restaurante != null &&
-      global.list_platillos_restaurante.length > 0) {
-    Navigator.push(
-        _context,
-        MaterialPageRoute(
-            builder: (context) => restaurante.RestauranteDetallePage()));
-  } else {
-    Future.delayed(const Duration(milliseconds: 10), () {
-      next_window_restaurante(_context, _recetaID);
-    });
-  }
+  Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) =>
+              restaurante.RestauranteDetallePage(_idRestaurante)));
 }
 
 Future<List<Restaurante>> fetchRestaurantes() async {

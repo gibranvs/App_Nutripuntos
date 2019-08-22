@@ -8,11 +8,16 @@ import '../src/HexToColor.dart';
 import '../src/ColorCirclesWidget.dart';
 
 class RestauranteDetallePage extends StatefulWidget {
+  final String idRestaurante;
+  RestauranteDetallePage(this.idRestaurante);
   @override
-  _RestauranteDetallePage createState() => new _RestauranteDetallePage();
+  _RestauranteDetallePage createState() =>
+      new _RestauranteDetallePage(idRestaurante);
 }
 
 class _RestauranteDetallePage extends State<RestauranteDetallePage> {
+  final String idRestaurante;
+  _RestauranteDetallePage(this.idRestaurante);
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -50,10 +55,8 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
               onTap: () {
                 global.widget = null;
                 global.list_platillos_restaurante = null;
-                Navigator.pop(                  
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => RestaurantesPage()));
+                Navigator.pop(context,
+                    MaterialPageRoute(builder: (_) => RestaurantesPage()));
               },
               child: Container(
                 alignment: Alignment.topLeft,
@@ -88,7 +91,9 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
               decoration: BoxDecoration(
                 border: Border.all(width: 0, color: Colors.white),
                 shape: BoxShape.circle,
-                image: DecorationImage(image: global.foto_restaurante,//global.returnFileSelected(global.imageFile),
+                image: DecorationImage(
+                  image: global
+                      .foto_restaurante, //global.returnFileSelected(global.imageFile),
                 ),
               ),
             ),
@@ -129,55 +134,7 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
             ///
             /// LISTA PLATILLOS
             ///
-            Container(
-              margin: EdgeInsets.only(left: 0, top: 280),
-              padding: EdgeInsets.only(top: 0),
-              child: new ListView(
-                children: global.list_platillos_restaurante.map((platillo) {
-                  return Card(
-                    margin:
-                        new EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                    child: ListTile(
-                      leading: Container(
-                        margin: new EdgeInsets.only(top: 0, left: 20),
-                        child: Icon(
-                          Icons.fastfood,
-                          color: hexToColor("#3f95ac"),
-                          size: 30,
-                        ),
-                      ),
-                      title: new Text(
-                        platillo.nombre,
-                        style: new TextStyle(
-                            fontSize: 13.0,
-                            fontFamily: "PT Sans",
-                            fontWeight: FontWeight.bold,
-                            color: hexToColor("#666666")),
-                      ),
-                      subtitle: new Container(
-                        alignment: Alignment.topLeft,
-                        margin: new EdgeInsets.only(top: 8.0, left: 0.0),
-                        child: new Column(
-                          children: <Widget>[
-                            new Container(
-                              alignment: Alignment.centerLeft,
-                              child: new ColorCirclesWidget(
-                                  platillo.azul,
-                                  platillo.verde,
-                                  platillo.naranja,
-                                  platillo.amarillo),
-                            ),
-                          ],
-                        ),
-                      ),
-                      contentPadding: new EdgeInsets.symmetric(
-                          horizontal: 0.0, vertical: 0.0),
-                      selected: true,
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
+            list_platillos(idRestaurante),
           ],
         ),
       ),
@@ -185,22 +142,130 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
   }
 }
 
-void getPlatillos(_idRestaurante) async {
+class list_platillos extends StatelessWidget {
+  final String idRestaurante;
+  list_platillos(this.idRestaurante);
+  @override
+  Widget build(BuildContext context) {
+    return //Center(child: Text("Sugerencias"));
+        Container(
+      margin: EdgeInsets.only(left: 0, top: 280),
+      padding: EdgeInsets.only(top: 0),
+      child: SingleChildScrollView(
+        child: Align(
+          alignment: Alignment.center,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: FutureBuilder<List<Platillo>>(
+                future: getPlatillos(idRestaurante),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        semanticsLabel: "Loading",
+                        backgroundColor: hexToColor("#cdcdcd"),
+                      ),
+                    );
+                  } else if (snapshot.hasData) {                    
+                    if (snapshot.data.length > 0) {
+                      return new ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            return Card(
+                              margin: EdgeInsets.only(bottom: 15),
+                              elevation: 0,
+                              child: Row(
+                                children: <Widget>[
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 5, left: 5, bottom: 3),
+                                        child: Container(
+                                          margin: new EdgeInsets.only(
+                                              top: 0, left: 0),
+                                          child: Container(
+                                            margin: EdgeInsets.only(left: 5),
+                                            height: 80,
+                                            child: new Image.asset(
+                                                "assets/icons/Recurso_26.png"),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 0, bottom:10, left: 10),
+                                        child: Container(
+                                          width: 180,
+                                          child: Text(
+                                            snapshot.data[index].nombre,
+                                            style: new TextStyle(
+                                                fontSize: 18.0,
+                                                fontFamily: "PT Sans",
+                                                fontWeight: FontWeight.bold,
+                                                color: hexToColor("#666666")),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 0, bottom:5, left: 10),
+                                        child: Container(
+                                          width: 180,
+                                          child: ColorCirclesWidget(
+                                              snapshot.data[index].azul,
+                                              snapshot.data[index].verde,
+                                              snapshot.data[index].naranja,
+                                              snapshot.data[index].amarillo),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
+                    } else {
+                      return new Center(child: Text("No hay platillos recomendados.",
+                          style: TextStyle(color: hexToColor("#606060"))));
+                    }
+                  } else if (snapshot.hasError) {
+                    return new Center(child: Text("Error al obtener platillos recomendados.",
+                          style: TextStyle(color: hexToColor("#606060"))));
+                  }
+                }),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+Future<List<Platillo>> getPlatillos(_idRestaurante) async {
   try {
     var response = await http.post(global.server + "/aplicacion/api", body: {
       "tipo": "platillos_restaurante",
       "id_restaurante": _idRestaurante.toString()
     });
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    //print(datos.length);
 
     var azul;
     var verde;
     var naranja;
     var amarillo;
-    global.list_platillos_restaurante = null;
-    global.list_platillos_restaurante = new List<Platillo>();
-    for (int i = 0; i < datos.length; i++) {
+    List<Platillo> list = new List<Platillo>();    
+    for (int i = 0; i < datos.length; i++) {      
       if (datos[i]["azul"] != null) {
         if (datos[i]["azul"].split('.')[1] == "0")
           azul = datos[i]["azul"].split('.')[0];
@@ -233,14 +298,15 @@ void getPlatillos(_idRestaurante) async {
       } else
         amarillo = "0";
 
-      global.list_platillos_restaurante.add(Platillo(
+      list.add(Platillo(
           id: int.parse(datos[i]["id"]),
-          nombre: datos[i]["nombre"],
+          nombre: datos[i]["nombre"].toString(),
           azul: azul,
           verde: verde,
           naranja: naranja,
-          amarillo: amarillo));
+          amarillo: amarillo));      
     }
+    return list;
   } catch (e) {
     print("Error getPlatillos: " + e.toString());
   }

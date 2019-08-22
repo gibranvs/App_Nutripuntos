@@ -276,17 +276,7 @@ class list_sugerencias extends StatelessWidget {
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
                             return GestureDetector(
-                              onTap: () async {
-                                getColorCirclesWidgetValues(global.token,
-                                    index_comida, (index + 1).toString());
-                                showDialog(
-                                    context: context,
-                                    builder: (BuildContext _context) {
-                                      return Center(
-                                          child: CircularProgressIndicator());
-                                    });
-                                await new Future.delayed(
-                                    Duration(milliseconds: 500));
+                              onTap: ()  {
                                 Navigator.push(
                                     _context,
                                     MaterialPageRoute(
@@ -348,23 +338,8 @@ class list_sugerencias extends StatelessWidget {
                           style: TextStyle(color: hexToColor("#606060")));
                     }
                   } else if (snapshot.hasError) {
-                    return Card(
-                      child: Row(
-                        children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: 4, left: 25, bottom: 12),
-                                child: Text(
-                                    "Error al obtener sugerencias de comida."),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
+                    return new Text("Error al obtener sugerencias de comida.",
+                          style: TextStyle(color: hexToColor("#606060")));
                   }
                 }),
           ),
