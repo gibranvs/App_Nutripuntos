@@ -15,7 +15,7 @@ class PlanPage extends StatefulWidget {
 
 class _PlanPageState extends State<PlanPage> {
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
         length: 5,
@@ -277,14 +277,23 @@ class list_sugerencias extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () async {
-                                getColorCirclesWidgetValues(global.token, index_comida, (index + 1).toString());
-                                await new Future.delayed(Duration(milliseconds: 2000));
+                                getColorCirclesWidgetValues(global.token,
+                                    index_comida, (index + 1).toString());
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext _context) {
+                                      return Center(
+                                          child: CircularProgressIndicator());
+                                    });
+                                await new Future.delayed(
+                                    Duration(milliseconds: 500));
                                 Navigator.push(
                                     _context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            OpcionDetallePage(global.token, index_comida,
-                                                (index + 1).toString())));
+                                        builder: (context) => OpcionDetallePage(
+                                            global.token,
+                                            index_comida,
+                                            (index + 1).toString())));
                               },
                               child: Card(
                                 margin: EdgeInsets.only(bottom: 15),
