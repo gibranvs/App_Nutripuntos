@@ -147,7 +147,7 @@ class list_platillos extends StatelessWidget {
   list_platillos(this.idRestaurante);
   @override
   Widget build(BuildContext context) {
-    return //Center(child: Text("Sugerencias"));
+    return
         Container(
       margin: EdgeInsets.only(left: 0, top: 280),
       padding: EdgeInsets.only(top: 0),

@@ -148,11 +148,15 @@ class label_nombre extends StatelessWidget {
       alignment: Alignment.topCenter,
       margin: new EdgeInsets.only(top: 175.0),
       padding: EdgeInsets.only(left: 10, right: 10),
-      child: Text(
-        nombreReceta,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-            fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+      child: SizedBox(
+        width: 320,
+        child: AutoSizeText(
+          nombreReceta,
+          maxLines: 3,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }
@@ -165,7 +169,7 @@ class widget_puntos extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Container(
       alignment: Alignment.center,
-      margin: EdgeInsets.only(top: 150),
+      margin: EdgeInsets.only(top: 170),
       child: FutureBuilder<Valores_Puntos>(
           future: getColorCirclesWidgetValues(idReceta),
           builder: (context, snapshot) {
@@ -203,12 +207,11 @@ class card_ingredientes extends StatelessWidget {
   card_ingredientes(this.idReceta);
   @override
   Widget build(BuildContext context) {
-    print(idReceta);
     return Stack(
       children: <Widget>[
         Container(
           margin: EdgeInsets.only(top: 0),
-          decoration: new BoxDecoration(            
+          decoration: new BoxDecoration(
             image: new DecorationImage(
               image: new AssetImage("assets/images/fondo.jpg"),
               colorFilter: new ColorFilter.mode(
@@ -308,12 +311,11 @@ class card_preparacion extends StatelessWidget {
   card_preparacion(this.idReceta);
   @override
   Widget build(BuildContext context) {
-    print(idReceta);
     return Stack(
       children: <Widget>[
         Container(
           margin: EdgeInsets.only(top: 0),
-          decoration: new BoxDecoration(            
+          decoration: new BoxDecoration(
             image: new DecorationImage(
               image: new AssetImage("assets/images/fondo.jpg"),
               colorFilter: new ColorFilter.mode(
@@ -325,49 +327,48 @@ class card_preparacion extends StatelessWidget {
         Column(
           children: <Widget>[
             Flexible(
-              child:
-            FutureBuilder<Detalle_Receta>(
-                future: getDetallesReceta(idReceta),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
+              child: FutureBuilder<Detalle_Receta>(
+                  future: getDetallesReceta(idReceta),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           semanticsLabel: "Loading",
                           backgroundColor: hexToColor("#cdcdcd"),
                         ),
                       );
-                  } else if (snapshot.hasData) {
-                    if (snapshot.data != null) {
-                      return Card(
-                        margin: EdgeInsets.all(20),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        elevation: 0,
-                        color: hexToColor("#f2f2f2"),
-                        child: Container(
-                          padding: EdgeInsets.all(15),
-                          child: Text(
-                            snapshot.data.preparacion.toString(),
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                                color: hexToColor("#78c826"),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14),
+                    } else if (snapshot.hasData) {
+                      if (snapshot.data != null) {
+                        return Card(
+                          margin: EdgeInsets.all(20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
                           ),
-                        ),
-                      );
-                    } else {
-                      return new Text("No existe preparación para la receta.",
+                          elevation: 0,
+                          color: hexToColor("#f2f2f2"),
+                          child: Container(
+                            padding: EdgeInsets.all(15),
+                            child: Text(
+                              snapshot.data.preparacion.toString(),
+                              textAlign: TextAlign.justify,
+                              style: TextStyle(
+                                  color: hexToColor("#78c826"),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return new Text("No existe preparación para la receta.",
+                            style: TextStyle(color: hexToColor("#606060")));
+                      }
+                    } else if (snapshot.hasError) {
+                      return new Text(
+                          "Error al obtener preparación para la receta.",
                           style: TextStyle(color: hexToColor("#606060")));
                     }
-                  } else if (snapshot.hasError) {
-                    return new Text(
-                        "Error al obtener preparación para la receta.",
-                        style: TextStyle(color: hexToColor("#606060")));
-                  }
-                }),
+                  }),
             ),
           ],
         ),
