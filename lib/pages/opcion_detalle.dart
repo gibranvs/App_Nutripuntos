@@ -6,9 +6,6 @@ import 'package:nutripuntos_app/src/HexToColor.dart';
 import '../src/ColorCirclesWidget.dart';
 import 'dart:convert';
 
-Valores_Puntos valores_puntos = new Valores_Puntos();
-Container container_circles;
-
 void main() {
   runApp(OpcionDetallePage("", 0, ""));
 }
@@ -147,7 +144,7 @@ class circle_widget extends StatelessWidget {
   circle_widget(this.index_comida, this.opcion);
   @override
   Widget build(BuildContext context) {
-    container_circles = new Container(
+     return new Container(
       margin: EdgeInsets.only(
           top: 30, left: MediaQuery.of(context).size.width * 0.52),
       child: FutureBuilder<Valores_Puntos>(
@@ -179,9 +176,7 @@ class circle_widget extends StatelessWidget {
               );
             }
           }),
-    );
-
-    return container_circles;
+    );    
   }
 }
 
@@ -316,6 +311,7 @@ class list_recetas extends StatelessWidget {
 Future<Valores_Puntos> getColorCirclesWidgetValues(
     _token, _index_comida, _dia) async {
   try {
+    Valores_Puntos valores_puntos;    
     String azul = "0";
     String verde = "0";
     String naranja = "0";

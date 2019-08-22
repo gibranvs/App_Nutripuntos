@@ -35,14 +35,11 @@ class _RecetasPageState extends State<RecetasPage> {
             return Card(
               margin: new EdgeInsets.symmetric(vertical: 5, horizontal: 15),
               child: ListTile(
-                leading:
-                
-                Container(
-                  margin: EdgeInsets.only(left:10),         
+                leading: Container(
+                  margin: EdgeInsets.only(left: 10),
                   height: 80,
                   child: new Image.asset("assets/icons/Recurso_26.png"),
                 ),
-                
                 title: new Text(
                   receta.nombre,
                   style: new TextStyle(
@@ -72,36 +69,19 @@ class _RecetasPageState extends State<RecetasPage> {
                   color: hexToColor("#3f95ac"),
                   size: 40,
                 ),
-
                 onTap: () {
-                  receta_press(context, receta.id);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              detalle.RecetaPage(receta.id, receta.nombre)));
                 },
               ),
             );
           }).toList(),
         ),
       ),
-
     );
-  }
-}
-
-void receta_press(_context, _recetaID) {
-  //print(_recetaID);
-  global.widget = null;
-  detalle.getReceta(_recetaID);
-
-  next_window_receta(_context, _recetaID);
-}
-
-void next_window_receta(_context, _recetaID) {
-  if (global.detalle_receta != null && global.widget != null) {
-    Navigator.push(_context,
-        MaterialPageRoute(builder: (context) => detalle.RecetaPage()));
-  } else {
-    Future.delayed(const Duration(milliseconds: 10), () {
-      next_window_receta(_context, _recetaID);
-    });
   }
 }
 

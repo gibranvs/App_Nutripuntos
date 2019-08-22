@@ -7,10 +7,13 @@ import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
 
 void main() {
-  runApp(RecetaPage());
+  runApp(RecetaPage(0, ""));
 }
 
 class RecetaPage extends StatelessWidget {
+  final int idReceta;
+  final String nombreReceta;
+  RecetaPage(this.idReceta, this.nombreReceta);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,7 +22,7 @@ class RecetaPage extends StatelessWidget {
         child: Scaffold(
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(330.0),
-            child: AppBar(              
+            child: AppBar(
               flexibleSpace: Container(
                 height: 350,
                 color: Color(0xFF059696),
@@ -28,62 +31,22 @@ class RecetaPage extends StatelessWidget {
                     ///
                     /// BACK
                     ///
-                    GestureDetector(
-                      onTap: () {
-                        print("back");
-                        global.widget = null;
-                        Navigator.pop(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => RecetasPage()));
-                      },
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        margin: EdgeInsets.only(top: 30, left: 10),
-                        child: Icon(Icons.arrow_back, color: Colors.white),
-                      ),
-                    ),
+                    boton_back(context),
 
                     ///
                     /// IMAGE
                     ///
-                    Container(
-                      height: 120,
-                      margin: new EdgeInsets.only(top: 50.0),
-                      decoration: BoxDecoration(
-                        image: new DecorationImage(
-                          image: new AssetImage("assets/icons/Recurso_25.png"),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
+                    imagen_cabecera(),
 
                     ///
                     /// LABEL NOMBRE
                     ///
-                    Container(
-                      alignment: Alignment.topCenter,
-                      margin: new EdgeInsets.only(top: 170.0),
-                      padding: EdgeInsets.only(left: 10, right: 10),
-                      child: Text(
-                        global.detalle_receta.nombre,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                    ),
+                    label_nombre(nombreReceta),
 
                     ///
                     /// WIDGET
                     ///
-                    Container(
-                      alignment: Alignment.topCenter,
-                      margin: new EdgeInsets.only(top: 220.0),
-                      padding: EdgeInsets.only(top: 0),
-                      child: global.widget,
-                    ),
+                    widget_puntos(idReceta),
                   ],
                 ),
               ),
@@ -123,80 +86,12 @@ class RecetaPage extends StatelessWidget {
               ///
               /// INGREDIENTES
               ///
-              Container(
-                margin: EdgeInsets.only(top: 0),
-                decoration: new BoxDecoration(
-                  color: Colors.white,
-                  image: new DecorationImage(
-                    image: new AssetImage("assets/images/fondo.jpg"),
-                    colorFilter: new ColorFilter.mode(
-                        Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Card(
-                  margin:
-                      new EdgeInsets.symmetric(vertical: 30, horizontal: 18),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0)),
-                  child: Container(
-                    padding: EdgeInsets.only(
-                        top: 10, bottom: 10, left: 20, right: 20),
-                    child: ListView(
-                      padding: new EdgeInsets.all(0),                                                          
-                      children: global.list_ingredientes.map((ingrediente) {
-                        return ListTile(                                                                              
-                          contentPadding: new EdgeInsets.all(0.0),
-                          leading: Text(
-                                ingrediente.cantidad +
-                                    "  " +
-                                    ingrediente.unidad +
-                                    " de " +
-                                    ingrediente.nombre,
-                                textAlign: TextAlign.left,
-                                style: TextStyle(
-                                    fontSize: 12, color: hexToColor("#78c826"), fontWeight: FontWeight.bold),
-                              ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ),
+              card_ingredientes(idReceta),
 
               ///
               /// PREPARACIÓN
               ///
-              Container(
-                margin: EdgeInsets.only(top: 0),
-                decoration: new BoxDecoration(
-                  color: const Color(0x00FFCC00),
-                  image: new DecorationImage(
-                    image: new AssetImage("assets/images/fondo.jpg"),
-                    colorFilter: new ColorFilter.mode(
-                        Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Card(
-                  margin:
-                      new EdgeInsets.symmetric(vertical: 30, horizontal: 18),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0)),
-                  child: Container(
-                    padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                    child: Text(
-                      global.detalle_receta.preparacion.toString(),
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: hexToColor("#78c826"),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              card_preparacion(idReceta),
             ],
           ),
         ),
@@ -205,7 +100,313 @@ class RecetaPage extends StatelessWidget {
   }
 }
 
-void getReceta(_idReceta) async {
+class boton_back extends StatelessWidget {
+  BuildContext _context;
+  boton_back(this._context);
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        print("back");
+        global.widget = null;
+        Navigator.pop(
+            _context, MaterialPageRoute(builder: (context) => RecetasPage()));
+      },
+      child: Container(
+        alignment: Alignment.topLeft,
+        margin: EdgeInsets.only(top: 30, left: 10),
+        child: Icon(Icons.arrow_back, color: Colors.white),
+      ),
+    );
+  }
+}
+
+class imagen_cabecera extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 120,
+      margin: new EdgeInsets.only(top: 50.0),
+      decoration: BoxDecoration(
+        image: new DecorationImage(
+          image: new AssetImage("assets/icons/Recurso_25.png"),
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+}
+
+class label_nombre extends StatelessWidget {
+  final String nombreReceta;
+  label_nombre(this.nombreReceta);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topCenter,
+      margin: new EdgeInsets.only(top: 175.0),
+      padding: EdgeInsets.only(left: 10, right: 10),
+      child: Text(
+        nombreReceta,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+    );
+  }
+}
+
+class widget_puntos extends StatelessWidget {
+  final int idReceta;
+  widget_puntos(this.idReceta);
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      alignment: Alignment.center,
+      margin: EdgeInsets.only(top: 150),
+      child: FutureBuilder<Valores_Puntos>(
+          future: getColorCirclesWidgetValues(idReceta),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  semanticsLabel: "Loading",
+                  backgroundColor: hexToColor("#cdcdcd"),
+                ),
+              );
+            } else if (snapshot.hasData) {
+              if (snapshot.data != null) {
+                return ColorCirclesWidget(
+                    snapshot.data.azul,
+                    snapshot.data.verde,
+                    snapshot.data.naranja,
+                    snapshot.data.amarillo);
+              } else {
+                return new Text("No hay puntajes.",
+                    style: TextStyle(color: hexToColor("#606060")));
+              }
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text("Error al obtener puntajes."),
+              );
+            }
+          }),
+    );
+  }
+}
+
+class card_ingredientes extends StatelessWidget {
+  final int idReceta;
+  card_ingredientes(this.idReceta);
+  @override
+  Widget build(BuildContext context) {
+    print(idReceta);
+    return Container(
+      margin: EdgeInsets.only(top: 0),
+      decoration: new BoxDecoration(
+        color: Colors.white,
+        image: new DecorationImage(
+          image: new AssetImage("assets/images/fondo.jpg"),
+          colorFilter: new ColorFilter.mode(
+              Colors.black.withOpacity(0.2), BlendMode.dstATop),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: FutureBuilder<List<Ingrediente>>(
+          future: getIngredientesReceta(idReceta),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  semanticsLabel: "Loading",
+                  backgroundColor: hexToColor("#cdcdcd"),
+                ),
+              );
+            } else if (snapshot.hasData) {
+              if (snapshot.data.length > 0) {
+                return new Container(
+                  //width: MediaQuery.of(context).size.width * 0.8,
+                  padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    elevation: 0,
+                    color: hexToColor("#f2f2f2"),
+                    child: ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            elevation: 0,
+                            color: Colors.transparent,
+                            child: Row(
+                              children: <Widget>[
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          top: 15, left: 15, bottom: 15),
+                                      child: Text(
+                                        snapshot.data[index].cantidad + " ",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: hexToColor("#78c826"),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 0, left: 0),
+                                      child: Text(
+                                        snapshot.data[index].unidad.toString() +
+                                            " de ",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: hexToColor("#78c826"),
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.only(top: 0, left: 0),
+                                      child: Text(
+                                        snapshot.data[index].nombre.toString(),
+                                        style: TextStyle(
+                                            color: hexToColor("#78c826"),
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
+                  ),
+                );
+              } else {
+                return new Text("No existen ingredientes.",
+                    style: TextStyle(color: hexToColor("#606060")));
+              }
+            } else if (snapshot.hasError) {
+              return Card(
+                child: Row(
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 4, left: 25, bottom: 12),
+                          child: Text("Error al obtener ingredientes."),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }
+          }),
+    );
+  }
+}
+
+class card_preparacion extends StatelessWidget {
+  final int idReceta;
+  card_preparacion(this.idReceta);
+  @override
+  Widget build(BuildContext context) {
+    print(idReceta);
+    return Container(
+      margin: EdgeInsets.only(top: 0),
+      decoration: new BoxDecoration(
+        color: Colors.white,
+        image: new DecorationImage(
+          image: new AssetImage("assets/images/fondo.jpg"),
+          colorFilter: new ColorFilter.mode(
+              Colors.black.withOpacity(0.2), BlendMode.dstATop),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: FutureBuilder<Detalle_Receta>(
+          future: getDetallesReceta(idReceta),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  semanticsLabel: "Loading",
+                  backgroundColor: hexToColor("#cdcdcd"),
+                ),
+              );
+            } else if (snapshot.hasData) {
+              if (snapshot.data != null) {
+                return new Container(
+                  //width: MediaQuery.of(context).size.width * 0.8,
+                  padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    elevation: 0,
+                    color: hexToColor("#f2f2f2"),
+                    child:
+                    Container(
+                      padding: EdgeInsets.all(15),
+                      child: Text(
+                      snapshot.data.preparacion.toString(),
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(
+                          color: hexToColor("#78c826"),                          
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14),
+                    ),
+                    ),
+                  ),
+                );
+              } else {
+                return new Text("No existen ingredientes.",
+                    style: TextStyle(color: hexToColor("#606060")));
+              }
+            } else if (snapshot.hasError) {
+              return Card(
+                child: Row(
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 4, left: 25, bottom: 12),
+                          child: Text("Error al obtener ingredientes."),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }
+          }),
+    );
+  }
+}
+
+Future<Valores_Puntos> getColorCirclesWidgetValues(_idReceta) async {
   try {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "detalle_recetas", "id_receta": _idReceta.toString()});
@@ -213,6 +414,7 @@ void getReceta(_idReceta) async {
     //print(datos);
 
     if (datos["status"] == 1) {
+      Valores_Puntos valores_puntos;
       var azul;
       var verde;
       var naranja;
@@ -249,33 +451,76 @@ void getReceta(_idReceta) async {
       } else
         amarillo = "0";
 
-      global.widget = new ColorCirclesWidget(azul, verde, naranja, amarillo);
+      return valores_puntos = new Valores_Puntos(
+          azul: azul, verde: verde, naranja: naranja, amarillo: amarillo);
+    }
+  } catch (e) {
+    print("Error getColorCirclesWidgetValues: " + e.toString());
+  }
+}
 
-      global.detalle_receta = null;
-      global.detalle_receta = new Detalle_Receta(
+Future<List<Ingrediente>> getIngredientesReceta(_idReceta) async {
+  try {
+    var response = await http.post(global.server + "/aplicacion/api",
+        body: {"tipo": "detalle_recetas", "id_receta": _idReceta.toString()});
+    var datos = json.decode(utf8.decode(response.bodyBytes));
+    //print(datos);
+
+    if (datos["status"] == 1) {
+      List<Ingrediente> list = new List<Ingrediente>();
+
+      var cantidad;
+      for (int i = 0; i < datos["response"][0]["ingredientes"].length; i++) {
+        if (datos["response"][0]["ingredientes"][i]["cantidad"]
+                .toString()
+                .split('.')[1] ==
+            "00")
+          cantidad =
+              datos["response"][0]["ingredientes"][i]["cantidad"].split('.')[0];
+        else
+          cantidad =
+              datos["response"][0]["ingredientes"][i]["cantidad"].toString();
+
+        list.add(Ingrediente(
+            cantidad: cantidad,
+            unidad: datos["response"][0]["ingredientes"][i]["medida"],
+            nombre: datos["response"][0]["ingredientes"][i]["nombre"]));
+      }
+      return list;
+    }
+  } catch (e) {
+    print("Error getIngredientesReceta: " + e.toString());
+  }
+}
+
+Future<Detalle_Receta> getDetallesReceta(_idReceta) async {
+  try {
+    var response = await http.post(global.server + "/aplicacion/api",
+        body: {"tipo": "detalle_recetas", "id_receta": _idReceta.toString()});
+    var datos = json.decode(utf8.decode(response.bodyBytes));
+    //print(datos);
+
+    if (datos["status"] == 1) {
+      Detalle_Receta detalle_receta;
+
+      return detalle_receta = new Detalle_Receta(
         id: int.parse(datos["response"][0]["id"]),
         nombre: datos["response"][0]["nombre"],
         preparacion: datos["response"][0]["receta"],
       );
-
-      global.list_ingredientes = new List<Ingrediente>();
-      var cantidad;     
-      for (int i = 0; i < datos["response"][0]["ingredientes"].length; i++) {
-        if (datos["response"][0]["ingredientes"][i]["cantidad"].toString().split('.')[1] == "00")
-          cantidad = datos["response"][0]["ingredientes"][i]["cantidad"].split('.')[0];
-        else
-          cantidad = datos["response"][0]["ingredientes"][i]["cantidad"].toString();
-
-
-        global.list_ingredientes.add(Ingrediente(
-            cantidad: cantidad,                
-            unidad: datos["response"][0]["ingredientes"][i]["medida"],
-            nombre: datos["response"][0]["ingredientes"][i]["nombre"]));
-      }
     }
   } catch (e) {
-    print("Error getReceta: " + e.toString());
+    print("Error getDetallesReceta: " + e.toString());
   }
+}
+
+class Valores_Puntos {
+  String azul;
+  String verde;
+  String naranja;
+  String amarillo;
+
+  Valores_Puntos({this.azul, this.verde, this.naranja, this.amarillo});
 }
 
 class Detalle_Receta {
