@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
 import 'package:nutripuntos_app/pages/opcion_detalle.dart';
 import 'package:nutripuntos_app/src/HexToColor.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:nutripuntos_app/src/MessageAlert.dart';
 import 'opcion_detalle.dart';
 
 class PlanPage extends StatefulWidget {
@@ -69,7 +71,7 @@ class _PlanPageState extends State<PlanPage> {
                 child: Stack(
                   children: <Widget>[
                     titulo1("Desayuno En Puntos"),
-                    botones_puntos("desayunos"),
+                    botones_puntos("desayuno"),
                     titulo2("Sugerencias De Desayuno"),
                     list_sugerencias(context, 0),
                   ],
@@ -92,8 +94,8 @@ class _PlanPageState extends State<PlanPage> {
                 child: Stack(
                   children: <Widget>[
                     titulo1("CM En Puntos"),
-                    botones_puntos("cm"),
-                    titulo2("Sugerencias De CM"),
+                    botones_puntos("colación matutina"),
+                    titulo2("Sugerencias De Colación Matutina"),
                     list_sugerencias(context, 1),
                   ],
                 ),
@@ -115,7 +117,7 @@ class _PlanPageState extends State<PlanPage> {
                 child: Stack(
                   children: <Widget>[
                     titulo1("Almuerzo En Puntos"),
-                    botones_puntos("almuerzos"),
+                    botones_puntos("almuerzo"),
                     titulo2("Sugerencias De Almuerzo"),
                     list_sugerencias(context, 2),
                   ],
@@ -138,8 +140,8 @@ class _PlanPageState extends State<PlanPage> {
                 child: Stack(
                   children: <Widget>[
                     titulo1("CV En Puntos"),
-                    botones_puntos("cv"),
-                    titulo2("Sugerencias De CV"),
+                    botones_puntos("colación vespertina"),
+                    titulo2("Sugerencias De Colación Vespertina"),
                     list_sugerencias(context, 3),
                   ],
                 ),
@@ -159,7 +161,7 @@ class _PlanPageState extends State<PlanPage> {
                 child: Stack(
                   children: <Widget>[
                     titulo1("Cena En Puntos"),
-                    botones_puntos("cenas"),
+                    botones_puntos("cena"),
                     titulo2("Sugerencias De Cena"),
                     list_sugerencias(context, 4),
                   ],
@@ -212,31 +214,75 @@ class titulo2 extends StatelessWidget {
 }
 
 class botones_puntos extends StatelessWidget {
-  final String tipo;
-  botones_puntos(this.tipo);
+  final String comida;
+  botones_puntos(this.comida);
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        Container(
-          height: 70,
-          margin: EdgeInsets.only(top: 50, left: 20),
-          child: Image.asset("assets/icons/Recurso_24.png"),
+        GestureDetector(
+          onTap: () {
+            //dialog(context, 1, comida);
+            show_Dialog(
+              context: context,
+              titulo: "GRUPO 1 VERDURAS",
+              imagen: "assets/icons/Recurso_24.png",
+              comida: comida,
+            );
+          },
+          child: Container(
+            height: 70,
+            margin: EdgeInsets.only(top: 50, left: 20),
+            child: Image.asset("assets/icons/Recurso_24.png"),
+          ),
         ),
-        Container(
-          height: 70,
-          margin: EdgeInsets.only(top: 50, left: 105),
-          child: Image.asset("assets/icons/Recurso_23.png"),
+        GestureDetector(
+          onTap: () {
+            //dialog(context, 2, comida);
+            show_Dialog(
+              context: context,
+              titulo: "GRUPO 2 HARINAS",
+              imagen: "assets/icons/Recurso_23.png",
+              comida: comida,
+            );
+          },
+          child: Container(
+            height: 70,
+            margin: EdgeInsets.only(top: 50, left: 105),
+            child: Image.asset("assets/icons/Recurso_23.png"),
+          ),
         ),
-        Container(
-          height: 70,
-          margin: EdgeInsets.only(top: 50, left: 185),
-          child: Image.asset("assets/icons/Recurso_22.png"),
+        GestureDetector(
+          onTap: () {
+            //dialog(context, 3, comida);
+            show_Dialog(
+              context: context,
+              titulo: "GRUPO 3 CARNES",
+              imagen: "assets/icons/Recurso_22.png",
+              comida: comida,
+            );
+          },
+          child: Container(
+            height: 70,
+            margin: EdgeInsets.only(top: 50, left: 185),
+            child: Image.asset("assets/icons/Recurso_22.png"),
+          ),
         ),
-        Container(
-          height: 70,
-          margin: EdgeInsets.only(top: 50, left: 270),
-          child: Image.asset("assets/icons/Recurso_21.png"),
+        GestureDetector(
+          onTap: () {
+            //dialog(context, 4, comida);
+            show_Dialog(
+              context: context,
+              titulo: "GRUPO 4 LÍQUIDOS",
+              imagen: "assets/icons/Recurso_24.png",
+              comida: comida,
+            );
+          },
+          child: Container(
+            height: 70,
+            margin: EdgeInsets.only(top: 50, left: 270),
+            child: Image.asset("assets/icons/Recurso_21.png"),
+          ),
         ),
       ],
     );
@@ -249,8 +295,7 @@ class list_sugerencias extends StatelessWidget {
   list_sugerencias(this._context, this.index_comida);
   @override
   Widget build(BuildContext context) {
-    return //Center(child: Text("Sugerencias"));
-        Container(
+    return Container(
       padding: EdgeInsets.only(top: 170),
       child: SingleChildScrollView(
         child: Align(
@@ -276,7 +321,7 @@ class list_sugerencias extends StatelessWidget {
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
                             return GestureDetector(
-                              onTap: ()  {
+                              onTap: () {
                                 Navigator.push(
                                     _context,
                                     MaterialPageRoute(
@@ -339,7 +384,7 @@ class list_sugerencias extends StatelessWidget {
                     }
                   } else if (snapshot.hasError) {
                     return new Text("Error al obtener sugerencias de comida.",
-                          style: TextStyle(color: hexToColor("#606060")));
+                        style: TextStyle(color: hexToColor("#606060")));
                   }
                 }),
           ),
@@ -347,6 +392,192 @@ class list_sugerencias extends StatelessWidget {
       ),
     );
   }
+}
+
+dialog(_context, _grupo, _comida) async {
+  String imagen;
+  String titulo;
+  String elementos;
+
+  switch (_grupo) {
+    case 1:
+      imagen = "assets/icons/Recurso_24.png";
+      titulo = "GRUPO 1 VERDURAS";
+      break;
+    case 2:
+      imagen = "assets/icons/Recurso_23.png";
+      titulo = "GRUPO 2 HARINAS";
+      break;
+    case 3:
+      imagen = "assets/icons/Recurso_22.png";
+      titulo = "GRUPO 3 CARNES";
+      break;
+    case 4:
+      imagen = "assets/icons/Recurso_21.png";
+      titulo = "GRUPO 4 LÍQUIDOS";
+      break;
+  }
+
+  showDialog(
+      context: _context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          backgroundColor: hexToColor("#505050"),
+          content: Container(
+            padding: EdgeInsets.only(top: 0),
+            height: 380,
+            child: Stack(
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(
+                        top: 0, left: MediaQuery.of(context).size.width * 0.58),
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 90,
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(top: 25),
+                  child: Image.asset(imagen),
+                ),
+                Container(
+                  alignment: Alignment.topCenter,
+                  margin: EdgeInsets.only(top: 130),
+                  child: Text(
+                    titulo,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.topCenter,
+                  margin: EdgeInsets.only(top: 180),
+                  child: SizedBox(
+                    width: 270,
+                    child: AutoSizeText(
+                      "Elige un elemento de este grupo para equilibrar tu $_comida dentro del plan nutrimental",
+                      maxLines: 3,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      });
+}
+
+Future<T> show_Dialog<T>({
+  @required BuildContext context,
+  String imagen,
+  String titulo,
+  String comida,
+}) {
+  return showGeneralDialog(
+    context: context,
+    pageBuilder: (BuildContext buildContext, Animation<double> animation,
+        Animation<double> secondaryAnimation) {
+      return Container(
+        child: Builder(builder: (BuildContext context) {
+          return Container(
+            alignment: Alignment.topCenter,
+            color: Colors.transparent,
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.center,
+                  width: 400,
+                  height: 600,
+                  margin: EdgeInsets.only(
+                      left: 30, right: 30, top: 170, bottom: 20),
+                  decoration: new BoxDecoration(
+                      color: hexToColor("#505050"),
+                      borderRadius:
+                          new BorderRadius.all(const Radius.circular(20.0))),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(
+                        top: 190,
+                        left: MediaQuery.of(context).size.width * 0.78),
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 90,
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(top: 195),
+                  child: Image.asset(imagen),
+                ),
+                Container(
+                  alignment: Alignment.topCenter,
+                  margin: EdgeInsets.only(top: 300),
+                  child: Text(
+                    titulo,
+                    style: TextStyle(
+                        decoration: TextDecoration.none,
+                        fontFamily: "Arial",
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.topCenter,
+                  margin: EdgeInsets.only(top: 340),
+                  child: SizedBox(
+                    width: 270,
+                    child: AutoSizeText(
+                      "Elige un elemento de este grupo para equilibrar tu $comida dentro del plan nutrimental",
+                      maxLines: 3,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        decoration: TextDecoration.none,
+                        fontFamily: "Arial",
+                        fontSize: 14,
+                        color: Colors.white,
+                        fontWeight: FontWeight.normal
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
+      );
+    },
+    barrierDismissible: true,
+    barrierLabel: "",
+    barrierColor: null,
+    transitionDuration: const Duration(milliseconds: 150),
+  );
 }
 
 Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {
