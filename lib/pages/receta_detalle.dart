@@ -3,17 +3,19 @@ import '../src/HexToColor.dart';
 import '../src/ColorCirclesWidget.dart';
 import 'dart:convert';
 import 'recetas.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
 
 void main() {
-  runApp(RecetaPage(0, ""));
+  runApp(RecetaPage(null, 0, ""));
 }
 
 class RecetaPage extends StatelessWidget {
+  final BuildContext _context;
   final int idReceta;
   final String nombreReceta;
-  RecetaPage(this.idReceta, this.nombreReceta);
+  RecetaPage(this._context, this.idReceta, this.nombreReceta);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,7 +33,7 @@ class RecetaPage extends StatelessWidget {
                     ///
                     /// BACK
                     ///
-                    boton_back(context),
+                    boton_back(_context),
 
                     ///
                     /// IMAGE
@@ -107,7 +109,7 @@ class boton_back extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("back");
+        //print("back");
         global.widget = null;
         Navigator.pop(
             _context, MaterialPageRoute(builder: (context) => RecetasPage()));
@@ -202,126 +204,102 @@ class card_ingredientes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(idReceta);
-    return Container(
-      margin: EdgeInsets.only(top: 0),
-      decoration: new BoxDecoration(
-        color: Colors.white,
-        image: new DecorationImage(
-          image: new AssetImage("assets/images/fondo.jpg"),
-          colorFilter: new ColorFilter.mode(
-              Colors.black.withOpacity(0.2), BlendMode.dstATop),
-          fit: BoxFit.cover,
+    return Stack(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(top: 0),
+          decoration: new BoxDecoration(
+            //color: Colors.white,
+            image: new DecorationImage(
+              image: new AssetImage("assets/images/fondo.jpg"),
+              colorFilter: new ColorFilter.mode(
+                  Colors.black.withOpacity(0.2), BlendMode.dstATop),
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
-      ),
-      child: FutureBuilder<List<Ingrediente>>(
-          future: getIngredientesReceta(idReceta),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  semanticsLabel: "Loading",
-                  backgroundColor: hexToColor("#cdcdcd"),
-                ),
-              );
-            } else if (snapshot.hasData) {
-              if (snapshot.data.length > 0) {
-                return new Container(
-                  //width: MediaQuery.of(context).size.width * 0.8,
-                  padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    elevation: 0,
-                    color: hexToColor("#f2f2f2"),
-                    child: ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            elevation: 0,
-                            color: Colors.transparent,
-                            child: Row(
-                              children: <Widget>[
-                                Column(
+        Column(
+          children: <Widget>[
+            Flexible(
+              child: FutureBuilder<List<Ingrediente>>(
+                  future: getIngredientesReceta(idReceta),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          semanticsLabel: "Loading",
+                          backgroundColor: hexToColor("#cdcdcd"),
+                        ),
+                      );
+                    } else if (snapshot.hasData) {
+                      if (snapshot.data.length > 0) {
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          elevation: 0,
+                          margin: EdgeInsets.all(20),
+                          color: hexToColor("#f2f2f2"),
+                          child: ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) {
+                                return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Padding(
-                                      padding: EdgeInsets.only(
-                                          top: 15, left: 15, bottom: 15),
-                                      child: Text(
-                                        snapshot.data[index].cantidad + " ",
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
-                                          color: hexToColor("#78c826"),
+                                      padding: EdgeInsets.all(15),
+                                      child: SizedBox(
+                                        width: 270,
+                                        child: AutoSizeText(
+                                          snapshot.data[index].cantidad +
+                                              " " +
+                                              snapshot.data[index].unidad
+                                                  .toString() +
+                                              " de " +
+                                              snapshot.data[index].nombre
+                                                  .toString(),
+                                          maxLines: 3,
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: hexToColor("#78c826"),
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ),
                                     ),
                                   ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 0, left: 0),
-                                      child: Text(
-                                        snapshot.data[index].unidad.toString() +
-                                            " de ",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color: hexToColor("#78c826"),
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 0, left: 0),
-                                      child: Text(
-                                        snapshot.data[index].nombre.toString(),
-                                        style: TextStyle(
-                                            color: hexToColor("#78c826"),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14),
-                                      ),
-                                    ),
-                                  ],
+                                );
+                              }),
+                        );
+                      } else {
+                        return new Text("No existen ingredientes.",
+                            style: TextStyle(color: hexToColor("#606060")));
+                      }
+                    } else if (snapshot.hasError) {
+                      return Card(
+                        child: Row(
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 4, left: 25, bottom: 12),
+                                  child: Text("Error al obtener ingredientes."),
                                 ),
                               ],
                             ),
-                          );
-                        }),
-                  ),
-                );
-              } else {
-                return new Text("No existen ingredientes.",
-                    style: TextStyle(color: hexToColor("#606060")));
-              }
-            } else if (snapshot.hasError) {
-              return Card(
-                child: Row(
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: 4, left: 25, bottom: 12),
-                          child: Text("Error al obtener ingredientes."),
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            }
-          }),
+                      );
+                    }
+                  }),
+            ),
+          ],
+        )
+      ],
     );
   }
 }
@@ -365,41 +343,26 @@ class card_preparacion extends StatelessWidget {
                     ),
                     elevation: 0,
                     color: hexToColor("#f2f2f2"),
-                    child:
-                    Container(
+                    child: Container(
                       padding: EdgeInsets.all(15),
                       child: Text(
-                      snapshot.data.preparacion.toString(),
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                          color: hexToColor("#78c826"),                          
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14),
-                    ),
+                        snapshot.data.preparacion.toString(),
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                            color: hexToColor("#78c826"),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14),
+                      ),
                     ),
                   ),
                 );
               } else {
-                return new Text("No existen ingredientes.",
+                return new Text("No existe preparación para la receta.",
                     style: TextStyle(color: hexToColor("#606060")));
               }
             } else if (snapshot.hasError) {
-              return Card(
-                child: Row(
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: 4, left: 25, bottom: 12),
-                          child: Text("Error al obtener ingredientes."),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
+              return new Text("Error al obtener preparación para la receta.",
+                  style: TextStyle(color: hexToColor("#606060")));
             }
           }),
     );

@@ -74,7 +74,7 @@ class _RecetasPageState extends State<RecetasPage> {
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              detalle.RecetaPage(receta.id, receta.nombre)));
+                              detalle.RecetaPage(context ,receta.id, receta.nombre)));
                 },
               ),
             );
