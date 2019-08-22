@@ -6,7 +6,10 @@ import 'package:nutripuntos_app/globals.dart' as global;
 import 'recetas.dart';
 import 'restaurantes.dart';
 import 'plan.dart';
+import '../src/HexToColor.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 import '../src/DBManager.dart' as db;
 
 class HomePage extends StatefulWidget {
@@ -18,7 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String prueb;
-  _HomePageState({this.prueb});  
+  _HomePageState({this.prueb});
 
   showAlertOption() {
     // set up the AlertDialog
@@ -59,7 +62,7 @@ class _HomePageState extends State<HomePage> {
         return alert;
       },
     );
-  }  
+  }
 
   pickImageFrom(context, ImageSource source) async {
     try {
@@ -67,18 +70,19 @@ class _HomePageState extends State<HomePage> {
           await ImagePicker.pickImage(source: source).whenComplete(() {});
       setState(() {
         global.imageFile = imageFile;
-        global.imageFilePath = imageFile.path;    
+        global.imageFilePath = imageFile.path;
         List<int> fileBytes = imageFile.readAsBytesSync();
-        String base64File = base64Encode(fileBytes);        
-        db.DBManager.instance.insertUsuario(global.nombre_user, global.apellidos_user, global.token, imageFile.path);        
+        String base64File = base64Encode(fileBytes);
+        db.DBManager.instance.insertUsuario(global.nombre_user,
+            global.apellidos_user, global.token, imageFile.path);
       });
       Navigator.of(context, rootNavigator: true).pop('dialog');
     } catch (e) {
       print("Error pickImageFrom " + e.toString());
     }
   }
-  
-  @override  
+
+  @override
   Widget build(BuildContext context) {
     return new Scaffold(
       drawer: new menu.Menu(),
@@ -111,32 +115,12 @@ class _HomePageState extends State<HomePage> {
                     ///
                     /// FONDO VERDE
                     ///
-                    Container(
-                      height: 200,
-                      margin: new EdgeInsets.only(top: 0.0, left: 0.0),
-                      decoration: BoxDecoration(
-                        color: Color(0xFF059696),
-                        borderRadius: new BorderRadius.vertical(
-                          bottom: new Radius.elliptical(
-                              MediaQuery.of(context).size.width * 1.5, 100.0),
-                        ),
-                      ),
-                    ),
+                    header(),
 
                     ///
                     /// FONDO FOTO
                     ///
-                    Container(
-                      height: 100,
-                      alignment: Alignment.topCenter,
-                      margin: EdgeInsets.only(top: 10, left: 30),
-                      decoration: BoxDecoration(
-                        image: new DecorationImage(
-                          image: new AssetImage("assets/icons/recurso_4.png"),
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                    ),
+                    fondo_foto(),
 
                     ///
                     /// IMAGEN FOTO
@@ -145,51 +129,19 @@ class _HomePageState extends State<HomePage> {
                       onTap: () {
                         showAlertOption();
                       },
-                      child: Container(
-                        height: 80,
-                        width: 80,
-                        alignment: Alignment.topCenter,
-                        margin: EdgeInsets.only(left: 145, top: 23.5),
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 0, color: Colors.white),
-                          shape: BoxShape.circle,
-                          image: global.returnFileSelected(global.imageFile, global.imageFile.path),
-                        ),
-                      ),
+                      child: foto(),
                     ),
 
                     ///
                     /// LABEL NOMBRE
                     ///
-                    Container(
-                      alignment: Alignment.topCenter,
-                      padding: EdgeInsets.only(top: 0),
-                      margin: EdgeInsets.only(left: 0, top: 120),
-                      child: Text(
-                        global.nombre_user + " " + global.apellidos_user,
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
-                      ),
-                    ),
+                    label_nombre(),
 
                     ///
                     /// LABEL STATUS
                     ///
-                    Container(
-                      alignment: Alignment.topCenter,
-                      padding: EdgeInsets.only(top: 0),
-                      margin: EdgeInsets.only(left: 0, top: 150),
-                      child: Text(
-                        "Activo" + "     |     " + "10 citas",
-                        style: TextStyle(fontSize: 14, color: Colors.white),
-                      ),
-                    ),
+                    label_status(),
 
-                    ///
-                    /// PROXIMA CITA
-                    ///
                     Container(
                       padding: EdgeInsets.only(top: 5),
                       margin: const EdgeInsets.only(top: 200),
@@ -198,233 +150,15 @@ class _HomePageState extends State<HomePage> {
                         scrollDirection: Axis.vertical,
                         child: Stack(
                           children: <Widget>[
-                            Container(
-                              alignment: Alignment.topCenter,
-                              margin: const EdgeInsets.only(top: 0),
-                              padding: EdgeInsets.all(10),
-                              child: Card(
-                                child: Row(
-                                  children: <Widget>[
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 12, left: 15, bottom: 2),
-                                          child: Text(
-                                            "11\nOCT",
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: Color(0xFF059696)),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 2, left: 15, bottom: 12),
-                                          child: Text("10:00 AM"),
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 12, left: 25, bottom: 4),
-                                          child: Text(
-                                            "Próxima cita",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 4, left: 25, bottom: 12),
-                                          child: Text("Seguimiento de peso"),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                            ///
+                            /// PROXIMA CITA
+                            ///
+                            card_proxima_cita(),
 
                             ///
                             /// BUTONS
                             ///
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              margin: const EdgeInsets.only(left: 0, top: 130),
-                              child: Stack(
-                                children: <Widget>[
-                                  ///
-                                  /// BOTON 1
-                                  ///
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  new RecetasPage()));
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.only(left: 30),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Image.asset(
-                                            "assets/icons/recurso_5.png",
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.2,
-                                          ),
-                                          Container(
-                                            width: 150,
-                                            child: SizedBox(
-                                              child: Text(
-                                                "Nuevas recetas disponibles",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                  ///
-                                  /// BOTON 2
-                                  ///
-                                  GestureDetector(
-                                    onTap: () {
-                                      print("Boton 2");
-                                      //global.read();
-                                    },
-                                    child: Container(
-                                      margin: EdgeInsets.only(left: 210),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Image.asset(
-                                            "assets/icons/recurso_8.png",
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.2,
-                                          ),
-                                          Text(
-                                            "Baja 2 kg",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 16.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            "meta cumplida",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 16.0,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                  ///
-                                  /// BOTON 3
-                                  ///
-                                  GestureDetector(
-                                    onTap: () {
-                                      print("Boton 3");
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  new PlanPage()));
-                                    },
-                                    child: Container(
-                                      margin:
-                                          EdgeInsets.only(left: 30.0, top: 150),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Image.asset(
-                                            "assets/icons/recurso_7.png",
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.2,
-                                          ),
-                                          Container(
-                                            width: 150,
-                                            child: SizedBox(
-                                              child: Text(
-                                                "Nuevo plan de alimentación disponible",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-
-                                  ///
-                                  /// BOTON 4
-                                  ///
-                                  GestureDetector(
-                                    onTap: () {
-                                      print("Boton 4");
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  new RestaurantesPage()));
-                                    },
-                                    child: Container(
-                                      margin:
-                                          EdgeInsets.only(left: 190, top: 150),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Image.asset(
-                                            "assets/icons/recurso_6.png",
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.2,
-                                          ),
-                                          Container(
-                                            width: 150,
-                                            child: SizedBox(
-                                              child: Text(
-                                                "Restaurantes disponibles en tu zona",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontSize: 16.0,
-                                                  fontWeight: FontWeight.normal,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            botones(),
                           ],
                         ),
                       ),
@@ -439,4 +173,427 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+class header extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 200,
+      margin: new EdgeInsets.only(top: 0.0, left: 0.0),
+      decoration: BoxDecoration(
+        color: Color(0xFF059696),
+        borderRadius: new BorderRadius.vertical(
+          bottom: new Radius.elliptical(
+              MediaQuery.of(context).size.width * 1.5, 100.0),
+        ),
+      ),
+    );
+  }
+}
+
+class fondo_foto extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 100,
+      alignment: Alignment.topCenter,
+      margin: EdgeInsets.only(top: 10, left: 30),
+      decoration: BoxDecoration(
+        image: new DecorationImage(
+          image: new AssetImage("assets/icons/recurso_4.png"),
+          fit: BoxFit.contain,
+        ),
+      ),
+    );
+  }
+}
+
+class foto extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 80,
+      width: 80,
+      alignment: Alignment.topCenter,
+      margin: EdgeInsets.only(left: 145, top: 23.5),
+      decoration: BoxDecoration(
+        border: Border.all(width: 0, color: Colors.white),
+        shape: BoxShape.circle,
+        image:
+            global.returnFileSelected(global.imageFile, global.imageFile.path),
+      ),
+    );
+  }
+}
+
+class label_nombre extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topCenter,
+      padding: EdgeInsets.only(top: 0),
+      margin: EdgeInsets.only(left: 0, top: 120),
+      child: Text(
+        global.nombre_user + " " + global.apellidos_user,
+        style: TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+    );
+  }
+}
+
+class label_status extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topCenter,
+      padding: EdgeInsets.only(top: 0),
+      margin: EdgeInsets.only(left: 0, top: 150),
+      child: Text(
+        "Activo" + "     |     " + "10 citas",
+        style: TextStyle(fontSize: 14, color: Colors.white),
+      ),
+    );
+  }
+}
+
+class card_proxima_cita extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topCenter,
+      margin: const EdgeInsets.only(top: 0),
+      //padding: EdgeInsets.all(10),
+      child: FutureBuilder<List<Citas>>(
+        future: getCitasProximas(global.token),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                semanticsLabel: "Loading",
+                backgroundColor: hexToColor("#cdcdcd"),
+              ),
+            );
+          } else if (snapshot.hasData) {
+            if (snapshot.data.length > 0) {
+              return Card(
+                child: Row(
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 12, left: 15, bottom: 2),
+                          child: Text(
+                            snapshot.data[0].fecha.toString().split("-")[0] +
+                                "\n" +
+                                snapshot.data[0].fecha.toString().split("-")[1],
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF059696)),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 2, left: 15, bottom: 12),
+                          child: Text(snapshot.data[0].horario.toString()),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 12, left: 25, bottom: 4),
+                          child: Text(
+                            "Próxima cita",
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 4, left: 25, bottom: 12),
+                          child: Text(snapshot.data[0].objetivo.toString()),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return Container(
+                margin: EdgeInsets.all(30),
+                child: Center(
+                  child: Text(
+                    "No tienes citas pendientes.",
+                    style: TextStyle(
+                      color: hexToColor("#606060"),
+                    ),
+                  ),
+                ),
+              );
+            }
+          } else if (snapshot.hasError) {
+            return Container(
+                margin: EdgeInsets.all(30),
+                child: Center(
+                  child: Text(
+                    "Error al obtener citas pendientes.",
+                    style: TextStyle(
+                      color: hexToColor("#606060"),
+                    ),
+                  ),
+                ),
+              );
+          }
+        },
+      ),
+
+      /*
+      Card(
+        child: Row(
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 12, left: 15, bottom: 2),
+                  child: Text(
+                    "11\nOCT",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF059696)),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 2, left: 15, bottom: 12),
+                  child: Text("10:00 AM"),
+                ),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 12, left: 25, bottom: 4),
+                  child: Text(
+                    "Próxima cita",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 4, left: 25, bottom: 12),
+                  child: Text("Seguimiento de peso"),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      */
+    );
+  }
+}
+
+class botones extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      margin: const EdgeInsets.only(left: 0, top: 100, bottom: 10),
+      child: Stack(
+        children: <Widget>[
+          ///
+          /// BOTON 1
+          ///
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => new RecetasPage()));
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: 30),
+              child: Column(
+                children: <Widget>[
+                  Image.asset(
+                    "assets/icons/recurso_5.png",
+                    width: MediaQuery.of(context).size.width * 0.2,
+                  ),
+                  Container(
+                    width: 150,
+                    child: SizedBox(
+                      child: Text(
+                        "Nuevas recetas disponibles",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          ///
+          /// BOTON 2
+          ///
+          GestureDetector(
+            onTap: () {
+              print("Boton 2");
+              //global.read();
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: 210),
+              child: Column(
+                children: <Widget>[
+                  Image.asset(
+                    "assets/icons/recurso_8.png",
+                    width: MediaQuery.of(context).size.width * 0.2,
+                  ),
+                  Text(
+                    "Baja 2 kg",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  Text(
+                    "meta cumplida",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          ///
+          /// BOTON 3
+          ///
+          GestureDetector(
+            onTap: () {
+              print("Boton 3");
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => new PlanPage()));
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: 30.0, top: 150),
+              child: Column(
+                children: <Widget>[
+                  Image.asset(
+                    "assets/icons/recurso_7.png",
+                    width: MediaQuery.of(context).size.width * 0.2,
+                  ),
+                  Container(
+                    width: 150,
+                    child: SizedBox(
+                      child: Text(
+                        "Nuevo plan de alimentación disponible",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          ///
+          /// BOTON 4
+          ///
+          GestureDetector(
+            onTap: () {
+              print("Boton 4");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => new RestaurantesPage()));
+            },
+            child: Container(
+              margin: EdgeInsets.only(left: 190, top: 150),
+              child: Column(
+                children: <Widget>[
+                  Image.asset(
+                    "assets/icons/recurso_6.png",
+                    width: MediaQuery.of(context).size.width * 0.2,
+                  ),
+                  Container(
+                    width: 150,
+                    child: SizedBox(
+                      child: Text(
+                        "Restaurantes disponibles en tu zona",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Future<List<Citas>> getCitasProximas(_token) async {
+  var timeNow = DateTime.now();
+  var timeCita;
+
+  try {
+    var response = await http.post(global.server + "/aplicacion/api",
+        body: {"tipo": "consultas", "token": _token});
+    var datos = json.decode(utf8.decode(response.bodyBytes));
+    //print(datos);
+    List<Citas> list_citas = new List<Citas>();
+    for (int i = 0; i < datos["response"].length; i++) {
+      //print(datos["response"][i]);
+      timeCita = DateTime.parse(datos["response"][i]["fecha"]);
+      //print(timeNow);
+      //print(timeCita);
+      //print(timeNow.difference(timeCita).inDays.toString());
+      if (timeNow.difference(timeCita).inDays < 0) {
+        list_citas.add(Citas(
+            objetivo: datos["response"][i]["objetivo"],
+            horario: new DateFormat("h:mm a")
+                .format(DateTime.parse(datos["response"][i]["fecha"]))
+                .toString(),
+            fecha: new DateFormat("dd-MMM-yyyy G")
+                .format(DateTime.parse(datos["response"][i]["fecha"]))
+                .toString()
+                .toUpperCase()));
+      }
+    }
+    return list_citas;
+  } catch (e) {
+    print("Error getCitasPasadas " + e.toString());
+  }
+}
+
+class Citas {
+  String objetivo;
+  String horario;
+  String fecha;
+
+  Citas({this.objetivo, this.horario, this.fecha});
 }
