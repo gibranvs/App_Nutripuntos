@@ -93,7 +93,7 @@ class _PlanPageState extends State<PlanPage> {
                 ),
                 child: Stack(
                   children: <Widget>[
-                    titulo1("CM En Puntos"),
+                    titulo1("Colación Matutina En Puntos"),
                     botones_puntos("colación matutina"),
                     titulo2("Sugerencias De Colación Matutina"),
                     list_sugerencias(context, 1),
@@ -139,7 +139,7 @@ class _PlanPageState extends State<PlanPage> {
                 ),
                 child: Stack(
                   children: <Widget>[
-                    titulo1("CV En Puntos"),
+                    titulo1("Colación Vespertina En Puntos"),
                     botones_puntos("colación vespertina"),
                     titulo2("Sugerencias De Colación Vespertina"),
                     list_sugerencias(context, 3),
@@ -222,7 +222,7 @@ class botones_puntos extends StatelessWidget {
       children: <Widget>[
         GestureDetector(
           onTap: () {
-            //dialog(context, 1, comida);
+            //dialog(context, "assets/icons/Recurso_24.png", "GRUPO 1 VERDURAS", comida);
             show_Dialog(
               context: context,
               titulo: "GRUPO 1 VERDURAS",
@@ -238,7 +238,7 @@ class botones_puntos extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            //dialog(context, 2, comida);
+            //dialog(context, "assets/icons/Recurso_23.png", "GRUPO 2 HARINAS", comida);
             show_Dialog(
               context: context,
               titulo: "GRUPO 2 HARINAS",
@@ -254,7 +254,7 @@ class botones_puntos extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            //dialog(context, 3, comida);
+            //dialog(context, "assets/icons/Recurso_22.png", "GRUPO 3 CARNES", comida);
             show_Dialog(
               context: context,
               titulo: "GRUPO 3 CARNES",
@@ -270,11 +270,11 @@ class botones_puntos extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            //dialog(context, 4, comida);
+            //dialog(context, "assets/icons/Recurso_21.png", "GRUPO 4 LÍQUIDOS", comida);
             show_Dialog(
               context: context,
               titulo: "GRUPO 4 LÍQUIDOS",
-              imagen: "assets/icons/Recurso_24.png",
+              imagen: "assets/icons/Recurso_21.png",
               comida: comida,
             );
           },
@@ -394,29 +394,7 @@ class list_sugerencias extends StatelessWidget {
   }
 }
 
-dialog(_context, _grupo, _comida) async {
-  String imagen;
-  String titulo;
-  String elementos;
-
-  switch (_grupo) {
-    case 1:
-      imagen = "assets/icons/Recurso_24.png";
-      titulo = "GRUPO 1 VERDURAS";
-      break;
-    case 2:
-      imagen = "assets/icons/Recurso_23.png";
-      titulo = "GRUPO 2 HARINAS";
-      break;
-    case 3:
-      imagen = "assets/icons/Recurso_22.png";
-      titulo = "GRUPO 3 CARNES";
-      break;
-    case 4:
-      imagen = "assets/icons/Recurso_21.png";
-      titulo = "GRUPO 4 LÍQUIDOS";
-      break;
-  }
+dialog(_context, _imagen, _titulo, _comida) async {
 
   showDialog(
       context: _context,
@@ -450,13 +428,13 @@ dialog(_context, _grupo, _comida) async {
                   height: 90,
                   alignment: Alignment.center,
                   margin: EdgeInsets.only(top: 25),
-                  child: Image.asset(imagen),
+                  child: Image.asset(_imagen),
                 ),
                 Container(
                   alignment: Alignment.topCenter,
                   margin: EdgeInsets.only(top: 130),
                   child: Text(
-                    titulo,
+                    _titulo,
                     style: TextStyle(
                         color: Colors.white,
                         fontSize: 20,
