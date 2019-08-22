@@ -43,13 +43,6 @@ class _RecetasPageState extends State<RecetasPage> {
                   child: new Image.asset("assets/icons/Recurso_26.png"),
                 ),
                 
-                /*
-                Container(
-                  margin: new EdgeInsets.only(top: 0, left: 20),
-                  child: Icon(Icons.fastfood, color: hexToColor("#3f95ac"), size: 30,),
-                ),
-                */
-                
                 title: new Text(
                   receta.nombre,
                   style: new TextStyle(

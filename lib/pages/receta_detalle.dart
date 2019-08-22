@@ -19,9 +19,7 @@ class RecetaPage extends StatelessWidget {
         child: Scaffold(
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(330.0),
-            child: AppBar(
-              //title:
-
+            child: AppBar(              
               flexibleSpace: Container(
                 height: 350,
                 color: Color(0xFF059696),

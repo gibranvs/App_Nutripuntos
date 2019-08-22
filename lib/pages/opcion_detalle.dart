@@ -1,51 +1,152 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
+import 'package:nutripuntos_app/pages/plan.dart';
 import 'package:nutripuntos_app/src/HexToColor.dart';
 import '../src/ColorCirclesWidget.dart';
 import 'dart:convert';
 
-Valores_Puntos valores_puntos;
+Valores_Puntos valores_puntos = new Valores_Puntos();
+
+void main() {
+  runApp(OpcionDetallePage("", 0, ""));
+}
 
 class OpcionDetallePage extends StatelessWidget {
   final String token;
   final int index_comida;
   final String opcion;
+
   OpcionDetallePage(this.token, this.index_comida, this.opcion);
 
   @override
   Widget build(BuildContext context) {
     getDetallesOpcion(token, index_comida, opcion);
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('DÍA $opcion'),
-      ),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 0),
-            decoration: new BoxDecoration(
-              color: const Color(0x00FFCC00),
-              image: new DecorationImage(
-                image: new AssetImage("assets/images/fondo.jpg"),
-                colorFilter: new ColorFilter.mode(
-                    Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                fit: BoxFit.cover,
+    return MaterialApp(
+      home: new Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(70.0),
+          child: AppBar(
+            elevation: 4,
+            flexibleSpace: Container(
+              height: 100,
+              decoration: BoxDecoration(
+                gradient: new LinearGradient(
+                    colors: [
+                      hexToColor("#35b9c5"),
+                      hexToColor("#34b6a4"),
+                      hexToColor("#348cb4")
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    stops: [0.1, 0.5, 1.0],
+                    tileMode: TileMode.clamp),
+              ),
+              child: Stack(
+                children: <Widget>[
+                  ///
+                  /// BACK
+                  ///
+                  GestureDetector(
+                    onTap: () {
+                      //print("back");
+                      global.widget = null;
+                      Navigator.pop(context,
+                          MaterialPageRoute(builder: (context) => PlanPage()));
+                    },
+                    child: Container(
+                      alignment: Alignment.topLeft,
+                      margin: EdgeInsets.only(top: 40, left: 10),
+                      child: Icon(Icons.arrow_back, color: Colors.white),
+                    ),
+                  ),
+
+                  ///
+                  /// LABEL NOMBRE
+                  ///
+                  Container(
+                    alignment: Alignment.topCenter,
+                    margin: new EdgeInsets.only(top: 40.0),
+                    //padding: EdgeInsets.only(left: 40, right: 40),
+                    child: Text(
+                      "Plan de alimentación",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
-          Container(
-            margin: EdgeInsets.only(top: 30, left: MediaQuery.of(context).size.width * 0.52 ),
-            child:
-          ColorCirclesWidget("0", "", "", ""),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 90),
-            alignment: Alignment.topCenter,
-            child: list_recetas(index_comida, opcion),
-          ),
-        ],
+        ),
+        body: Stack(
+          children: <Widget>[
+            ///
+            /// FONDO
+            ///
+            Container(
+              margin: EdgeInsets.only(top: 0),
+              decoration: new BoxDecoration(
+                color: const Color(0x00FFCC00),
+                image: new DecorationImage(
+                  image: new AssetImage("assets/images/fondo.jpg"),
+                  colorFilter: new ColorFilter.mode(
+                      Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+
+            ///
+            /// LABEL TÍTULO
+            ///
+            label_titulo("Opción $opcion"),
+
+            ///
+            /// CIRCLE WIDGET
+            ///
+            circle_widget(),
+
+            ///
+            /// LIST RECETAS
+            ///
+            list_recetas(index_comida, opcion),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class label_titulo extends StatelessWidget {
+  final String titulo;
+  label_titulo(this.titulo);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topLeft,
+      margin: EdgeInsets.only(left: 20, top: 30),
+      child: Text(
+        titulo,
+        style: TextStyle(
+            fontSize: 20,
+            color: hexToColor("#059696"),
+            fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}
+
+class circle_widget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.only(
+          top: 30, left: MediaQuery.of(context).size.width * 0.52),
+      child: ColorCirclesWidget(valores_puntos.azul, valores_puntos.verde, valores_puntos.naranja, valores_puntos.amarillo),
     );
   }
 }
@@ -57,14 +158,15 @@ class list_recetas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return //Center(child: Text("Sugerencias"));
-        Container(
+    return Container(
+      margin: EdgeInsets.only(top: 90),
+      alignment: Alignment.topCenter,
       padding: EdgeInsets.only(top: 0),
       child: SingleChildScrollView(
         child: Align(
           alignment: Alignment.center,
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.9,
+            width: MediaQuery.of(context).size.width * 0.8,
             child: FutureBuilder<List<Detalle_Opcion>>(
                 future: getDetallesOpcion(global.token, index_comida, opcion),
                 builder: (context, snapshot) {
@@ -77,7 +179,6 @@ class list_recetas extends StatelessWidget {
                       ),
                     );
                   } else if (snapshot.hasData) {
-                    //print(snapshot.data.length);
                     if (snapshot.data.length > 0) {
                       return new ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
@@ -106,7 +207,7 @@ class list_recetas extends StatelessWidget {
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(
-                                            top: 0, left: 47, bottom: 3),
+                                            top: 0, left: 45, bottom: 3),
                                         child: Container(
                                           child: Text(
                                             snapshot.data[index].index,
@@ -127,7 +228,7 @@ class list_recetas extends StatelessWidget {
                                         padding: EdgeInsets.only(
                                             top: 10, bottom: 10, left: 20),
                                         child: Container(
-                                          width: 180,
+                                          width: 173,
                                           child: Text(
                                             snapshot.data[index].nombre
                                                 .toString()
@@ -143,7 +244,7 @@ class list_recetas extends StatelessWidget {
                                         padding: EdgeInsets.only(
                                             top: 0, bottom: 10, left: 20),
                                         child: Container(
-                                          width: 180,
+                                          width: 173,
                                           child: Text(
                                             snapshot.data[index].preparacion
                                                 .toString(),
@@ -178,7 +279,7 @@ class list_recetas extends StatelessWidget {
   }
 }
 
-Future<Valores_Puntos> getColorCirclesWidgetValues(
+getColorCirclesWidgetValues(
     _token, _index_comida, _dia) async {
   String azul = "0";
   String verde = "0";
@@ -188,65 +289,69 @@ Future<Valores_Puntos> getColorCirclesWidgetValues(
   var response = await http.post(global.server + "/aplicacion/api",
       body: {"tipo": "dieta", "token": _token});
   var datos = json.decode(utf8.decode(response.bodyBytes));
-
+  //print(datos["response"]["d$_dia"][_index_comida]);
+/*
+  print(datos["response"]["d$_dia"][_index_comida][1]["azul"]);
+  print(datos["response"]["d$_dia"][_index_comida][1]["verde"]);
+  print(datos["response"]["d$_dia"][_index_comida][1]["naranja"]);
+  print(datos["response"]["d$_dia"][_index_comida][1]["amarillo"]);
+*/
   if (datos["status"] == 1) {
-    if (datos["response"]["d$_dia"][0][0]["azul"] != null) {
-      if (datos["response"]["d$_dia"][0][0]["azul"].toString().contains('.') ==
+    if (datos["response"]["d$_dia"][_index_comida][1]["azul"] != null) {
+      if (datos["response"]["d$_dia"][_index_comida][1]["azul"].toString().contains('.') ==
           true) {
-        if (datos["response"]["d$_dia"][0][0]["azul"].split('.')[1] == "0")
-          azul = datos["response"]["d$_dia"][0][0]["azul"].split('.')[0];
+        if (datos["response"]["d$_dia"][_index_comida][1]["azul"].split('.')[1] == "0")
+          azul = datos["response"]["d$_dia"][_index_comida][1]["azul"].split('.')[0];
         else
-          azul = datos["response"]["d$_dia"][0][0]["azul"].toString();
+          azul = datos["response"]["d$_dia"][_index_comida][1]["azul"].toString();
       } else
-        azul = datos["response"]["d$_dia"][0][0]["azul"].toString();
+        azul = datos["response"]["d$_dia"][_index_comida][1]["azul"].toString();
     } else
       azul = "0";
 
-    if (datos["response"]["d$_dia"][0][0]["verde"] != null) {
-      if (datos["response"]["d$_dia"][0][0]["verde"].toString().contains('.') ==
+    if (datos["response"]["d$_dia"][_index_comida][1]["verde"] != null) {
+      if (datos["response"]["d$_dia"][_index_comida][1]["verde"].toString().contains('.') ==
           true) {
-        if (datos["response"]["d$_dia"][0][0]["verde"].split('.')[1] == "0")
-          verde = datos["response"]["d$_dia"][0][0]["verde"].split('.')[0];
+        if (datos["response"]["d$_dia"][_index_comida][1]["verde"].split('.')[1] == "0")
+          verde = datos["response"]["d$_dia"][_index_comida][1]["verde"].split('.')[0];
         else
-          verde = datos["response"]["d$_dia"][0][0]["verde"].toString();
+          verde = datos["response"]["d$_dia"][_index_comida][1]["verde"].toString();
       } else
-        verde = datos["response"]["d$_dia"][0][0]["verde"].toString();
+        verde = datos["response"]["d$_dia"][_index_comida][1]["verde"].toString();
     } else
       verde = "0";
 
-    if (datos["response"]["d$_dia"][0][0]["naranja"] != null) {
-      if (datos["response"]["d$_dia"][0][0]["naranja"]
+    if (datos["response"]["d$_dia"][_index_comida][1]["naranja"] != null) {
+      if (datos["response"]["d$_dia"][_index_comida][1]["naranja"]
               .toString()
               .contains('.') ==
           true) {
-        if (datos["response"]["d$_dia"][0][0]["naranja"].split('.')[1] == "0")
-          naranja = datos["response"]["d$_dia"][0][0]["naranja"].split('.')[0];
+        if (datos["response"]["d$_dia"][_index_comida][1]["naranja"].split('.')[1] == "0")
+          naranja = datos["response"]["d$_dia"][_index_comida][1]["naranja"].split('.')[0];
         else
-          naranja = datos["response"]["d$_dia"][0][0]["naranja"].toString();
+          naranja = datos["response"]["d$_dia"][_index_comida][1]["naranja"].toString();
       } else
-        naranja = datos["response"]["d$_dia"][0][0]["naranja"].toString();
+        naranja = datos["response"]["d$_dia"][_index_comida][1]["naranja"].toString();
     } else
       naranja = "0";
 
-    if (datos["response"]["d$_dia"][0][0]["amarillo"] != null) {
-      if (datos["response"]["d$_dia"][0][0]["amarillo"]
+    if (datos["response"]["d$_dia"][_index_comida][1]["amarillo"] != null) {
+      if (datos["response"]["d$_dia"][_index_comida][1]["amarillo"]
               .toString()
               .contains('.') ==
           true) {
-        if (datos["response"]["d$_dia"][0][0]["amarillo"].split('.')[1] == "0")
+        if (datos["response"]["d$_dia"][_index_comida][1]["amarillo"].split('.')[1] == "0")
           amarillo =
-              datos["response"]["d$_dia"][0][0]["amarillo"].split('.')[0];
+              datos["response"]["d$_dia"][_index_comida][1]["amarillo"].split('.')[0];
         else
-          amarillo = datos["response"]["d$_dia"][0][0]["amarillo"].toString();
+          amarillo = datos["response"]["d$_dia"][_index_comida][1]["amarillo"].toString();
       } else
-        amarillo = datos["response"]["d$_dia"][0][0]["amarillo"].toString();
+        amarillo = datos["response"]["d$_dia"][_index_comida][1]["amarillo"].toString();
     } else
       amarillo = "0";
 
     valores_puntos = new Valores_Puntos(
-        azul: azul, verde: verde, naranja: naranja, amarillo: amarillo);
-
-    return valores_puntos;    
+        azul: azul, verde: verde, naranja: naranja, amarillo: amarillo);    
   }
 }
 

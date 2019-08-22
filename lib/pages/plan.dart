@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
 import 'package:nutripuntos_app/pages/opcion_detalle.dart';
@@ -14,8 +15,7 @@ class PlanPage extends StatefulWidget {
 
 class _PlanPageState extends State<PlanPage> {
   @override
-  Widget build(BuildContext context) {
-    //getOpcionesDieta(global.token, "desayunos");
+  Widget build(BuildContext context) {    
     return MaterialApp(
       home: DefaultTabController(
         length: 5,
@@ -71,7 +71,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("Desayuno En Puntos"),
                     botones_puntos("desayunos"),
                     titulo2("Sugerencias De Desayuno"),
-                    list_sugerencias(0),
+                    list_sugerencias(context, 0),
                   ],
                 ),
               ),
@@ -94,7 +94,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("CM En Puntos"),
                     botones_puntos("cm"),
                     titulo2("Sugerencias De CM"),
-                    list_sugerencias(1),
+                    list_sugerencias(context, 1),
                   ],
                 ),
               ),
@@ -117,7 +117,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("Almuerzo En Puntos"),
                     botones_puntos("almuerzos"),
                     titulo2("Sugerencias De Almuerzo"),
-                    list_sugerencias(2),
+                    list_sugerencias(context, 2),
                   ],
                 ),
               ),
@@ -140,7 +140,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("CV En Puntos"),
                     botones_puntos("cv"),
                     titulo2("Sugerencias De CV"),
-                    list_sugerencias(3),
+                    list_sugerencias(context, 3),
                   ],
                 ),
               ),
@@ -161,7 +161,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo1("Cena En Puntos"),
                     botones_puntos("cenas"),
                     titulo2("Sugerencias De Cena"),
-                    list_sugerencias(4),
+                    list_sugerencias(context, 4),
                   ],
                 ),
               ),
@@ -244,8 +244,9 @@ class botones_puntos extends StatelessWidget {
 }
 
 class list_sugerencias extends StatelessWidget {
+  final BuildContext _context;
   final int index_comida;
-  list_sugerencias(this.index_comida);
+  list_sugerencias(this._context, this.index_comida);
   @override
   Widget build(BuildContext context) {
     return //Center(child: Text("Sugerencias"));
@@ -275,12 +276,14 @@ class list_sugerencias extends StatelessWidget {
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
                             return GestureDetector(
-                              onTap: () {
+                              onTap: () async {
+                                getColorCirclesWidgetValues(global.token, index_comida, (index + 1).toString());
+                                await new Future.delayed(Duration(milliseconds: 2000));
                                 Navigator.push(
-                                    context,
+                                    _context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            new OpcionDetallePage(global.token, index_comida,
+                                            OpcionDetallePage(global.token, index_comida,
                                                 (index + 1).toString())));
                               },
                               child: Card(
@@ -374,7 +377,7 @@ Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {
       for (int dias = 0; dias < datos["response"].length; dias++) {
         list.add(Opciones_Dieta(
           id: (dias + 1).toString(),
-          nombre: "Día " + (dias + 1).toString(),
+          nombre: "Opción " + (dias + 1).toString(),
         ));
       }
       return list;
