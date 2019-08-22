@@ -466,9 +466,9 @@ dialog(_context, _imagen, _titulo, _comida) async {
 
 Future<T> show_Dialog<T>({
   @required BuildContext context,
-  String imagen,
-  String titulo,
-  String comida,
+  @required String imagen,
+  @required String titulo,
+  @required String comida,
 }) {
   return showGeneralDialog(
     context: context,
