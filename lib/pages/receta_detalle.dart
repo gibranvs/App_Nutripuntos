@@ -112,7 +112,7 @@ class boton_back extends StatelessWidget {
         //print("back");
         global.widget = null;
         Navigator.pop(
-            _context, MaterialPageRoute(builder: (context) => RecetasPage()));
+            _context, MaterialPageRoute(builder: (_context) => RecetasPage()));
       },
       child: Container(
         alignment: Alignment.topLeft,

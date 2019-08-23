@@ -19,7 +19,7 @@ class OpcionDetallePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    getDetallesOpcion(token, index_comida, opcion);
+    //getDetallesOpcion(token, index_comida, opcion);
     return MaterialApp(
       home: new Scaffold(
         appBar: PreferredSize(
@@ -46,8 +46,7 @@ class OpcionDetallePage extends StatelessWidget {
                   /// BACK
                   ///
                   GestureDetector(
-                    onTap: () {
-                      //print("back");
+                    onTap: () {                      
                       global.widget = null;
                       Navigator.pop(context,
                           MaterialPageRoute(builder: (context) => PlanPage()));
@@ -64,8 +63,7 @@ class OpcionDetallePage extends StatelessWidget {
                   ///
                   Container(
                     alignment: Alignment.topCenter,
-                    margin: new EdgeInsets.only(top: 40.0),
-                    //padding: EdgeInsets.only(left: 40, right: 40),
+                    margin: new EdgeInsets.only(top: 40.0),                    
                     child: Text(
                       "Plan de alimentación",
                       textAlign: TextAlign.center,
@@ -204,7 +202,7 @@ class list_recetas extends StatelessWidget {
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         semanticsLabel: "Loading",
-                        backgroundColor: hexToColor("#cdcdcd"),
+                        backgroundColor: hexToColor("#cdcdcd"),                                         
                       ),
                     );
                   } else if (snapshot.hasData) {
