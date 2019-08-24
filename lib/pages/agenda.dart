@@ -8,6 +8,7 @@ import '../classes/event.dart';
 import '../classes/event_list.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'newmenu.dart' as newmenu;
 import 'package:http/http.dart' as http;
 
 List<DateTime> _markedDates = new List<DateTime>();
@@ -21,91 +22,109 @@ class AgendaPage extends StatelessWidget {
   Widget build(BuildContext context) {
     //getAllCitas(global.token);
     global.list_citas = null;
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            title: TabBar(
-              tabs: [
-                Tab(
-                  text: "Calendario",
+    return Scaffold(
+      drawer: new newmenu.menu(3),
+      appBar: AppBar(
+        elevation: 0,
+        title: Text("Agenda"),
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF35B9C5),
+                Color(0xFF348CB4),
+              ],
+            ),
+          ),
+        ),
+      ),
+      body: MaterialApp(
+        home: DefaultTabController(
+          length: 2,
+          child: Scaffold(
+            appBar: AppBar(
+              title: TabBar(
+                tabs: [
+                  Tab(
+                    text: "Calendario",
+                  ),
+                  Tab(
+                    text: "Citas",
+                  ),
+                ],
+              ),
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF35B9C5),
+                      Color(0xFF348CB4),
+                    ],
+                  ),
                 ),
-                Tab(
-                  text: "Citas",
+              ),
+            ),
+            body: TabBarView(
+              children: [
+                ///
+                /// TAB CALENDARIO
+                ///
+                Stack(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(top: 0),
+                      decoration: new BoxDecoration(
+                        color: const Color(0x00FFCC00),
+                        image: new DecorationImage(
+                          image: new AssetImage("assets/images/fondo.jpg"),
+                          colorFilter: new ColorFilter.mode(
+                              Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 65,
+                      color: hexToColor("#efefef"),
+                    ),
+                    Container(
+                      height: 210,
+                      color: hexToColor("#ffffff"),
+                      margin: EdgeInsets.only(top: 65),
+                    ),
+                    Calendario(),
+                    Card_Proxima(),
+                  ],
+                ),
+
+                ///
+                /// TAB CITAS
+                ///
+                Stack(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(top: 0),
+                      decoration: new BoxDecoration(
+                        color: const Color(0x00FFCC00),
+                        image: new DecorationImage(
+                          image: new AssetImage("assets/images/fondo.jpg"),
+                          colorFilter: new ColorFilter.mode(
+                              Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    ListView(
+                      children: <Widget>[
+                        Card_Anteriores(),
+                        Card_Proximas(),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF35B9C5),
-                    Color(0xFF348CB4),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              ///
-              /// TAB CALENDARIO
-              ///
-              Stack(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: 0),
-                    decoration: new BoxDecoration(
-                      color: const Color(0x00FFCC00),
-                      image: new DecorationImage(
-                        image: new AssetImage("assets/images/fondo.jpg"),
-                        colorFilter: new ColorFilter.mode(
-                            Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 65,
-                    color: hexToColor("#efefef"),
-                  ),
-                  Container(
-                    height: 210,
-                    color: hexToColor("#ffffff"),
-                    margin: EdgeInsets.only(top: 65),
-                  ),
-                  Calendario(),
-                  Card_Proxima(),
-                ],
-              ),
-
-              ///
-              /// TAB CITAS
-              ///
-              Stack(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: 0),
-                    decoration: new BoxDecoration(
-                      color: const Color(0x00FFCC00),
-                      image: new DecorationImage(
-                        image: new AssetImage("assets/images/fondo.jpg"),
-                        colorFilter: new ColorFilter.mode(
-                            Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  ListView(
-                    children: <Widget>[
-                      Card_Anteriores(),
-                      Card_Proximas(),
-                    ],
-                  ),
-                ],
-              ),
-            ],
           ),
         ),
       ),

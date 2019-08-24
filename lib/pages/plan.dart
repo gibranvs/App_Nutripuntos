@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
+import 'newmenu.dart' as newmenu;
 import 'package:nutripuntos_app/pages/opcion_detalle.dart';
 import 'package:nutripuntos_app/src/HexToColor.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -18,156 +19,174 @@ class PlanPage extends StatefulWidget {
 class _PlanPageState extends State<PlanPage> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 5,
-        child: Scaffold(
-          appBar: AppBar(
-            title: TabBar(
-              tabs: [
-                Tab(
-                  text: "Desayunos",
+    return Scaffold(
+      drawer: new newmenu.menu(1),
+      appBar: AppBar(
+        elevation: 0,
+        title: Text("Plan de alimentación"),
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF35B9C5),
+                Color(0xFF348CB4),
+              ],
+            ),
+          ),
+        ),
+      ),
+      body: MaterialApp(
+        home: DefaultTabController(
+          length: 5,
+          child: Scaffold(
+            appBar: AppBar(
+              title: TabBar(
+                tabs: [
+                  Tab(
+                    text: "Desayunos",
+                  ),
+                  Tab(
+                    text: "CM",
+                  ),
+                  Tab(
+                    text: "Almuerzos",
+                  ),
+                  Tab(
+                    text: "CV",
+                  ),
+                  Tab(
+                    text: "Cenas",
+                  ),
+                ],
+              ),
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF35B9C5),
+                      Color(0xFF348CB4),
+                    ],
+                  ),
                 ),
-                Tab(
-                  text: "CM",
+              ),
+            ),
+            body: TabBarView(
+              children: [
+                ///
+                /// TAB DESAYUNOS
+                ///
+                Container(
+                  decoration: new BoxDecoration(
+                    color: const Color(0x00FFCC00),
+                    image: new DecorationImage(
+                      image: new AssetImage("assets/images/fondo.jpg"),
+                      colorFilter: new ColorFilter.mode(
+                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Stack(
+                    children: <Widget>[
+                      titulo1("Desayuno En Puntos"),
+                      botones_puntos("desayuno"),
+                      titulo2("Sugerencias De Desayuno"),
+                      list_sugerencias(context, 0),
+                    ],
+                  ),
                 ),
-                Tab(
-                  text: "Almuerzos",
+
+                ///
+                /// TAB CM
+                ///
+                Container(
+                  decoration: new BoxDecoration(
+                    color: const Color(0x00FFCC00),
+                    image: new DecorationImage(
+                      image: new AssetImage("assets/images/fondo.jpg"),
+                      colorFilter: new ColorFilter.mode(
+                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Stack(
+                    children: <Widget>[
+                      titulo1("Colación Matutina En Puntos"),
+                      botones_puntos("colación matutina"),
+                      titulo2("Sugerencias De Colación Matutina"),
+                      list_sugerencias(context, 1),
+                    ],
+                  ),
                 ),
-                Tab(
-                  text: "CV",
+
+                ///
+                /// TAB ALMUERZOS
+                ///
+                Container(
+                  decoration: new BoxDecoration(
+                    color: const Color(0x00FFCC00),
+                    image: new DecorationImage(
+                      image: new AssetImage("assets/images/fondo.jpg"),
+                      colorFilter: new ColorFilter.mode(
+                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Stack(
+                    children: <Widget>[
+                      titulo1("Almuerzo En Puntos"),
+                      botones_puntos("almuerzo"),
+                      titulo2("Sugerencias De Almuerzo"),
+                      list_sugerencias(context, 2),
+                    ],
+                  ),
                 ),
-                Tab(
-                  text: "Cenas",
+
+                ///
+                /// TAB CV
+                ///
+                Container(
+                  decoration: new BoxDecoration(
+                    color: const Color(0x00FFCC00),
+                    image: new DecorationImage(
+                      image: new AssetImage("assets/images/fondo.jpg"),
+                      colorFilter: new ColorFilter.mode(
+                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Stack(
+                    children: <Widget>[
+                      titulo1("Colación Vespertina En Puntos"),
+                      botones_puntos("colación vespertina"),
+                      titulo2("Sugerencias De Colación Vespertina"),
+                      list_sugerencias(context, 3),
+                    ],
+                  ),
+                ),
+
+                /// TAB CENAS
+                Container(
+                  decoration: new BoxDecoration(
+                    color: const Color(0x00FFCC00),
+                    image: new DecorationImage(
+                      image: new AssetImage("assets/images/fondo.jpg"),
+                      colorFilter: new ColorFilter.mode(
+                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Stack(
+                    children: <Widget>[
+                      titulo1("Cena En Puntos"),
+                      botones_puntos("cena"),
+                      titulo2("Sugerencias De Cena"),
+                      list_sugerencias(context, 4),
+                    ],
+                  ),
                 ),
               ],
             ),
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF35B9C5),
-                    Color(0xFF348CB4),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              ///
-              /// TAB DESAYUNOS
-              ///
-              Container(
-                decoration: new BoxDecoration(
-                  color: const Color(0x00FFCC00),
-                  image: new DecorationImage(
-                    image: new AssetImage("assets/images/fondo.jpg"),
-                    colorFilter: new ColorFilter.mode(
-                        Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Stack(
-                  children: <Widget>[
-                    titulo1("Desayuno En Puntos"),
-                    botones_puntos("desayuno"),
-                    titulo2("Sugerencias De Desayuno"),
-                    list_sugerencias(context, 0),
-                  ],
-                ),
-              ),
-
-              ///
-              /// TAB CM
-              ///
-              Container(
-                decoration: new BoxDecoration(
-                  color: const Color(0x00FFCC00),
-                  image: new DecorationImage(
-                    image: new AssetImage("assets/images/fondo.jpg"),
-                    colorFilter: new ColorFilter.mode(
-                        Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Stack(
-                  children: <Widget>[
-                    titulo1("Colación Matutina En Puntos"),
-                    botones_puntos("colación matutina"),
-                    titulo2("Sugerencias De Colación Matutina"),
-                    list_sugerencias(context, 1),
-                  ],
-                ),
-              ),
-
-              ///
-              /// TAB ALMUERZOS
-              ///
-              Container(
-                decoration: new BoxDecoration(
-                  color: const Color(0x00FFCC00),
-                  image: new DecorationImage(
-                    image: new AssetImage("assets/images/fondo.jpg"),
-                    colorFilter: new ColorFilter.mode(
-                        Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Stack(
-                  children: <Widget>[
-                    titulo1("Almuerzo En Puntos"),
-                    botones_puntos("almuerzo"),
-                    titulo2("Sugerencias De Almuerzo"),
-                    list_sugerencias(context, 2),
-                  ],
-                ),
-              ),
-
-              ///
-              /// TAB CV
-              ///
-              Container(
-                decoration: new BoxDecoration(
-                  color: const Color(0x00FFCC00),
-                  image: new DecorationImage(
-                    image: new AssetImage("assets/images/fondo.jpg"),
-                    colorFilter: new ColorFilter.mode(
-                        Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Stack(
-                  children: <Widget>[
-                    titulo1("Colación Vespertina En Puntos"),
-                    botones_puntos("colación vespertina"),
-                    titulo2("Sugerencias De Colación Vespertina"),
-                    list_sugerencias(context, 3),
-                  ],
-                ),
-              ),
-
-              /// TAB CENAS
-              Container(
-                decoration: new BoxDecoration(
-                  color: const Color(0x00FFCC00),
-                  image: new DecorationImage(
-                    image: new AssetImage("assets/images/fondo.jpg"),
-                    colorFilter: new ColorFilter.mode(
-                        Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Stack(
-                  children: <Widget>[
-                    titulo1("Cena En Puntos"),
-                    botones_puntos("cena"),
-                    titulo2("Sugerencias De Cena"),
-                    list_sugerencias(context, 4),
-                  ],
-                ),
-              ),
-            ],
           ),
         ),
       ),
@@ -395,7 +414,6 @@ class list_sugerencias extends StatelessWidget {
 }
 
 dialog(_context, _imagen, _titulo, _comida) async {
-
   showDialog(
       context: _context,
       barrierDismissible: true,
@@ -536,12 +554,11 @@ Future<T> show_Dialog<T>({
                       maxLines: 3,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        decoration: TextDecoration.none,
-                        fontFamily: "Arial",
-                        fontSize: 14,
-                        color: Colors.white,
-                        fontWeight: FontWeight.normal
-                      ),
+                          decoration: TextDecoration.none,
+                          fontFamily: "Arial",
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.normal),
                     ),
                   ),
                 ),

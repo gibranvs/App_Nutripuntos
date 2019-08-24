@@ -3,6 +3,7 @@ import '../src/hexToColor.dart';
 import 'package:nutripuntos_app/globals.dart' as global;
 import 'dart:convert';
 import '../src/ColorCirclesWidget.dart';
+import 'newmenu.dart' as newmenu;
 import 'receta_detalle.dart' as detalle;
 import 'package:http/http.dart' as http;
 import 'dart:math';
@@ -18,7 +19,23 @@ class _RecetasPageState extends State<RecetasPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      drawer: new newmenu.menu(4),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Recetas"),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF35B9C5),
+                Color(0xFF348CB4),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: new Container(
+        padding: EdgeInsets.only(top: 0),
         decoration: new BoxDecoration(
           color: const Color(0x00FFCC00),
           image: new DecorationImage(

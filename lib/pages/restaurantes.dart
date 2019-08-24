@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
+import 'newmenu.dart' as newmenu;
 import 'dart:async';
 import 'dart:convert';
 import 'restaurante_detalle.dart' as restaurante;
@@ -14,6 +15,22 @@ class _RestaurantesPageState extends State<RestaurantesPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      drawer: new newmenu.menu(5),
+      appBar: AppBar(
+        elevation: 4,
+        title: Text("Restaurantes"),
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF35B9C5),
+                Color(0xFF348CB4),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: new Container(
         decoration: new BoxDecoration(
           color: const Color(0x00FFCC00),

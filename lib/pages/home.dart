@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'menu.dart' as menu;
+import 'newmenu.dart' as newmenu;
 import 'package:nutripuntos_app/globals.dart' as global;
 import 'recetas.dart';
 import 'restaurantes.dart';
@@ -85,7 +86,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      drawer: new menu.Menu(),
+      //drawer: new menu.Menu(),
+      drawer: new newmenu.menu(0),
       drawerDragStartBehavior: DragStartBehavior.start,
       appBar: new AppBar(
         centerTitle: true,
