@@ -47,55 +47,57 @@ class _RecetasPageState extends State<RecetasPage> {
         ),
         alignment: Alignment.topLeft,
         margin: new EdgeInsets.only(top: 0.0, left: 0.0),
-        child: new ListView(
-          children: listRecetas.map((receta) {
-            return Card(
-              margin: new EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-              child: ListTile(
-                leading: Container(
-                  margin: EdgeInsets.only(left: 10),
-                  height: 80,
-                  child: new Image.asset("assets/icons/Recurso_26.png"),
-                ),
-                title: new Text(
-                  receta.nombre,
-                  style: new TextStyle(
-                      fontSize: 13.0,
-                      fontFamily: "PT Sans",
-                      fontWeight: FontWeight.bold,
-                      color: hexToColor("#666666")),
-                ),
-                subtitle: new Container(
-                  alignment: Alignment.topLeft,
-                  margin: new EdgeInsets.only(top: 8.0, left: 0.0),
-                  child: new Column(
-                    children: <Widget>[
-                      new Container(
-                        alignment: Alignment.centerLeft,
-                        child: new ColorCirclesWidget(receta.azul, receta.verde,
-                            receta.naranja, receta.amarillo),
-                      ),
-                    ],
+        child: new Scrollbar(
+          child: new ListView(
+            children: listRecetas.map((receta) {
+              return Card(
+                margin: new EdgeInsets.symmetric(vertical: 5, horizontal: 15),
+                child: ListTile(
+                  leading: Container(
+                    margin: EdgeInsets.only(left: 10),
+                    height: 80,
+                    child: new Image.asset("assets/icons/Recurso_26.png"),
                   ),
+                  title: new Text(
+                    receta.nombre,
+                    style: new TextStyle(
+                        fontSize: 13.0,
+                        fontFamily: "PT Sans",
+                        fontWeight: FontWeight.bold,
+                        color: hexToColor("#666666")),
+                  ),
+                  subtitle: new Container(
+                    alignment: Alignment.topLeft,
+                    margin: new EdgeInsets.only(top: 8.0, left: 0.0),
+                    child: new Column(
+                      children: <Widget>[
+                        new Container(
+                          alignment: Alignment.centerLeft,
+                          child: new ColorCirclesWidget(receta.azul,
+                              receta.verde, receta.naranja, receta.amarillo),
+                        ),
+                      ],
+                    ),
+                  ),
+                  contentPadding:
+                      new EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                  selected: true,
+                  trailing: new Icon(
+                    Icons.keyboard_arrow_right,
+                    color: hexToColor("#3f95ac"),
+                    size: 40,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => detalle.RecetaPage(
+                                context, receta.id, receta.nombre)));
+                  },
                 ),
-                contentPadding:
-                    new EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-                selected: true,
-                trailing: new Icon(
-                  Icons.keyboard_arrow_right,
-                  color: hexToColor("#3f95ac"),
-                  size: 40,
-                ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => detalle.RecetaPage(
-                              context, receta.id, receta.nombre)));
-                },
-              ),
-            );
-          }).toList(),
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
