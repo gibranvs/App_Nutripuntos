@@ -59,7 +59,7 @@ class ProgresoPage extends StatelessWidget {
                 ),
               ),
             ),
-            body: TabBarView(              
+            body: TabBarView(
               children: [
                 ///
                 /// TAB PESO
@@ -79,9 +79,10 @@ class ProgresoPage extends StatelessWidget {
                     ),
                     label_titulo("Gráfica de peso"),
                     cuadro_informacion("52 KG", "Último peso medido"),
-                    cuadro_grafica(),
+                    cuadro_grafica("Peso en Kg"),
                   ],
                 ),
+
                 ///
                 /// TAB HISTORIAL
                 ///
@@ -100,25 +101,30 @@ class ProgresoPage extends StatelessWidget {
                     ),
                     label_titulo("Gráfica de Calorías"),
                     cuadro_informacion("350 Kcal", "Última medida"),
+                    cuadro_grafica("Progreso en Kcal"),
                   ],
                 ),
 
                 ///
                 /// TAB METAS
                 ///
-                Container(
-                  decoration: new BoxDecoration(
-                    color: const Color(0x00FFCC00),
-                    image: new DecorationImage(
-                      image: new AssetImage("assets/images/fondo.jpg"),
-                      colorFilter: new ColorFilter.mode(
-                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                      fit: BoxFit.cover,
+                Stack(
+                  children: <Widget>[
+                    Container(
+                      decoration: new BoxDecoration(
+                        color: const Color(0x00FFCC00),
+                        image: new DecorationImage(
+                          image: new AssetImage("assets/images/fondo.jpg"),
+                          colorFilter: new ColorFilter.mode(
+                              Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                  ),
-                  child: Center(
-                    child: Image.asset("assets/images/gr_metas.png"),
-                  ),
+                    label_titulo("Próxima Meta"),
+                    label_subtitulo("Retos anteriores"),
+                    circle_image("-3 Kg", "en un mes"),
+                  ],
                 ),
               ],
             ),
@@ -137,11 +143,32 @@ class label_titulo extends StatelessWidget {
     return Container(
       alignment: Alignment.topCenter,
       margin: EdgeInsets.only(top: 20),
-      child: Text(titulo,
-          style: TextStyle(
-              color: hexToColor("#059696"),
-              fontWeight: FontWeight.bold,
-              fontSize: 16)),
+      child: Text(
+        titulo,
+        style: TextStyle(
+            color: hexToColor("#059696"),
+            fontWeight: FontWeight.bold,
+            fontSize: 16),
+      ),
+    );
+  }
+}
+
+class label_subtitulo extends StatelessWidget {
+  final String subtitulo;
+  label_subtitulo(this.subtitulo);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topLeft,
+      margin: EdgeInsets.only(top: 200, left: 20),
+      child: Text(
+        subtitulo,
+        style: TextStyle(
+            color: hexToColor("#059696"),
+            fontWeight: FontWeight.bold,
+            fontSize: 16),
+      ),
     );
   }
 }
@@ -182,7 +209,7 @@ class cuadro_informacion extends StatelessWidget {
                 leyenda,
                 style: TextStyle(
                     color: Colors.white,
-                    fontWeight: FontWeight.w200,
+                    fontWeight: FontWeight.w300,
                     fontSize: 15),
               ),
             ),
@@ -194,25 +221,118 @@ class cuadro_informacion extends StatelessWidget {
 }
 
 class cuadro_grafica extends StatelessWidget {
+  final String leyenda_y;
+  cuadro_grafica(this.leyenda_y);
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.topCenter,
-      margin: EdgeInsets.only(top: 170),
+      margin: EdgeInsets.only(top: 170, bottom: 20),
       child: Container(
-        width: MediaQuery.of(context).size.width *0.8,
-        height: 70,
+        width: MediaQuery.of(context).size.width * 0.75,
+        height: MediaQuery.of(context).size.width * 0.75,
         decoration: BoxDecoration(
-          color: hexToColor("#059696"),
+          color: hexToColor("#78c826"),
           borderRadius: BorderRadius.all(Radius.circular(15)),
         ),
         child: Stack(
           children: <Widget>[
-            
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.only(top: 15, left: 40),
+              height: 185,
+              child: new Image.asset("assets/icons/ejes.png"),
+            ),
+
+            ///
+            /// AXIS Y
+            ///
+            RotatedBox(
+              quarterTurns: -1,
+              child: Container(
+                alignment: Alignment.topCenter,
+                margin: EdgeInsets.only(top: 10, left: 0),
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                  width: 115,
+                  height: 20,
+                  margin: EdgeInsets.only(top: 0, left: 5),
+                  child: Text(leyenda_y,
+                      style: TextStyle(
+                          color: hexToColor("#059696"),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13)),
+                ),
+              ),
+            ),
+
+            ///
+            /// AXIS X
+            ///
+            Container(
+              alignment: Alignment.bottomCenter,
+              margin: EdgeInsets.only(bottom: 10),
+              child: Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                width: 115,
+                height: 20,
+                margin: EdgeInsets.only(top: 0, left: 5),
+                child: Text("Citas por mes",
+                    style: TextStyle(
+                        color: hexToColor("#059696"),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13)),
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+}
+
+class circle_image extends StatelessWidget {
+  final String cantidad;
+  final String leyenda;
+  circle_image(this.cantidad, this.leyenda);
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          alignment: Alignment.topCenter,
+          margin: EdgeInsets.only(top: 50),
+          height: 130,
+          child: new Image.asset("assets/icons/Recurso_27.png"),
+        ),
+        Container(
+          alignment: Alignment.topCenter,
+          margin: EdgeInsets.only(top: 90),
+          child: Text(
+            cantidad,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 23),
+          ),
+        ),
+        Container(
+          alignment: Alignment.topCenter,
+          margin: EdgeInsets.only(top: 120),
+          child: Text(
+            leyenda,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+          ),
+        ),
+      ],
+    );    
   }
 }
 

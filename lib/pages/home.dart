@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:nutripuntos_app/pages/progreso.dart';
 import 'menu.dart' as menu;
 import 'newmenu.dart' as newmenu;
 import 'package:nutripuntos_app/globals.dart' as global;
@@ -416,6 +417,7 @@ class botones extends StatelessWidget {
           ///
           GestureDetector(
             onTap: () {
+              global.selected_index = 4;
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => new RecetasPage()));
             },
@@ -449,9 +451,10 @@ class botones extends StatelessWidget {
           /// BOTON 2
           ///
           GestureDetector(
-            onTap: () {
-              print("Boton 2");
-              //global.read();
+            onTap: () {             
+              global.selected_index = 2; 
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => new ProgresoPage()));
             },
             child: Container(
               margin: EdgeInsets.only(left: 210),
@@ -485,8 +488,8 @@ class botones extends StatelessWidget {
           /// BOTON 3
           ///
           GestureDetector(
-            onTap: () {
-              print("Boton 3");
+            onTap: () {   
+              global.selected_index = 1;           
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => new PlanPage()));
             },
@@ -520,8 +523,8 @@ class botones extends StatelessWidget {
           /// BOTON 4
           ///
           GestureDetector(
-            onTap: () {
-              print("Boton 4");
+            onTap: () {    
+              global.selected_index = 5;          
               Navigator.push(
                   context,
                   MaterialPageRoute(
