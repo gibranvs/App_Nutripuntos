@@ -13,7 +13,7 @@ tipo "detalle_platillo"
 parámetros: platillo
 
 tipo "record"
-parámetros: platillo
+parámetros: token
 
 tipo "restaurantes"
 parámetros: ninguno
