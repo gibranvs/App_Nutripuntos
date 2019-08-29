@@ -79,7 +79,7 @@ class ProgresoPage extends StatelessWidget {
                       ),
                     ),
                     label_titulo("Gráfica de peso"),
-                    cuadro_informacion("52 KG", "Último peso medido"),
+                    cuadro_informacion_peso("Último peso medido"),
                     cuadro_grafica("Peso en Kg"),
                   ],
                 ),
@@ -101,7 +101,7 @@ class ProgresoPage extends StatelessWidget {
                       ),
                     ),
                     label_titulo("Gráfica de Calorías"),
-                    cuadro_informacion("350 Kcal", "Última medida"),
+                    cuadro_informacion_grasa("Última medida"),
                     cuadro_grafica("Progreso en Kcal"),
                   ],
                 ),
@@ -174,10 +174,9 @@ class label_subtitulo extends StatelessWidget {
   }
 }
 
-class cuadro_informacion extends StatelessWidget {
-  final String dato;
+class cuadro_informacion_peso extends StatelessWidget {
   final String leyenda;
-  cuadro_informacion(this.dato, this.leyenda);
+  cuadro_informacion_peso(this.leyenda);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -195,13 +194,105 @@ class cuadro_informacion extends StatelessWidget {
             Container(
               alignment: Alignment.topCenter,
               margin: EdgeInsets.only(top: 10),
+              child: FutureBuilder<String>(
+                  future: GetLastPeso(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          semanticsLabel: "Loading",
+                          backgroundColor: hexToColor("#cdcdcd"),
+                        ),
+                      );
+                    } else if (snapshot.hasData) {
+                      if (snapshot.data != null) {
+                        return Text(
+                          snapshot.data + " KG",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22),
+                        );
+                      } else {
+                        return new Text("No existe",
+                            style: TextStyle(color: hexToColor("#606060")));
+                      }
+                    } else if (snapshot.hasError) {
+                      return new Text("Error al obtener",
+                          style: TextStyle(color: hexToColor("#606060")));
+                    }
+                  }),
+            ),
+            Container(
+              alignment: Alignment.topCenter,
+              margin: EdgeInsets.only(top: 40),
               child: Text(
-                dato,
+                leyenda,
                 style: TextStyle(
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22),
+                    fontWeight: FontWeight.w300,
+                    fontSize: 15),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class cuadro_informacion_grasa extends StatelessWidget {
+  final String leyenda;
+  cuadro_informacion_grasa(this.leyenda);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topCenter,
+      margin: EdgeInsets.only(top: 60),
+      child: Container(
+        width: 160,
+        height: 70,
+        decoration: BoxDecoration(
+          color: hexToColor("#059696"),
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Stack(
+          children: <Widget>[
+            Container(
+              alignment: Alignment.topCenter,
+              margin: EdgeInsets.only(top: 10),
+              child:
+              FutureBuilder<String>(
+                  future: GetLastGrasa(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          semanticsLabel: "Loading",
+                          backgroundColor: hexToColor("#cdcdcd"),
+                        ),
+                      );
+                    } else if (snapshot.hasData) {
+                      if (snapshot.data != null) {
+                        return Text(
+                          snapshot.data + " Kcal",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22),
+                        );
+                      } else {
+                        return new Text("No existe",
+                            style: TextStyle(color: hexToColor("#606060")));
+                      }
+                    } else if (snapshot.hasError) {
+                      return new Text("Error al obtener",
+                          style: TextStyle(color: hexToColor("#606060")));
+                    }
+                  }),
+
             ),
             Container(
               alignment: Alignment.topCenter,
@@ -333,27 +424,97 @@ class circle_image extends StatelessWidget {
           ),
         ),
       ],
-    );    
+    );
   }
 }
 
-void GetProgreso() async {
+Future<String> GetLastPeso() async {
   try {
-    //List<Opciones_Dieta> list = new List<Opciones_Dieta>();
+    String peso;
 
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "record", "token": global.token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    print(datos);
-    
+    //print(datos);
+
+    if (datos["status"] == 1) {
+      for (int i = 0; i < datos["response"].length; i++) {
+        if (datos["response"][i]["peso"] != null) {
+        if (datos["response"][i]["peso"].toString().contains('.') == true) {
+          if (datos["response"][i]["peso"].split('.')[1] == "00")
+            peso = datos["response"][i]["peso"].split('.')[0];
+          else
+            peso = datos["response"][i]["peso"].toString();
+        } else
+          peso = datos["response"][i]["peso"]
+              .toString();
+      } else
+        peso = "0";        
+      }
+    }
+    return peso;
   } catch (e) {
-    print("Error getOpcionesDieta " + e.toString());
+    print("Error GetLastPeso " + e.toString());
   }
 }
 
-class Progreso
-{
+Future<String> GetLastGrasa() async {
+  try {
+    String grasa;
+
+    var response = await http.post(global.server + "/aplicacion/api",
+        body: {"tipo": "record", "token": global.token});
+    var datos = json.decode(utf8.decode(response.bodyBytes));
+    //print(datos);
+
+    if (datos["status"] == 1) {
+      for (int i = 0; i < datos["response"].length; i++) {
+        if (datos["response"][i]["grasa"] != null) {
+        if (datos["response"][i]["grasa"].toString().contains('.') == true) {
+          if (datos["response"][i]["grasa"].split('.')[1] == "00")
+            grasa = datos["response"][i]["grasa"].split('.')[0];
+          else
+            grasa = datos["response"][i]["grasa"].toString();
+        } else
+          grasa = datos["response"][i]["grasa"]
+              .toString();
+      } else
+        grasa = "0";     
+      }
+    }
+    return grasa;
+  } catch (e) {
+    print("Error GetLastGrasa " + e.toString());
+  }
+}
+
+Future<List<Progreso>> GetProgreso() async {
+  try {
+    List<Progreso> list = new List<Progreso>();
+
+    var response = await http.post(global.server + "/aplicacion/api",
+        body: {"tipo": "record", "token": global.token});
+    var datos = json.decode(utf8.decode(response.bodyBytes));
+    //print(datos);
+
+    if (datos["status"] == 1) {
+      for (int i = 0; i < datos["response"].length; i++) {
+        list.add(Progreso(
+            peso: datos["response"][i]["peso"].toString(),
+            grasa: datos["response"][i]["grasa"].toString(),
+            fecha: datos["response"][i]["fecha"].toString()));
+      }
+    }
+    return list;
+  } catch (e) {
+    print("Error GetProgreso " + e.toString());
+  }
+}
+
+class Progreso {
   String peso;
   String grasa;
-  String meta;
+  String fecha;
+
+  Progreso({this.peso, this.grasa, this.fecha});
 }
