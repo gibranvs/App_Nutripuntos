@@ -262,8 +262,7 @@ class cuadro_informacion_grasa extends StatelessWidget {
             Container(
               alignment: Alignment.topCenter,
               margin: EdgeInsets.only(top: 10),
-              child:
-              FutureBuilder<String>(
+              child: FutureBuilder<String>(
                   future: GetLastGrasa(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -292,7 +291,6 @@ class cuadro_informacion_grasa extends StatelessWidget {
                           style: TextStyle(color: hexToColor("#606060")));
                     }
                   }),
-
             ),
             Container(
               alignment: Alignment.topCenter,
@@ -440,16 +438,15 @@ Future<String> GetLastPeso() async {
     if (datos["status"] == 1) {
       for (int i = 0; i < datos["response"].length; i++) {
         if (datos["response"][i]["peso"] != null) {
-        if (datos["response"][i]["peso"].toString().contains('.') == true) {
-          if (datos["response"][i]["peso"].split('.')[1] == "00")
-            peso = datos["response"][i]["peso"].split('.')[0];
-          else
+          if (datos["response"][i]["peso"].toString().contains('.') == true) {
+            if (datos["response"][i]["peso"].split('.')[1] == "00")
+              peso = datos["response"][i]["peso"].split('.')[0];
+            else
+              peso = datos["response"][i]["peso"].toString();
+          } else
             peso = datos["response"][i]["peso"].toString();
         } else
-          peso = datos["response"][i]["peso"]
-              .toString();
-      } else
-        peso = "0";        
+          peso = "0";
       }
     }
     return peso;
@@ -470,16 +467,15 @@ Future<String> GetLastGrasa() async {
     if (datos["status"] == 1) {
       for (int i = 0; i < datos["response"].length; i++) {
         if (datos["response"][i]["grasa"] != null) {
-        if (datos["response"][i]["grasa"].toString().contains('.') == true) {
-          if (datos["response"][i]["grasa"].split('.')[1] == "00")
-            grasa = datos["response"][i]["grasa"].split('.')[0];
-          else
+          if (datos["response"][i]["grasa"].toString().contains('.') == true) {
+            if (datos["response"][i]["grasa"].split('.')[1] == "00")
+              grasa = datos["response"][i]["grasa"].split('.')[0];
+            else
+              grasa = datos["response"][i]["grasa"].toString();
+          } else
             grasa = datos["response"][i]["grasa"].toString();
         } else
-          grasa = datos["response"][i]["grasa"]
-              .toString();
-      } else
-        grasa = "0";     
+          grasa = "0";
       }
     }
     return grasa;
@@ -499,10 +495,18 @@ Future<List<Progreso>> GetProgreso() async {
 
     if (datos["status"] == 1) {
       for (int i = 0; i < datos["response"].length; i++) {
+        //print(datos["response"][i]["fecha"].toString().replaceAll('/', '-') );
         list.add(Progreso(
             peso: datos["response"][i]["peso"].toString(),
             grasa: datos["response"][i]["grasa"].toString(),
-            fecha: datos["response"][i]["fecha"].toString()));
+/*
+            fecha: new DateFormat("dd-MMM-yyyy G")
+                .format(DateTime.parse(datos["response"][i]["fecha"].toString().replaceAll('/', '-') + " 00:00:00"))
+                .toString(),   
+                */           
+        ));
+
+        //print(list[i].grasa);
       }
     }
     return list;
@@ -515,6 +519,9 @@ class Progreso {
   String peso;
   String grasa;
   String fecha;
+  String dia;
+  String mes;
+  String anio;
 
-  Progreso({this.peso, this.grasa, this.fecha});
+  Progreso({this.peso, this.grasa, this.fecha, this.dia, this.mes, this.anio});
 }
