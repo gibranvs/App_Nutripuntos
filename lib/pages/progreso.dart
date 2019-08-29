@@ -13,6 +13,7 @@ void main() {
 class ProgresoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    GetProgreso();
     return Scaffold(
       drawer: new newmenu.menu(2),
       appBar: AppBar(
@@ -336,4 +337,23 @@ class circle_image extends StatelessWidget {
   }
 }
 
-void GetProgreso() {}
+void GetProgreso() async {
+  try {
+    //List<Opciones_Dieta> list = new List<Opciones_Dieta>();
+
+    var response = await http.post(global.server + "/aplicacion/api",
+        body: {"tipo": "record", "token": global.token});
+    var datos = json.decode(utf8.decode(response.bodyBytes));
+    print(datos);
+    
+  } catch (e) {
+    print("Error getOpcionesDieta " + e.toString());
+  }
+}
+
+class Progreso
+{
+  String peso;
+  String grasa;
+  String meta;
+}
