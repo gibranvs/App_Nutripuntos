@@ -103,7 +103,9 @@ class DBManager {
           );
         });
       }
-    } catch (_ex) {}
+    } catch (_ex) {
+      globals.imageFilePath = "assets/images/photo.jpg";
+    }
   }
 
   deleteAll() async {

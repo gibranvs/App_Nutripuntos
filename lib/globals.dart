@@ -32,9 +32,6 @@ File imageFile = new File("assets/images/photo.jpg");
 String imageFilePath;
 DecorationImage returnFileSelected(File file, String filePath) {
   try {
-    //_save(file);
-    //print(file.path);
-
     return new DecorationImage(
       fit: BoxFit.contain,
       image: file == null
@@ -43,41 +40,11 @@ DecorationImage returnFileSelected(File file, String filePath) {
     );
   } catch (e) {
     print("Error returnFileSelected " + e.toString());
+    return new DecorationImage(
+      fit: BoxFit.contain,
+      image: new AssetImage("assets/images/photo.jpg"),
+    );
   }
-}
-
-_save(File file) async {
-  try {
-    final filename = 'photo.jpg';
-    print(file.path);
-    var bytes = await rootBundle.load(file.path);
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    //print(dir);
-    writeToFile(bytes, '$dir/$filename');
-  } catch (e) {
-    print("Error _save " + e.toString());
-  }
-}
-
-Future<void> writeToFile(ByteData data, String path) {
-  final buffer = data.buffer;
-  return new File(path)
-      .writeAsBytes(buffer.asUint8List(data.offsetInBytes, data.lengthInBytes));
-}
-
-_read() async {
-  try {
-    final directory = await getApplicationDocumentsDirectory();
-    final file = File('${directory.path}/photo.jpg');
-    imageFile = file;
-    return '${directory.path}/photo.jpg';
-  } catch (e) {
-    print("Couldn't read file");
-  }
-}
-
-read() {
-  _read();
 }
 
 ///

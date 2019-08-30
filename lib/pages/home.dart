@@ -81,6 +81,10 @@ class _HomePageState extends State<HomePage> {
       Navigator.of(context, rootNavigator: true).pop('dialog');
     } catch (e) {
       print("Error pickImageFrom " + e.toString());
+      return new DecorationImage(
+        fit: BoxFit.contain,
+        image: new AssetImage("assets/images/photo.jpg"),
+      );
     }
   }
 
@@ -343,16 +347,16 @@ class card_proxima_cita extends StatelessWidget {
             }
           } else if (snapshot.hasError) {
             return Container(
-                margin: EdgeInsets.all(30),
-                child: Center(
-                  child: Text(
-                    "Error al obtener citas pendientes.",
-                    style: TextStyle(
-                      color: hexToColor("#606060"),
-                    ),
+              margin: EdgeInsets.all(30),
+              child: Center(
+                child: Text(
+                  "Error al obtener citas pendientes.",
+                  style: TextStyle(
+                    color: hexToColor("#606060"),
                   ),
                 ),
-              );
+              ),
+            );
           }
         },
       ),
@@ -451,8 +455,8 @@ class botones extends StatelessWidget {
           /// BOTON 2
           ///
           GestureDetector(
-            onTap: () {             
-              global.selected_index = 2; 
+            onTap: () {
+              global.selected_index = 2;
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => new ProgresoPage()));
             },
@@ -488,8 +492,8 @@ class botones extends StatelessWidget {
           /// BOTON 3
           ///
           GestureDetector(
-            onTap: () {   
-              global.selected_index = 1;           
+            onTap: () {
+              global.selected_index = 1;
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => new PlanPage()));
             },
@@ -523,8 +527,8 @@ class botones extends StatelessWidget {
           /// BOTON 4
           ///
           GestureDetector(
-            onTap: () {    
-              global.selected_index = 5;          
+            onTap: () {
+              global.selected_index = 5;
               Navigator.push(
                   context,
                   MaterialPageRoute(
