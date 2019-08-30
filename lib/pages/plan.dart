@@ -276,7 +276,7 @@ class botones_puntos extends StatelessWidget {
             //dialog(context, "assets/icons/Recurso_22.png", "GRUPO 3 CARNES", comida);
             show_Dialog(
               context: context,
-              titulo: "GRUPO 3 CARNES",
+              titulo: "GRUPO 3 PROTEINAS",
               imagen: "assets/icons/Recurso_22.png",
               comida: comida,
             );

@@ -94,7 +94,7 @@ class DBManager {
         globals.apellidos_user = res[res.length - 1]["APELLIDO"].toString();
         globals.token = res[res.length - 1]["TOKEN"].toString();
         globals.imageFilePath = res[res.length - 1]["FOTO"].toString();
-        print(globals.imageFilePath);
+        //print(globals.imageFilePath);
 
         Future.delayed(const Duration(milliseconds: 300), () {
           Navigator.push(

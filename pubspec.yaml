@@ -84,6 +84,7 @@ flutter:
     - assets/icons/Recurso_26.png  # menu recetas
     - assets/icons/Recurso_27.png  
     - assets/icons/ejes.png  
+    - assets/icons/barra_graphic.png  
     - assets/images/gr_peso.png
     - assets/images/gr_grasa.png
     - assets/images/gr_metas.png

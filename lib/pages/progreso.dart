@@ -13,7 +13,7 @@ void main() {
 class ProgresoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    GetProgreso();
+    //GetProgreso();
     return Scaffold(
       drawer: new newmenu.menu(2),
       appBar: AppBar(
@@ -329,13 +329,13 @@ class cuadro_grafica extends StatelessWidget {
           children: <Widget>[
             Container(
               alignment: Alignment.centerLeft,
-              margin: EdgeInsets.only(top: 15, left: 40),
+              margin: EdgeInsets.only(top: 20, left: 40),
               height: 185,
               child: new Image.asset("assets/icons/ejes.png"),
             ),
 
             ///
-            /// AXIS Y
+            /// LABEL AXIS Y
             ///
             RotatedBox(
               quarterTurns: -1,
@@ -360,7 +360,7 @@ class cuadro_grafica extends StatelessWidget {
             ),
 
             ///
-            /// AXIS X
+            /// LABEL AXIS X
             ///
             Container(
               alignment: Alignment.bottomCenter,
@@ -379,6 +379,109 @@ class cuadro_grafica extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         fontSize: 13)),
               ),
+            ),
+
+            ///
+            /// DATOS GRÁFICA
+            ///
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.only(top: 15, left: 40),
+              child: FutureBuilder<List<Progreso>>(
+                  future: GetProgreso(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          semanticsLabel: "Loading",
+                          backgroundColor: hexToColor("#cdcdcd"),
+                        ),
+                      );
+                    } else if (snapshot.hasData) {
+                      print(snapshot.data.length);
+                      if (snapshot.data.length > 0) {
+                        return new ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                alignment: Alignment.bottomLeft,
+                                margin: EdgeInsets.only(bottom: 10),
+                                child: Column(
+                                  children: <Widget>[
+                                    Column(
+                                      children: <Widget>[
+                                        Container(
+                                          alignment: Alignment.bottomLeft,
+                                          height: 80,
+                                          width: 20,
+                                          padding: EdgeInsets.only(left: 20),
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: AssetImage(
+                                                  "assets/icons/barra_graphic.png"),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          alignment: Alignment.bottomLeft,
+                                          padding: EdgeInsets.only(
+                                              top: 30, left: 18),
+                                          child: Text(snapshot.data[index].mes,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.bold)),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+
+/*
+                              return Stack(
+                                children: <Widget>[
+                                  Container(
+                                    width: 20,
+                                    alignment: Alignment.bottomLeft,
+                                    margin:
+                                        EdgeInsets.only(bottom: 50, left: 16),
+                                    child: Text(snapshot.data[index].mes,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.topLeft,
+                                    margin:
+                                        EdgeInsets.only(top: 70, left: 18),
+                                        width: 20,
+                                    height: 90,
+                                    child: new Image.asset(
+                                        "assets/icons/barra_graphic.png"),
+                                  ),
+                                ],
+                              );
+                              */
+                            });
+                      } else {
+                        return new Center(
+                            child: Text("No hay datos.",
+                                style:
+                                    TextStyle(color: hexToColor("#606060"))));
+                      }
+                    } else if (snapshot.hasError) {
+                      return new Center(
+                          child: Text("Error al obtener datos.",
+                              style: TextStyle(color: hexToColor("#606060"))));
+                    }
+                  }),
             ),
           ],
         ),
@@ -494,19 +597,46 @@ Future<List<Progreso>> GetProgreso() async {
     //print(datos);
 
     if (datos["status"] == 1) {
+      list.clear();
       for (int i = 0; i < datos["response"].length; i++) {
-        //print(datos["response"][i]["fecha"].toString().replaceAll('/', '-') );
-        list.add(Progreso(
-            peso: datos["response"][i]["peso"].toString(),
-            grasa: datos["response"][i]["grasa"].toString(),
-/*
-            fecha: new DateFormat("dd-MMM-yyyy G")
-                .format(DateTime.parse(datos["response"][i]["fecha"].toString().replaceAll('/', '-') + " 00:00:00"))
-                .toString(),   
-                */           
-        ));
+        //print(DateTime.parse(datos["response"][i]["fecha"]).month);
+        if (list.length == 0) {
+          list.add(Progreso(
+              peso: datos["response"][i]["peso"].toString(),
+              grasa: datos["response"][i]["grasa"].toString(),
+              fecha: new DateFormat("dd-MMM-yyyy")
+                  .format(DateTime.parse(datos["response"][i]["fecha"]))
+                  .toString(),
+              dia: DateTime.parse(datos["response"][i]["fecha"]).day,
+              mes: DateFormat("MMM")
+                  .format(DateTime.parse(datos["response"][i]["fecha"]))
+                  .toString(),
+              anio: DateTime.parse(datos["response"][i]["fecha"]).year));
+        } else {
+          if (DateFormat("MMM")
+                  .format(DateTime.parse(datos["response"][i]["fecha"]))
+                  .toString() !=
+              list[list.length - 1].mes) {
+            list.add(Progreso(
+                peso: datos["response"][i]["peso"].toString(),
+                grasa: datos["response"][i]["grasa"].toString(),
+                fecha: new DateFormat("dd-MMM-yyyy")
+                    .format(DateTime.parse(datos["response"][i]["fecha"]))
+                    .toString(),
+                dia: DateTime.parse(datos["response"][i]["fecha"]).day,
+                mes: DateFormat("MMM")
+                    .format(DateTime.parse(datos["response"][i]["fecha"]))
+                    .toString(),
+                anio: DateTime.parse(datos["response"][i]["fecha"]).year));
+          }
+        }
+      }
 
-        //print(list[i].grasa);
+      for (int i = list.length; i > 0; i--) {
+        if (list.length > 5)
+          list.removeAt(0);
+        else
+          break;
       }
     }
     return list;
@@ -519,9 +649,9 @@ class Progreso {
   String peso;
   String grasa;
   String fecha;
-  String dia;
+  int dia;
   String mes;
-  String anio;
+  int anio;
 
   Progreso({this.peso, this.grasa, this.fecha, this.dia, this.mes, this.anio});
 }
