@@ -75,7 +75,7 @@ class datos extends StatelessWidget {
                   padding: EdgeInsets.only(top: 5, left: 20),
                   child: GestureDetector(
                     onTap: () {
-                      db.DBManager.instance.deleteAll();
+                      db.DBManager.instance.deleteAllRegistros();
                       print("Cerrar sesión");
                       global.token = "";
                       global.recovery_token = "";

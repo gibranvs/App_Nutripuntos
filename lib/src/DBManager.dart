@@ -15,12 +15,22 @@ final String columnApellido = "APELLIDO";
 final String columnToken = "TOKEN";
 final String columnFoto = "FOTO";
 
+final String tableRetos = "RETOS";
+final String columnReto = "RETO";
+final String columnFecha = "FECHA";
+final String columnStatus = "ESTATUS";
+
+final String tableChat = "CHAT";
+final String columnTokenMsj = "TOKEN";
+final String columnMensaje = "MENSAJE";
+final String columnEnviado = "FECHA";
+
 // singleton class to manage the database
 class DBManager {
   // This is the actual database filename that is saved in the docs directory.
   static final _databaseName = "RegistroUsuario.db";
   // Increment this version when you need to change the schema.
-  static final _databaseVersion = 4;
+  static final _databaseVersion = 6;
 
   // Make this a singleton class.
   DBManager._privateConstructor();
@@ -59,6 +69,18 @@ class DBManager {
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
     if (oldVersion < newVersion) {
       //db.execute("DROP TABLE IF EXISTS $tableRegistro");
+      /*
+      db.execute(
+          '''CREATE TABLE $tableRetos (
+            $columnReto VARCHAR(200) NOT NULL,
+            $columnFecha VARCHAR(100) NOT NULL,
+            $columnStatus VARCHAR(2) NOT NULL)''');
+      */
+      db.execute(
+          '''CREATE TABLE $tableChat (
+            $columnTokenMsj VARCHAR(200) NOT NULL,
+            $columnMensaje TEXT NOT NULL,            
+            $columnEnviado VARCHAR(100) NOT NULL)''');
     }
   }
 
@@ -114,9 +136,20 @@ class DBManager {
     }
   }
 
-  deleteAll() async {
+  deleteAllRegistros() async {
     Database db = await database;
     db.rawQuery("DELETE FROM $tableRegistro");
+  }
+
+  insertMensaje(String _token, String _mensaje) async {
+    Database db = await database;
+    db.rawQuery('INSERT Into $tableChat(TOKEN, $columnMensaje, $columnEnviado) VALUES(?,?,?);', [_token, _mensaje, DateTime.now().toString()]);
+  }
+
+  getMensajes(String _token) async {
+    Database db = await database;
+    var res = await db.rawQuery('SELECT * FROM $tableChat WHERE $columnTokenMsj = ?', [_token]);
+    print(res);        
   }
 }
 

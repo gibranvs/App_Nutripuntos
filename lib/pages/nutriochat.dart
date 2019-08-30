@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:nutripuntos_app/src/HexToColor.dart';
 import 'package:nutripuntos_app/globals.dart' as global;
 import 'package:http/http.dart' as http;
+import '../src/DBManager.dart' as db;
 import 'newmenu.dart' as newmenu;
 
 class NutriochatPage extends StatefulWidget {
@@ -22,6 +23,7 @@ class _NutriochatPageState extends State<NutriochatPage> {
             'Escribe a un nutriólogo a través de nutrio chat, un espacio creado para contactar a tu doctor, fácilmente');
             */
     getMensajes(global.token);
+    db.DBManager.instance.getMensajes(global.token);
     return new Scaffold(
       drawer: new newmenu.menu(6),
       appBar: AppBar(
@@ -185,12 +187,13 @@ void getMensajes(String _token) async {
 guardarMensajes(String _token, String _mensaje) async {
   try {
     var response = await http.post(global.server + "/aplicacion/api", body: {
-      "tipo": "guardar_mensaje",
+      "tipo": "guarda_mensaje",
       "token": _token,
       "mensaje": _mensaje
     });
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    print(datos);
+    //print(datos);
+    db.DBManager.instance.insertMensaje(_token, _mensaje);
     myTextEdit.text = "";
   } catch (e) {
     print("Error guardarMensajes " + e.toString());

@@ -168,7 +168,7 @@ class MenuState extends State<Menu> {
                               InkWell(
                                 child: GestureDetector(
                                   onTap: () {
-                                    db.DBManager.instance.deleteAll();
+                                    db.DBManager.instance.deleteAllRegistros();
                                     print("Cerrar sesión");
                                     global.token = "";
                                     global.recovery_token = "";
