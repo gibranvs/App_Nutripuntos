@@ -628,6 +628,19 @@ Future<List<Progreso>> GetProgreso() async {
                     .format(DateTime.parse(datos["response"][i]["fecha"]))
                     .toString(),
                 anio: DateTime.parse(datos["response"][i]["fecha"]).year));
+          } else {
+            list.removeAt(list.length - 1);
+            list.add(Progreso(
+                peso: datos["response"][i]["peso"].toString(),
+                grasa: datos["response"][i]["grasa"].toString(),
+                fecha: new DateFormat("dd-MMM-yyyy")
+                    .format(DateTime.parse(datos["response"][i]["fecha"]))
+                    .toString(),
+                dia: DateTime.parse(datos["response"][i]["fecha"]).day,
+                mes: DateFormat("MMM")
+                    .format(DateTime.parse(datos["response"][i]["fecha"]))
+                    .toString(),
+                anio: DateTime.parse(datos["response"][i]["fecha"]).year));
           }
         }
       }
