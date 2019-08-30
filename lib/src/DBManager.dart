@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import '../globals.dart' as globals;
 import '../pages/home.dart';
+import '../pages/login.dart';
 
 final String tableRegistro = "REGISTRO";
 final String columnNombre = "NOMBRE";
@@ -85,10 +86,15 @@ class DBManager {
     try {
       Database db = await database;
       var res = await db.rawQuery("SELECT * FROM $tableRegistro");
-      print("res=" + res.toString());
+      //print("res=" + res.toString());
       if (res.isEmpty == true) {
+        print("No hay usuario");
         globals.user_exist = false;
-        Navigator.of(_context).pushReplacementNamed('/HomeScreen');
+        //Navigator.of(_context).pushReplacementNamed('/HomeScreen');
+        Navigator.push(
+          _context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
       } else {
         globals.nombre_user = res[res.length - 1]["NOMBRE"].toString();
         globals.apellidos_user = res[res.length - 1]["APELLIDO"].toString();

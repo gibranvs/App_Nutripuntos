@@ -10,9 +10,7 @@ import 'src/DBManager.dart' as db;
 void main() {
   runApp(new MaterialApp(
     home: new MyApp(),
-    routes: <String, WidgetBuilder>{
-      '/HomeScreen': (BuildContext context) => new login.LoginPage()
-    },
+    //routes: <String, WidgetBuilder>{'/HomeScreen': (BuildContext context) => new login.LoginPage()},
     theme: ThemeData(
       primaryColor: Color(0xFF059696),
       textTheme: TextTheme(
@@ -42,7 +40,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();      
-    login.fetchDoctores();
+    //login.fetchDoctores();
     recetas.getRecetas();    
     startTime();
   }

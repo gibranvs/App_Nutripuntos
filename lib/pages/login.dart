@@ -17,7 +17,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  
   final Data data = new Data(usr: "1", doctor: "2");
 
   @override
@@ -88,40 +87,35 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                      child: 
-                      //FutureBuilder<List<Doctor>>(                    
-                          //future: fetchDoctores(),                          
-                          //builder: (context, snapshot) {                            
-                            //if (snapshot.hasData) {
-                              //if(listDoctores.length > 0) {
-                               DropdownButton<Doctor>(
-                                iconSize: 0,
-                                hint: Text(
-                                  "Selecciona un especialista",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
-                                ),
-                                items:                                 
-
-                                listDoctores
-                                    .map((doctor) => DropdownMenuItem<Doctor>(
-                                          child: Text(doctor.nombre),
-                                          value: doctor,
-                                        ))
-                                    .toList(),
-                                    
-                                value: doctorSelect,
-                                onChanged: (Doctor _doctor) {
-                                  setState(() {
-                                    if(_doctor != null)
-                                    {
-                                    doctorSelect = _doctor;
-                                    print(doctorSelect.nombre);
-                                    }
-                                  });
-                                },                                
-                              ),
-                              /*
+                      child:
+                          //FutureBuilder<List<Doctor>>(
+                          //future: fetchDoctores(),
+                          //builder: (context, snapshot) {
+                          //if (snapshot.hasData) {
+                          //if(listDoctores.length > 0) {
+                          DropdownButton<Doctor>(
+                        iconSize: 0,
+                        hint: Text(
+                          "Selecciona un especialista",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                        items: listDoctores
+                            .map((doctor) => DropdownMenuItem<Doctor>(
+                                  child: Text(doctor.nombre),
+                                  value: doctor,
+                                ))
+                            .toList(),
+                        value: doctorSelect,
+                        onChanged: (Doctor _doctor) {
+                          setState(() {
+                            if (_doctor != null) {
+                              doctorSelect = _doctor;
+                              print(doctorSelect.nombre);
+                            }
+                          });
+                        },
+                      ),
+                      /*
                             } else if (snapshot.hasError) {
                               return Padding(
                                 padding: EdgeInsets.symmetric(
@@ -132,9 +126,9 @@ class _LoginPageState extends State<LoginPage> {
                               );
                             }
                             */
-                            // By default, show a loading spinner
-                            //return new CircularProgressIndicator();
-                          //},),
+                      // By default, show a loading spinner
+                      //return new CircularProgressIndicator();
+                      //},),
                     ),
                   ),
                   Container(
@@ -181,7 +175,11 @@ class _LoginPageState extends State<LoginPage> {
 
 void check_login(_context, _controller, _doctorSelected) async {
   if (_controller.text != "") {
-    final response = await http.post(global.server + '/aplicacion/api', body:{"tipo": "login", "usr": _controller.text, "doc": _doctorSelected.id});        
+    final response = await http.post(global.server + '/aplicacion/api', body: {
+      "tipo": "login",
+      "usr": _controller.text,
+      "doc": _doctorSelected.id
+    });
     var responseJson = json.decode(utf8.decode(response.bodyBytes));
     //print(responseJson);
     if (responseJson["status"] == 1) {
@@ -189,29 +187,32 @@ void check_login(_context, _controller, _doctorSelected) async {
       global.apellidos_user = responseJson["response"][0]["apellidos"];
       global.token = responseJson["response"][0]["token"];
       global.recovery_token = responseJson["response"][0]["recoverytk"];
-      db.DBManager.instance.insertUsuario(responseJson["response"][0]["nombre"].toString(), responseJson["response"][0]["apellidos"].toString(), responseJson["response"][0]["token"].toString(), "");
-      _controller.text = "";    
-      global.selected_index = 0;  
+      db.DBManager.instance.insertUsuario(
+          responseJson["response"][0]["nombre"].toString(),
+          responseJson["response"][0]["apellidos"].toString(),
+          responseJson["response"][0]["token"].toString(),
+          "");
+      _controller.text = "";
+      global.selected_index = 0;
       Navigator.push(
         _context,
         MaterialPageRoute(builder: (context) => HomePage()),
-      );  
+      );
+    } else {
+      alert.showMessageDialog(_context, "Error en el login",
+          "Verifica que tu correo y tu especialista sean correctos.");
     }
-    else
-    {
-      alert.showMessageDialog(_context, "Error en el login", "Verifica que tu correo y tu especialista sean correctos.");
-    }
-  }
-  else
-  {
-    alert.showMessageDialog(_context, "Error en el login", "Ingresa todos los campos.");
+  } else {
+    alert.showMessageDialog(
+        _context, "Error en el login", "Ingresa todos los campos.");
   }
 }
 
 Future<List<Doctor>> fetchDoctores() async {
   final response =
       await http.post(global.server + '/aplicacion/api/get_doctores');
-      print(json.decode(utf8.decode(response.bodyBytes)));
+  var datos = json.decode(utf8.decode(response.bodyBytes));
+  print(datos);
   List responseJson = json.decode(utf8.decode(response.bodyBytes));
   List<Doctor> doctoresList = createDoctoresList(responseJson);
   return doctoresList;
@@ -227,10 +228,10 @@ List<Doctor> createDoctoresList(List data) {
     Doctor doctor = new Doctor(id: id, nombre: nombre);
     list.add(doctor);
   }
-  
-  if(list.length > 0)
+
+  if (list.length > 0)
     listDoctores = list;
-    else
+  else
     listDoctores.add("No se pudo cargar la lista de especialistas.");
   return list;
 }
