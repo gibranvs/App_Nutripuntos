@@ -10,6 +10,7 @@ import 'dart:typed_data';
 import 'pages/receta_detalle.dart';
 import 'pages/restaurante_detalle.dart';
 import 'pages/agenda.dart';
+import 'pages/nutriochat.dart';
 import 'src/DBManager.dart' as db;
 
 String server = "http://c1370875.ferozo.com";
@@ -66,3 +67,9 @@ List<Platillo> list_platillos_restaurante;
 /// AGENDA
 ///
 List<Citas> list_citas;
+
+
+///
+/// MENSAJES
+///
+List<Mensaje> list_mensajes;

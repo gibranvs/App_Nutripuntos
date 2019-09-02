@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import '../globals.dart' as globals;
 import '../pages/home.dart';
 import '../pages/login.dart';
+import '../pages/nutriochat.dart' as chat;
 
 final String tableRegistro = "REGISTRO";
 final String columnNombre = "NOMBRE";
@@ -76,8 +77,7 @@ class DBManager {
             $columnFecha VARCHAR(100) NOT NULL,
             $columnStatus VARCHAR(2) NOT NULL)''');
       */
-      db.execute(
-          '''CREATE TABLE $tableChat (
+      db.execute('''CREATE TABLE $tableChat (
             $columnTokenMsj VARCHAR(200) NOT NULL,
             $columnMensaje TEXT NOT NULL,            
             $columnEnviado VARCHAR(100) NOT NULL)''');
@@ -124,6 +124,10 @@ class DBManager {
         globals.imageFilePath = res[res.length - 1]["FOTO"].toString();
         //print(globals.imageFilePath);
 
+        globals.list_mensajes = new List<chat.Mensaje>();
+        getMensajes(globals.token);
+        chat.getMensajesServer(globals.token);
+
         Future.delayed(const Duration(milliseconds: 300), () {
           Navigator.push(
             _context,
@@ -143,13 +147,23 @@ class DBManager {
 
   insertMensaje(String _token, String _mensaje) async {
     Database db = await database;
-    db.rawQuery('INSERT Into $tableChat(TOKEN, $columnMensaje, $columnEnviado) VALUES(?,?,?);', [_token, _mensaje, DateTime.now().toString()]);
+    db.rawQuery(
+        'INSERT Into $tableChat(TOKEN, $columnMensaje, $columnEnviado) VALUES(?,?,?);',
+        [_token, _mensaje, DateTime.now().toString()]);
   }
 
-  getMensajes(String _token) async {
+getMensajes(String _token) async {
     Database db = await database;
-    var res = await db.rawQuery('SELECT * FROM $tableChat WHERE $columnTokenMsj = ?', [_token]);
-    print(res);        
+    var res = await db.rawQuery(
+        'SELECT * FROM $tableChat WHERE $columnTokenMsj = ?', [_token]);
+
+    for (int i = 0; i < res.length; i++) {
+      globals.list_mensajes.add(chat.Mensaje(
+          origen: "usuario",
+          mensaje: res[i]["MENSAJE"],
+          fecha: DateTime.parse(res[i]["FECHA"])));
+    }
+    //globals.list_mensajes.sort((a, b) => a.toString().compareTo(b.toString()));
   }
 }
 

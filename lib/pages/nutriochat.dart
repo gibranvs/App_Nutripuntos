@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import '../src/DBManager.dart' as db;
 import 'newmenu.dart' as newmenu;
 
+final myTextEdit = TextEditingController();
+
 class NutriochatPage extends StatefulWidget {
   @override
   _NutriochatPageState createState() => new _NutriochatPageState();
@@ -21,9 +23,9 @@ class _NutriochatPageState extends State<NutriochatPage> {
         titulo: '¿Tienes dudas?',
         mensaje:
             'Escribe a un nutriólogo a través de nutrio chat, un espacio creado para contactar a tu doctor, fácilmente');
-            */
-    getMensajes(global.token);
-    db.DBManager.instance.getMensajes(global.token);
+            */    
+    global.list_mensajes.sort((a, b) => a.toString().compareTo(b.toString()));   
+    print(global.list_mensajes.length);
     return new Scaffold(
       drawer: new newmenu.menu(6),
       appBar: AppBar(
@@ -55,6 +57,7 @@ class _NutriochatPageState extends State<NutriochatPage> {
               ),
             ),
           ),
+          list_messages(),
           message_area(),
         ],
       ),
@@ -62,7 +65,19 @@ class _NutriochatPageState extends State<NutriochatPage> {
   }
 }
 
-final myTextEdit = TextEditingController();
+class list_messages extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: ListView(
+        children: global.list_mensajes.map((mensaje)
+        {
+          print(mensaje.fecha);
+        }).toList(),
+      ),
+    );
+  }
+}
 
 class message_area extends StatelessWidget {
   @override
@@ -173,24 +188,30 @@ Future<T> show_Dialog<T>({
   );
 }
 
-void getMensajes(String _token) async {
+getMensajesServer(String _token) async {
   try {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "get_mensajes", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    print(datos);
+    //print(datos);
+
+    for (int i = 0; i < datos["response"].length; i++) {
+      global.list_mensajes.add(Mensaje(
+          origen: "doctor",
+          mensaje: datos["response"][i]["texto"],
+          fecha: DateTime.parse(datos["response"][i]["fecha"])));
+    }
+    //global.list_mensajes.sort((a, b) => a.toString().compareTo(b.toString()));    
   } catch (e) {
     print("Error getMensajes " + e.toString());
   }
 }
 
+
 guardarMensajes(String _token, String _mensaje) async {
   try {
-    var response = await http.post(global.server + "/aplicacion/api", body: {
-      "tipo": "guarda_mensaje",
-      "token": _token,
-      "mensaje": _mensaje
-    });
+    var response = await http.post(global.server + "/aplicacion/api",
+        body: {"tipo": "guarda_mensaje", "token": _token, "mensaje": _mensaje});
     var datos = json.decode(utf8.decode(response.bodyBytes));
     //print(datos);
     db.DBManager.instance.insertMensaje(_token, _mensaje);
@@ -198,4 +219,12 @@ guardarMensajes(String _token, String _mensaje) async {
   } catch (e) {
     print("Error guardarMensajes " + e.toString());
   }
+}
+
+class Mensaje {
+  String origen;
+  String mensaje;
+  DateTime fecha;
+
+  Mensaje({this.origen, this.mensaje, this.fecha});
 }

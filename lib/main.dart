@@ -41,7 +41,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();      
     //login.fetchDoctores();
-    recetas.getRecetas();    
+    recetas.getRecetas();        
     startTime();
   }
 
