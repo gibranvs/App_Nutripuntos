@@ -23,8 +23,8 @@ class _NutriochatPageState extends State<NutriochatPage> {
         titulo: '¿Tienes dudas?',
         mensaje:
             'Escribe a un nutriólogo a través de nutrio chat, un espacio creado para contactar a tu doctor, fácilmente');
-            */    
-    global.list_mensajes.sort((a, b) => a.toString().compareTo(b.toString()));   
+            */
+    global.list_mensajes.sort((a, b) => a.toString().compareTo(b.toString()));
     print(global.list_mensajes.length);
     return new Scaffold(
       drawer: new newmenu.menu(6),
@@ -70,9 +70,31 @@ class list_messages extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: ListView(
-        children: global.list_mensajes.map((mensaje)
-        {
-          print(mensaje.fecha);
+        children: global.list_mensajes.map((mensaje) {
+          if (mensaje.origen == "doctor") {
+            return Container(
+              margin: EdgeInsets.all(10),
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: 50,
+              child: Container(                  
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text(mensaje.mensaje)),
+            );
+          } else {
+            return Container(
+              margin: EdgeInsets.all(10),
+              width: MediaQuery.of(context).size.width * 0.8,
+              //height: 30,
+              alignment: Alignment.centerRight,
+              child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.blueGrey,
+                      borderRadius: BorderRadius.circular(10)),                  
+                  child: Text(mensaje.mensaje)),
+            );
+          }
         }).toList(),
       ),
     );
@@ -201,12 +223,11 @@ getMensajesServer(String _token) async {
           mensaje: datos["response"][i]["texto"],
           fecha: DateTime.parse(datos["response"][i]["fecha"])));
     }
-    //global.list_mensajes.sort((a, b) => a.toString().compareTo(b.toString()));    
+    //global.list_mensajes.sort((a, b) => a.toString().compareTo(b.toString()));
   } catch (e) {
     print("Error getMensajes " + e.toString());
   }
 }
-
 
 guardarMensajes(String _token, String _mensaje) async {
   try {
