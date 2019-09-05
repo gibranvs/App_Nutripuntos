@@ -108,7 +108,7 @@ class list_messages extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5)),
                       child: Container(
                         constraints:
-                            BoxConstraints(minWidth: 100, maxWidth: 200),
+                            BoxConstraints(minWidth: 20, maxWidth: 200),
                         margin: EdgeInsets.only(left: 10, right: 10),
                         child: AutoSizeText(
                           mensaje.mensaje,
@@ -135,7 +135,7 @@ class list_messages extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5)),
                       child: Container(
                         constraints:
-                            BoxConstraints(minWidth: 100, maxWidth: 200),
+                            BoxConstraints(minWidth: 20, maxWidth: 200),
                         margin: EdgeInsets.only(right: 10, left: 10),
                         child: AutoSizeText(mensaje.mensaje,
                         wrapWords: false,
