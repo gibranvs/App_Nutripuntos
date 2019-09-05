@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:nutripuntos_app/src/HexToColor.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:nutripuntos_app/globals.dart' as global;
 import 'package:http/http.dart' as http;
 import '../src/DBManager.dart' as db;
@@ -72,27 +73,76 @@ class list_messages extends StatelessWidget {
       child: ListView(
         children: global.list_mensajes.map((mensaje) {
           if (mensaje.origen == "doctor") {
-            return Container(
-              margin: EdgeInsets.all(10),
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: 50,
-              child: Container(                  
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Text(mensaje.mensaje)),
+            return Row(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(left: 10),
+                  width: 40,
+                  child: Image.asset("assets/icons/recurso_2.png"),
+                ),
+                Container(
+                  margin: EdgeInsets.all(10),
+                  height: 50,
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    decoration: BoxDecoration(
+                        color: hexToColor("#bcbcbc"),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Container(
+                      constraints: BoxConstraints(minWidth: 100, maxWidth:220),
+                      margin: EdgeInsets.only(left: 10, right: 10),
+                      child: AutoSizeText(
+                        mensaje.mensaje,
+                        wrapWords: true,
+                        style: TextStyle(color: hexToColor("#676767")),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             );
           } else {
-            return Container(
-              margin: EdgeInsets.all(10),
-              width: MediaQuery.of(context).size.width * 0.8,
-              //height: 30,
-              alignment: Alignment.centerRight,
-              child: Container(
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.all(10),
+                  height: 50,
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    decoration: BoxDecoration(
+                        color: hexToColor("#059696"),
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Container(
+                      constraints: BoxConstraints(minWidth: 100, maxWidth: 220),
+                      margin: EdgeInsets.only(right: 10, left: 10),
+                      child: AutoSizeText(mensaje.mensaje,
+                          style: TextStyle(color: Colors.white)),
+                    ),
+                  ),
+                ),
+                Container(
+                  height: 40,
+                  width: 40,
+                  margin: EdgeInsets.only(right: 10),
                   decoration: BoxDecoration(
-                      color: Colors.blueGrey,
-                      borderRadius: BorderRadius.circular(10)),                  
-                  child: Text(mensaje.mensaje)),
+                    color: Colors.white,
+                    //border: Border.all(color: Color(0xFF059696), width: 6),
+                    shape: BoxShape.circle,
+                    image: global.returnFileSelected(
+                        global.imageFile, global.imageFile.path),
+                  ),
+                ),
+
+                /*
+                Container(
+                  margin: EdgeInsets.only(right: 10),
+                  width: 40,
+                  child: Image.asset("assets/icons/recurso_2.png"),
+                ),
+                */
+              ],
             );
           }
         }).toList(),
