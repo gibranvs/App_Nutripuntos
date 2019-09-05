@@ -106,7 +106,7 @@ class list_messages extends StatelessWidget {
                           BoxDecoration(borderRadius: BorderRadius.circular(5)),
                       child: Container(
                         constraints:
-                            BoxConstraints(minWidth: 20, maxWidth: 220),
+                            BoxConstraints(minWidth: 20, maxWidth: 220, minHeight: 40),
                         child: Bubble(
                           color: hexToColor("#bcbcbc"),
                           nip: BubbleNip.leftBottom,
@@ -138,7 +138,7 @@ class list_messages extends StatelessWidget {
                           BoxDecoration(borderRadius: BorderRadius.circular(5)),
                       child: Container(
                         constraints:
-                            BoxConstraints(minWidth: 20, maxWidth: 220),
+                            BoxConstraints(minWidth: 20, maxWidth: 220, minHeight: 40),
                         child: Bubble(
                           color: hexToColor("#059696"),
                           nip: BubbleNip.rightBottom,
