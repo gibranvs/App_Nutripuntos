@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:nutripuntos_app/src/HexToColor.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'newmenu.dart' as newmenu;
+import '../src/DBManager.dart' as db;
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
 
@@ -398,7 +400,7 @@ class cuadro_grafica_peso extends StatelessWidget {
                           backgroundColor: hexToColor("#cdcdcd"),
                         ),
                       );
-                    } else if (snapshot.hasData) {                      
+                    } else if (snapshot.hasData) {
                       if (snapshot.data.length > 0) {
                         return new ListView.builder(
                             scrollDirection: Axis.horizontal,
@@ -408,7 +410,8 @@ class cuadro_grafica_peso extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return Container(
                                 alignment: Alignment.bottomLeft,
-                                margin: EdgeInsets.only(top: 170, left: 7, bottom: 10),
+                                margin: EdgeInsets.only(
+                                    top: 170, left: 7, bottom: 10),
                                 child: Column(
                                   children: <Widget>[
                                     Container(
@@ -449,7 +452,7 @@ class cuadro_grafica_peso extends StatelessWidget {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
-                        /*
+                          /*
                         child:
                         CircularProgressIndicator(
                           strokeWidth: 2,
@@ -457,8 +460,8 @@ class cuadro_grafica_peso extends StatelessWidget {
                           backgroundColor: hexToColor("#cdcdcd"),
                         ),
                         */
-                      );
-                    } else if (snapshot.hasData) {                      
+                          );
+                    } else if (snapshot.hasData) {
                       if (snapshot.data.length > 0) {
                         return new ListView.builder(
                             scrollDirection: Axis.horizontal,
@@ -469,27 +472,26 @@ class cuadro_grafica_peso extends StatelessWidget {
                               //List<double> heights = [85, 86, 86, 86, 86];
                               double height;
                               String text;
-                              if(double.parse(snapshot.data[index].peso) == 0)
-                              {
+                              if (double.parse(snapshot.data[index].peso) ==
+                                  0) {
                                 height = 1;
                                 text = "00.00";
-                              }
-                              else
-                              {
-                                height = double.parse(snapshot.data[index].peso);
+                              } else {
+                                height =
+                                    double.parse(snapshot.data[index].peso);
                                 text = snapshot.data[index].peso;
                               }
                               return Container(
                                 alignment: Alignment.bottomLeft,
-                                margin: EdgeInsets.only(bottom: 0, left:10),
+                                margin: EdgeInsets.only(bottom: 0, left: 10),
                                 child: Column(
                                   children: <Widget>[
                                     Container(
                                       margin: EdgeInsets.only(
-                                          //top: 155 - heights[index],
-                                          top: 155 - height, 
-                                          bottom: 5,
-                                          ),
+                                        //top: 155 - heights[index],
+                                        top: 155 - height,
+                                        bottom: 5,
+                                      ),
                                       child: Text(text,
                                           style: TextStyle(
                                               fontSize: 10,
@@ -620,7 +622,7 @@ class cuadro_grafica_grasa extends StatelessWidget {
                           backgroundColor: hexToColor("#cdcdcd"),
                         ),
                       );
-                    } else if (snapshot.hasData) {                      
+                    } else if (snapshot.hasData) {
                       if (snapshot.data.length > 0) {
                         return new ListView.builder(
                             scrollDirection: Axis.horizontal,
@@ -630,7 +632,8 @@ class cuadro_grafica_grasa extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return Container(
                                 alignment: Alignment.bottomLeft,
-                                margin: EdgeInsets.only(top: 170, left: 7, bottom: 10),
+                                margin: EdgeInsets.only(
+                                    top: 170, left: 7, bottom: 10),
                                 child: Column(
                                   children: <Widget>[
                                     Container(
@@ -671,7 +674,7 @@ class cuadro_grafica_grasa extends StatelessWidget {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
-                        /*
+                          /*
                         child:
                         CircularProgressIndicator(
                           strokeWidth: 2,
@@ -679,8 +682,8 @@ class cuadro_grafica_grasa extends StatelessWidget {
                           backgroundColor: hexToColor("#cdcdcd"),
                         ),
                         */
-                      );
-                    } else if (snapshot.hasData) {                      
+                          );
+                    } else if (snapshot.hasData) {
                       if (snapshot.data.length > 0) {
                         return new ListView.builder(
                             scrollDirection: Axis.horizontal,
@@ -691,27 +694,26 @@ class cuadro_grafica_grasa extends StatelessWidget {
                               //List<double> heights = [85, 86, 86, 86, 86];
                               double height;
                               String text;
-                              if(double.parse(snapshot.data[index].grasa) == 0)
-                              {
+                              if (double.parse(snapshot.data[index].grasa) ==
+                                  0) {
                                 height = 1;
                                 text = "00.00";
-                              }
-                              else
-                              {
-                                height = double.parse(snapshot.data[index].grasa);
+                              } else {
+                                height =
+                                    double.parse(snapshot.data[index].grasa);
                                 text = snapshot.data[index].grasa;
                               }
                               return Container(
                                 alignment: Alignment.bottomLeft,
-                                margin: EdgeInsets.only(bottom: 0, left:10),
+                                margin: EdgeInsets.only(bottom: 0, left: 10),
                                 child: Column(
                                   children: <Widget>[
                                     Container(
                                       margin: EdgeInsets.only(
-                                          //top: 155 - heights[index],
-                                          top: 155 - height, 
-                                          bottom: 5,
-                                          ),
+                                        //top: 155 - heights[index],
+                                        top: 155 - height,
+                                        bottom: 5,
+                                      ),
                                       child: Text(text,
                                           style: TextStyle(
                                               fontSize: 10,
@@ -760,37 +762,152 @@ class circle_image extends StatelessWidget {
   circle_image(this.cantidad, this.leyenda);
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          alignment: Alignment.topCenter,
-          margin: EdgeInsets.only(top: 50),
-          height: 130,
-          child: new Image.asset("assets/icons/Recurso_27.png"),
-        ),
-        Container(
-          alignment: Alignment.topCenter,
-          margin: EdgeInsets.only(top: 90),
-          child: Text(
-            cantidad,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 23),
+    return GestureDetector(
+      onTap: () {
+        show_Dialog(context: context);
+      },
+      child: Stack(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.topCenter,
+            margin: EdgeInsets.only(top: 50),
+            height: 130,
+            child: new Image.asset("assets/icons/Recurso_27.png"),
           ),
-        ),
-        Container(
-          alignment: Alignment.topCenter,
-          margin: EdgeInsets.only(top: 120),
-          child: Text(
-            leyenda,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+          FutureBuilder<Meta>(
+              future: db.DBManager.instance.getReto(global.token),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      semanticsLabel: "Loading",
+                      backgroundColor: hexToColor("#cdcdcd"),
+                    ),
+                  );
+                } else if (snapshot.hasData) {
+                  if (snapshot.data != null) {
+                    if(snapshot.data.meta == "No existe reto")
+                    {
+                    return new Container(
+                      alignment: Alignment.center,
+                      child: Container(
+                        alignment: Alignment.topLeft,
+                        margin: EdgeInsets.only(top: 95),                        
+                        constraints:
+                            BoxConstraints(minWidth: 80, maxWidth: 80),
+                        child: AutoSizeText(
+                          snapshot.data.meta,
+                          textAlign: TextAlign.center,
+                          maxFontSize: 20,
+                          maxLines: 2,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 23),
+                        ),
+                      ),
+                    );
+                    }
+                    else
+                    {
+
+                    }
+                  } else {
+                    return new Center(
+                        child: Text("No hay datos.",
+                            style: TextStyle(color: hexToColor("#606060"))));
+                  }
+                } else if (snapshot.hasError) {
+                  return new Center(
+                      child: Text("Error al obtener datos.",
+                          style: TextStyle(color: hexToColor("#606060"))));
+                }
+              }),
+
+/*
+          Container(
+            alignment: Alignment.topCenter,
+            margin: EdgeInsets.only(top: 90),
+            child: Text(
+              cantidad,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 23),
+            ),
           ),
-        ),
-      ],
+          Container(
+            alignment: Alignment.topCenter,
+            margin: EdgeInsets.only(top: 120),
+            child: Text(
+              leyenda,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14),
+            ),
+          ),
+          */
+        ],
+      ),
     );
   }
+}
+
+Future<T> show_Dialog<T>({
+  @required BuildContext context,
+}) {
+  return showGeneralDialog(
+    context: context,
+    pageBuilder: (BuildContext buildContext, Animation<double> animation,
+        Animation<double> secondaryAnimation) {
+      return Container(
+        child: Builder(builder: (BuildContext context) {
+          return Container(
+            alignment: Alignment.topCenter,
+            color: Colors.transparent,
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.center,
+                  width: 400,
+                  height: 600,
+                  margin: EdgeInsets.only(
+                      left: 30, right: 30, top: 170, bottom: 10),
+                  decoration: new BoxDecoration(
+                      color: hexToColor("#505050"),
+                      borderRadius:
+                          new BorderRadius.all(const Radius.circular(20.0))),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(
+                        top: 190,
+                        left: MediaQuery.of(context).size.width * 0.78),
+                    child: Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
+      );
+    },
+    barrierDismissible: true,
+    barrierLabel: "",
+    barrierColor: null,
+    transitionDuration: const Duration(milliseconds: 150),
+  );
 }
 
 Future<String> GetLastPeso() async {
@@ -954,4 +1071,10 @@ class Progreso {
   int anio;
 
   Progreso({this.peso, this.grasa, this.fecha, this.dia, this.mes, this.anio});
+}
+
+class Meta {
+  String meta;
+
+  Meta({this.meta});
 }

@@ -8,19 +8,30 @@ import 'package:path_provider/path_provider.dart';
 import '../globals.dart' as globals;
 import '../pages/home.dart';
 import '../pages/login.dart';
+import '../pages/progreso.dart' as progreso;
 import '../pages/nutriochat.dart' as chat;
 
+///
+/// TABLA REGISTRO
+///
 final String tableRegistro = "REGISTRO";
 final String columnNombre = "NOMBRE";
 final String columnApellido = "APELLIDO";
 final String columnToken = "TOKEN";
 final String columnFoto = "FOTO";
 
+///
+/// TABLA RETOS
+///
 final String tableRetos = "RETOS";
+final String columnTokenReto = "TOKEN";
 final String columnReto = "RETO";
 final String columnFecha = "FECHA";
 final String columnStatus = "ESTATUS";
 
+///
+/// TABLA CHAT
+///
 final String tableChat = "CHAT";
 final String columnTokenMsj = "TOKEN";
 final String columnMensaje = "MENSAJE";
@@ -31,7 +42,7 @@ class DBManager {
   // This is the actual database filename that is saved in the docs directory.
   static final _databaseName = "RegistroUsuario.db";
   // Increment this version when you need to change the schema.
-  static final _databaseVersion = 6;
+  static final _databaseVersion = 8;
 
   // Make this a singleton class.
   DBManager._privateConstructor();
@@ -69,23 +80,31 @@ class DBManager {
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
     if (oldVersion < newVersion) {
-      //db.execute("DROP TABLE IF EXISTS $tableRegistro");
+      //db.execute("DROP TABLE IF EXISTS $tableRegistro");      
+      //db.execute('DROP TABLE IF EXISTS $tableRetos');
       /*
       db.execute(
           '''CREATE TABLE $tableRetos (
+            $columnTokenReto VARCHAR(200) NOT NULL,
             $columnReto VARCHAR(200) NOT NULL,
             $columnFecha VARCHAR(100) NOT NULL,
             $columnStatus VARCHAR(2) NOT NULL)''');
       */
+      /*
       db.execute('''CREATE TABLE $tableChat (
             $columnTokenMsj VARCHAR(200) NOT NULL,
             $columnMensaje TEXT NOT NULL,            
             $columnEnviado VARCHAR(100) NOT NULL)''');
+      */
     }
   }
 
   ///
   /// Database helper methods:
+  ///
+
+  ///
+  /// MÉTODOS PARA USO DE USUARIO:
   ///
   insertUsuario(_nombre, _apellido, _token, _foto) async {
     Database db = await database;
@@ -145,6 +164,9 @@ class DBManager {
     db.rawQuery("DELETE FROM $tableRegistro");
   }
 
+  ///
+  /// MÉTODOS PARA USO DE CHAT:
+  ///
   insertMensaje(String _token, String _mensaje) async {
     Database db = await database;
     db.rawQuery(
@@ -152,7 +174,7 @@ class DBManager {
         [_token, _mensaje, DateTime.now().toString()]);
   }
 
-getMensajes(String _token) async {
+  getMensajes(String _token) async {
     Database db = await database;
     var res = await db.rawQuery(
         'SELECT * FROM $tableChat WHERE $columnTokenMsj = ?', [_token]);
@@ -164,6 +186,21 @@ getMensajes(String _token) async {
           fecha: DateTime.parse(res[i]["FECHA"])));
     }
     //globals.list_mensajes.sort((a, b) => a.toString().compareTo(b.toString()));
+  }
+
+  ///
+  /// MÉTODOS PARA USO DE RETOS:
+  ///
+  Future<progreso.Meta> getReto(String _token) async {
+    Database db = await database;
+    var res = await db.rawQuery('SELECT * FROM $tableRetos WHERE $columnTokenReto = ?', [_token]);    
+    progreso.Meta meta = new progreso.Meta();
+    if(res.length > 0)
+      meta.meta = res[res.length - 1]["RETO"];
+    else 
+      meta.meta = "No existe reto";
+
+    return meta;
   }
 }
 
