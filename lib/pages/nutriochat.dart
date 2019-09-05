@@ -116,7 +116,7 @@ class list_messages extends StatelessWidget {
                           margin: BubbleEdges.only(top: 10),
                           stick: true,
                           child: Text(
-                            mensaje.mensaje,                            
+                            mensaje.mensaje,
                             style: TextStyle(color: hexToColor("#676767")),
                           ),
                         ),
@@ -148,7 +148,7 @@ class list_messages extends StatelessWidget {
                           margin: BubbleEdges.only(top: 10),
                           stick: true,
                           child: Text(
-                            mensaje.mensaje,                            
+                            mensaje.mensaje,
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
