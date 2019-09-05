@@ -97,6 +97,7 @@ class datos extends StatelessWidget {
         Row(
           children: <Widget>[
             GestureDetector(
+              
               onTap: () {
                 //print("Back");
                 if (global.selected_index == 0)
