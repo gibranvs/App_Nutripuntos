@@ -8,6 +8,8 @@ import '../src/DBManager.dart' as db;
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
 
+final myTextEdit = TextEditingController();
+
 void main() {
   runApp(ProgresoPage());
 }
@@ -126,7 +128,7 @@ class ProgresoPage extends StatelessWidget {
                     ),
                     label_titulo("Próxima Meta"),
                     label_subtitulo("Retos anteriores"),
-                    circle_image("-3 Kg", "en un mes"),
+                    circle_image(context),
                   ],
                 ),
               ],
@@ -757,14 +759,13 @@ class cuadro_grafica_grasa extends StatelessWidget {
 }
 
 class circle_image extends StatelessWidget {
-  final String cantidad;
-  final String leyenda;
-  circle_image(this.cantidad, this.leyenda);
+  final BuildContext _context;
+  circle_image(this._context);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        show_Dialog(context: context);
+      onTap: () {                
+        _showDialog(_context);
       },
       child: Stack(
         children: <Widget>[
@@ -787,31 +788,52 @@ class circle_image extends StatelessWidget {
                   );
                 } else if (snapshot.hasData) {
                   if (snapshot.data != null) {
-                    if(snapshot.data.meta == "No existe reto")
-                    {
-                    return new Container(
-                      alignment: Alignment.center,
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        margin: EdgeInsets.only(top: 95),                        
-                        constraints:
-                            BoxConstraints(minWidth: 80, maxWidth: 80),
-                        child: AutoSizeText(
-                          snapshot.data.meta,
-                          textAlign: TextAlign.center,
-                          maxFontSize: 20,
-                          maxLines: 2,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 23),
+                    if (snapshot.data.meta == "NA") {
+                      return new Container(
+                        alignment: Alignment.center,
+                        child: Container(
+                          alignment: Alignment.topLeft,
+                          margin: EdgeInsets.only(top: 100),
+                          constraints:
+                              BoxConstraints(minWidth: 80, maxWidth: 80),
+                          child: AutoSizeText(
+                            "Presiona para agregar reto",
+                            textAlign: TextAlign.center,
+                            maxFontSize: 20,
+                            maxLines: 2,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 23),
+                          ),
                         ),
-                      ),
-                    );
-                    }
-                    else
-                    {
-
+                      );
+                    } else {
+                      return new Container(
+                        alignment: Alignment.center,
+                        child: Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(
+                              bottom:
+                                  MediaQuery.of(context).size.height * 0.335),
+                          constraints: BoxConstraints(
+                              minWidth: 80,
+                              maxWidth: 80,
+                              maxHeight: 80,
+                              minHeight: 80),
+                          child: AutoSizeText(
+                            snapshot.data.meta,
+                            maxLines: 3,
+                            maxFontSize: 20,
+                            wrapWords: false,                                                     
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20),
+                          ),
+                        ),
+                      );
                     }
                   } else {
                     return new Center(
@@ -857,56 +879,45 @@ class circle_image extends StatelessWidget {
   }
 }
 
-Future<T> show_Dialog<T>({
-  @required BuildContext context,
-}) {
-  return showGeneralDialog(
+_showDialog(context) async {
+  await showDialog<String>(
     context: context,
-    pageBuilder: (BuildContext buildContext, Animation<double> animation,
-        Animation<double> secondaryAnimation) {
-      return Container(
-        child: Builder(builder: (BuildContext context) {
-          return Container(
-            alignment: Alignment.topCenter,
-            color: Colors.transparent,
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  width: 400,
-                  height: 600,
-                  margin: EdgeInsets.only(
-                      left: 30, right: 30, top: 170, bottom: 10),
-                  decoration: new BoxDecoration(
-                      color: hexToColor("#505050"),
-                      borderRadius:
-                          new BorderRadius.all(const Radius.circular(20.0))),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(
-                        top: 190,
-                        left: MediaQuery.of(context).size.width * 0.78),
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
-                ),
-              ],
+    child: new AlertDialog(
+      elevation: 4,
+      contentPadding: const EdgeInsets.all(16.0),
+      content: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new TextField(
+              controller: myTextEdit,
+              autofocus: true,
+              cursorColor: hexToColor("#059696"),
+              decoration: new InputDecoration(
+                labelText: 'Reto',
+                hintText: 'ej. -3 KG en un mes',
+              ),
             ),
-          );
-        }),
-      );
-    },
-    barrierDismissible: true,
-    barrierLabel: "",
-    barrierColor: null,
-    transitionDuration: const Duration(milliseconds: 150),
+          )
+        ],
+      ),
+      actions: <Widget>[
+        new FlatButton(
+            child: Text('CANCELAR',
+                style: TextStyle(color: hexToColor("#059696"))),
+            onPressed: () {
+              myTextEdit.text = "";
+              Navigator.pop(context);
+            }),
+        new FlatButton(
+            child:
+                Text('GUARDAR', style: TextStyle(color: hexToColor("#059696"))),
+            onPressed: () {
+              db.DBManager.instance.insertReto(global.token, myTextEdit.text);
+              myTextEdit.text = "";
+              Navigator.pop(context);
+            })
+      ],
+    ),
   );
 }
 

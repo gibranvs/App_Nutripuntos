@@ -154,6 +154,7 @@ class label_nombre extends StatelessWidget {
           nombreReceta,
           maxLines: 3,
           textAlign: TextAlign.center,
+          wrapWords: false,
           style: TextStyle(
               fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
         ),
@@ -264,6 +265,7 @@ class card_ingredientes extends StatelessWidget {
                                               snapshot.data[index].nombre
                                                   .toString(),
                                           maxLines: 3,
+                                          wrapWords: false,
                                           style: TextStyle(
                                               fontSize: 14,
                                               color: hexToColor("#78c826"),

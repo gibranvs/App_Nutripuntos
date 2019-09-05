@@ -29,6 +29,7 @@ class _NutriochatPageState extends State<NutriochatPage> {
     global.list_mensajes
         .sort((a, b) => a.fecha.toString().compareTo(b.fecha.toString()));
 
+/*
     Future.delayed(const Duration(milliseconds: 1000), () {      
       myListView.animateTo(
         myListView.position.maxScrollExtent,
@@ -36,6 +37,7 @@ class _NutriochatPageState extends State<NutriochatPage> {
         duration: const Duration(milliseconds: 300),
       );
     });
+    */
 
     return new Scaffold(
       drawer: new newmenu.menu(6),
@@ -110,7 +112,7 @@ class list_messages extends StatelessWidget {
                         margin: EdgeInsets.only(left: 10, right: 10),
                         child: AutoSizeText(
                           mensaje.mensaje,
-                          wrapWords: true,
+                          wrapWords: false,
                           style: TextStyle(color: hexToColor("#676767")),
                         ),
                       ),
@@ -136,6 +138,7 @@ class list_messages extends StatelessWidget {
                             BoxConstraints(minWidth: 100, maxWidth: 200),
                         margin: EdgeInsets.only(right: 10, left: 10),
                         child: AutoSizeText(mensaje.mensaje,
+                        wrapWords: false,
                             style: TextStyle(color: Colors.white)),
                       ),
                     ),

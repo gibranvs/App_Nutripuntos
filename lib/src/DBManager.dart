@@ -170,7 +170,7 @@ class DBManager {
   insertMensaje(String _token, String _mensaje) async {
     Database db = await database;
     db.rawQuery(
-        'INSERT Into $tableChat(TOKEN, $columnMensaje, $columnEnviado) VALUES(?,?,?);',
+        'INSERT Into $tableChat($columnTokenMsj, $columnMensaje, $columnEnviado) VALUES(?,?,?);',
         [_token, _mensaje, DateTime.now().toString()]);
   }
 
@@ -198,9 +198,15 @@ class DBManager {
     if(res.length > 0)
       meta.meta = res[res.length - 1]["RETO"];
     else 
-      meta.meta = "No existe reto";
+      meta.meta = "NA";
 
     return meta;
+  }
+
+  insertReto(String _token, String _reto) async {
+    Database db = await database;
+    db.rawQuery('INSERT Into $tableRetos($columnTokenReto, $columnReto, $columnFecha, $columnStatus) VALUES(?,?,?,?)',
+    [_token, _reto, DateTime.now().toString(), "Ok"]);
   }
 }
 

@@ -553,6 +553,7 @@ Future<T> show_Dialog<T>({
                       "Elige un elemento de este grupo para equilibrar tu $comida dentro del plan nutrimental",
                       maxLines: 3,
                       textAlign: TextAlign.center,
+                      wrapWords: false,
                       style: TextStyle(
                           decoration: TextDecoration.none,
                           fontFamily: "Arial",
