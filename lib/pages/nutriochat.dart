@@ -7,6 +7,7 @@ import 'package:nutripuntos_app/globals.dart' as global;
 import 'package:http/http.dart' as http;
 import '../src/DBManager.dart' as db;
 import 'newmenu.dart' as newmenu;
+import '../src/bubble.dart';
 
 final myTextEdit = TextEditingController();
 final myListView = ScrollController();
@@ -100,20 +101,28 @@ class list_messages extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.all(10),
-                    height: 50,
+                    //height: 50,
                     child: Container(
                       alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                          color: hexToColor("#bcbcbc"),
-                          borderRadius: BorderRadius.circular(5)),
+                      decoration:
+                          BoxDecoration(borderRadius: BorderRadius.circular(5)),
                       child: Container(
                         constraints:
-                            BoxConstraints(minWidth: 20, maxWidth: 200),
-                        margin: EdgeInsets.only(left: 10, right: 10),
-                        child: AutoSizeText(
-                          mensaje.mensaje,
-                          wrapWords: false,
-                          style: TextStyle(color: hexToColor("#676767")),
+                            BoxConstraints(minWidth: 20, maxWidth: 220),
+                        //margin: EdgeInsets.only(left: 10, right: 10),
+                        child: Bubble(
+                          color: hexToColor("#bcbcbc"),
+                          nip: BubbleNip.leftBottom,
+                          nipWidth: 15,
+                          nipHeight: 10,
+                          radius: Radius.zero,
+                          margin: BubbleEdges.only(top: 10),
+                          stick: true,
+                          child: Text(
+                            mensaje.mensaje,
+                            //wrapWords: false,
+                            style: TextStyle(color: hexToColor("#676767")),
+                          ),
                         ),
                       ),
                     ),
@@ -126,20 +135,36 @@ class list_messages extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.all(10),
-                    height: 50,
+                    //height: 50,
                     alignment: Alignment.centerRight,
                     child: Container(
                       alignment: Alignment.centerRight,
-                      decoration: BoxDecoration(
-                          color: hexToColor("#059696"),
+                      decoration: BoxDecoration(                          
                           borderRadius: BorderRadius.circular(5)),
                       child: Container(
                         constraints:
-                            BoxConstraints(minWidth: 20, maxWidth: 200),
-                        margin: EdgeInsets.only(right: 10, left: 10),
-                        child: AutoSizeText(mensaje.mensaje,
-                        wrapWords: false,
+                            BoxConstraints(minWidth: 20, maxWidth: 220),
+                        //margin: EdgeInsets.only(right: 10, left: 10),
+                        child: 
+                        Bubble(
+                          color: hexToColor("#059696"),
+                          nip: BubbleNip.rightBottom,
+                          nipWidth: 15,
+                          nipHeight: 10,
+                          radius: Radius.zero,
+                          margin: BubbleEdges.only(top: 10),
+                          stick: true,
+                          child: Text(
+                            mensaje.mensaje,
+                            //wrapWords: false,                            
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        /*
+                        AutoSizeText(mensaje.mensaje,
+                            wrapWords: false,
                             style: TextStyle(color: Colors.white)),
+                            */
                       ),
                     ),
                   ),
