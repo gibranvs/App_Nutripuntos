@@ -89,7 +89,6 @@ class list_messages extends StatelessWidget {
         child: ListView(
           controller: myListView,
           shrinkWrap: true,
-          //reverse: true,
           children: global.list_mensajes.map((mensaje) {
             if (mensaje.origen == "doctor") {
               return Row(
@@ -101,7 +100,6 @@ class list_messages extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.all(10),
-                    //height: 50,
                     child: Container(
                       alignment: Alignment.centerLeft,
                       decoration:
@@ -109,7 +107,6 @@ class list_messages extends StatelessWidget {
                       child: Container(
                         constraints:
                             BoxConstraints(minWidth: 20, maxWidth: 220),
-                        //margin: EdgeInsets.only(left: 10, right: 10),
                         child: Bubble(
                           color: hexToColor("#bcbcbc"),
                           nip: BubbleNip.leftBottom,
@@ -135,18 +132,15 @@ class list_messages extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.all(10),
-                    //height: 50,
                     alignment: Alignment.centerRight,
                     child: Container(
                       alignment: Alignment.centerRight,
-                      decoration: BoxDecoration(                          
-                          borderRadius: BorderRadius.circular(5)),
+                      decoration:
+                          BoxDecoration(borderRadius: BorderRadius.circular(5)),
                       child: Container(
                         constraints:
                             BoxConstraints(minWidth: 20, maxWidth: 220),
-                        //margin: EdgeInsets.only(right: 10, left: 10),
-                        child: 
-                        Bubble(
+                        child: Bubble(
                           color: hexToColor("#059696"),
                           nip: BubbleNip.rightBottom,
                           nipWidth: 15,
@@ -156,7 +150,7 @@ class list_messages extends StatelessWidget {
                           stick: true,
                           child: Text(
                             mensaje.mensaje,
-                            //wrapWords: false,                            
+                            //wrapWords: false,
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
