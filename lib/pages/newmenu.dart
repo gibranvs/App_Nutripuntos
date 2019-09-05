@@ -114,6 +114,7 @@ class datos extends StatelessWidget {
                   width: 80,
                   decoration: BoxDecoration(
                     border: Border.all(color: Color(0xFF059696), width: 6),
+                    color: Colors.white,
                     shape: BoxShape.circle,
                     image: global.returnFileSelected(
                         global.imageFile, global.imageFile.path),
