@@ -6,6 +6,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import '../globals.dart' as globals;
+import 'package:intl/intl.dart';
 import '../pages/home.dart';
 import '../pages/login.dart';
 import '../pages/progreso.dart' as progreso;
@@ -80,7 +81,7 @@ class DBManager {
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
     if (oldVersion < newVersion) {
-      //db.execute("DROP TABLE IF EXISTS $tableRegistro");      
+      //db.execute("DROP TABLE IF EXISTS $tableRegistro");
       //db.execute('DROP TABLE IF EXISTS $tableRetos');
       /*
       db.execute(
@@ -193,20 +194,40 @@ class DBManager {
   ///
   Future<progreso.Meta> getReto(String _token) async {
     Database db = await database;
-    var res = await db.rawQuery('SELECT * FROM $tableRetos WHERE $columnTokenReto = ?', [_token]);    
+    var res = await db.rawQuery(
+        'SELECT * FROM $tableRetos WHERE $columnTokenReto = ?', [_token]);
     progreso.Meta meta = new progreso.Meta();
-    if(res.length > 0)
+    if (res.length > 0) {
       meta.meta = res[res.length - 1]["RETO"];
-    else 
+    } else {
       meta.meta = "NA";
+    }
 
     return meta;
   }
 
+  Future<List<progreso.Meta>> getAllRetosPasados(String _token) async {
+    Database db = await database;
+    var res = await db.rawQuery(
+        'SELECT * FROM $tableRetos WHERE $columnTokenReto = ?', [_token]);
+
+    List<progreso.Meta> list = new List<progreso.Meta>();
+    for (int i = 0; i < res.length - 1; i++) {
+      list.add(progreso.Meta(
+          meta: res[i]["RETO"],
+          status: res[i]["ESTATUS"],
+          fecha: new DateFormat("dd-MM-yyyy")
+              .format(DateTime.parse(res[i]["FECHA"]))
+              .toString()));
+    }
+    return list;
+  }
+
   insertReto(String _token, String _reto) async {
     Database db = await database;
-    db.rawQuery('INSERT Into $tableRetos($columnTokenReto, $columnReto, $columnFecha, $columnStatus) VALUES(?,?,?,?)',
-    [_token, _reto, DateTime.now().toString(), "Ok"]);
+    db.rawQuery(
+        'INSERT Into $tableRetos($columnTokenReto, $columnReto, $columnFecha, $columnStatus) VALUES(?,?,?,?)',
+        [_token, _reto, DateTime.now().toString(), "Ok"]);
   }
 }
 

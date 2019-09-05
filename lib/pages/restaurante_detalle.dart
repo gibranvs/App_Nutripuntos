@@ -147,8 +147,7 @@ class list_platillos extends StatelessWidget {
   list_platillos(this.idRestaurante);
   @override
   Widget build(BuildContext context) {
-    return
-        Container(
+    return Container(
       margin: EdgeInsets.only(left: 0, top: 280),
       padding: EdgeInsets.only(top: 0),
       child: SingleChildScrollView(
@@ -167,7 +166,7 @@ class list_platillos extends StatelessWidget {
                         backgroundColor: hexToColor("#cdcdcd"),
                       ),
                     );
-                  } else if (snapshot.hasData) {                    
+                  } else if (snapshot.hasData) {
                     if (snapshot.data.length > 0) {
                       return new ListView.builder(
                           physics: const NeverScrollableScrollPhysics(),
@@ -176,6 +175,7 @@ class list_platillos extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return Card(
                               margin: EdgeInsets.only(bottom: 15),
+                              color: hexToColor("#f2f2f2"),
                               elevation: 0,
                               child: Row(
                                 children: <Widget>[
@@ -204,8 +204,8 @@ class list_platillos extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 0, bottom:10, left: 10),
+                                        padding: EdgeInsets.only(
+                                            top: 0, bottom: 10, left: 10),
                                         child: Container(
                                           width: 180,
                                           child: Text(
@@ -219,8 +219,8 @@ class list_platillos extends StatelessWidget {
                                         ),
                                       ),
                                       Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 0, bottom:5, left: 10),
+                                        padding: EdgeInsets.only(
+                                            top: 0, bottom: 5, left: 10),
                                         child: Container(
                                           width: 180,
                                           child: ColorCirclesWidget(
@@ -237,12 +237,14 @@ class list_platillos extends StatelessWidget {
                             );
                           });
                     } else {
-                      return new Center(child: Text("No hay platillos recomendados.",
-                          style: TextStyle(color: hexToColor("#606060"))));
+                      return new Center(
+                          child: Text("No hay platillos recomendados.",
+                              style: TextStyle(color: hexToColor("#606060"))));
                     }
                   } else if (snapshot.hasError) {
-                    return new Center(child: Text("Error al obtener platillos recomendados.",
-                          style: TextStyle(color: hexToColor("#606060"))));
+                    return new Center(
+                        child: Text("Error al obtener platillos recomendados.",
+                            style: TextStyle(color: hexToColor("#606060"))));
                   }
                 }),
           ),
@@ -264,8 +266,8 @@ Future<List<Platillo>> getPlatillos(_idRestaurante) async {
     var verde;
     var naranja;
     var amarillo;
-    List<Platillo> list = new List<Platillo>();    
-    for (int i = 0; i < datos.length; i++) {      
+    List<Platillo> list = new List<Platillo>();
+    for (int i = 0; i < datos.length; i++) {
       if (datos[i]["azul"] != null) {
         if (datos[i]["azul"].split('.')[1] == "0")
           azul = datos[i]["azul"].split('.')[0];
@@ -304,7 +306,7 @@ Future<List<Platillo>> getPlatillos(_idRestaurante) async {
           azul: azul,
           verde: verde,
           naranja: naranja,
-          amarillo: amarillo));      
+          amarillo: amarillo));
     }
     return list;
   } catch (e) {

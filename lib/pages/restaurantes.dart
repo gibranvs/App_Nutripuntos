@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
 import 'newmenu.dart' as newmenu;
+import '../src/HexToColor.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'restaurante_detalle.dart' as restaurante;
@@ -52,6 +53,8 @@ class _RestaurantesPageState extends State<RestaurantesPage> {
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) {
                           return Card(
+                            color: hexToColor("#f2f2f2"), 
+                            elevation: 0,
                             margin: new EdgeInsets.symmetric(
                                 horizontal: 15, vertical: 6),
                             child: new InkWell(

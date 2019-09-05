@@ -51,6 +51,8 @@ class _RecetasPageState extends State<RecetasPage> {
           child: new ListView(
             children: listRecetas.map((receta) {
               return Card(
+                color: hexToColor("#f2f2f2"), 
+                elevation: 0,
                 margin: new EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                 child: ListTile(
                   leading: Container(

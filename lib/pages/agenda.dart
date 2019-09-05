@@ -199,6 +199,8 @@ class Card_Proxima extends StatelessWidget {
           } else if (snapshot.hasData) {
             if (snapshot.data.length > 0) {
               return Card(
+                color: hexToColor("#f2f2f2"),
+                elevation: 0,
                 child: Row(
                   children: <Widget>[
                     Column(
@@ -247,6 +249,8 @@ class Card_Proxima extends StatelessWidget {
               );
             } else {
               return Card(
+                color: hexToColor("#f2f2f2"),
+                elevation: 0,
                 child: Center(
                   child: Text(
                     "No tienes citas pendientes.",
@@ -259,6 +263,8 @@ class Card_Proxima extends StatelessWidget {
             }
           } else if (snapshot.hasError) {
             return Card(
+              color: hexToColor("#f2f2f2"),
+              elevation: 0,
               child: Center(
                 child: Text(
                   "Error al obtener citas pendientes.",
@@ -285,6 +291,8 @@ class Card_Anteriores extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Card(
+            color: hexToColor("#f2f2f2"),
+            elevation: 0,
             clipBehavior: Clip.antiAlias,
             child: Column(
               children: <Widget>[
@@ -345,6 +353,7 @@ class Card_Anteriores extends StatelessWidget {
                                   itemCount: snapshot.data.length,
                                   itemBuilder: (context, index) {
                                     return Card(
+                                      color: hexToColor("#f2f2f2"), 
                                       elevation: 0,
                                       child: Row(
                                         children: <Widget>[
@@ -417,6 +426,8 @@ class Card_Anteriores extends StatelessWidget {
                             }
                           } else if (snapshot.hasError) {
                             return Card(
+                              color: hexToColor("#f2f2f2"), 
+                              elevation: 0,
                               child: Row(
                                 children: <Widget>[
                                   Column(
@@ -468,6 +479,8 @@ class Card_Proximas extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Card(
+            color: hexToColor("#f2f2f2"),
+            elevation: 0,
             clipBehavior: Clip.antiAlias,
             child: Column(
               children: <Widget>[
@@ -528,6 +541,7 @@ class Card_Proximas extends StatelessWidget {
                                   itemCount: snapshot.data.length,
                                   itemBuilder: (context, index) {
                                     return Card(
+                                      color: hexToColor("#f2f2f2"),                
                                       elevation: 0,
                                       child: Row(
                                         children: <Widget>[
@@ -620,6 +634,8 @@ class Card_Proximas extends StatelessWidget {
                             }
                           } else if (snapshot.hasError) {
                             return Card(
+                              color: hexToColor("#f2f2f2"), 
+                              elevation: 0,
                               child: Row(
                                 children: <Widget>[
                                   Column(

@@ -127,8 +127,9 @@ class ProgresoPage extends StatelessWidget {
                       ),
                     ),
                     label_titulo("Próxima Meta"),
-                    label_subtitulo("Retos anteriores"),
                     circle_image(context),
+                    label_subtitulo("Retos anteriores"),
+                    list_metas(),
                   ],
                 ),
               ],
@@ -764,7 +765,7 @@ class circle_image extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {                
+      onTap: () {
         _showDialog(_context);
       },
       child: Stack(
@@ -825,7 +826,7 @@ class circle_image extends StatelessWidget {
                             snapshot.data.meta,
                             maxLines: 3,
                             maxFontSize: 20,
-                            wrapWords: false,                                                     
+                            wrapWords: false,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Colors.white,
@@ -837,43 +838,114 @@ class circle_image extends StatelessWidget {
                     }
                   } else {
                     return new Center(
-                        child: Text("No hay datos.",
+                        child: Text("No hay méta próxima.",
                             style: TextStyle(color: hexToColor("#606060"))));
                   }
                 } else if (snapshot.hasError) {
                   return new Center(
-                      child: Text("Error al obtener datos.",
+                      child: Text("Error al obtener meta próxima.",
                           style: TextStyle(color: hexToColor("#606060"))));
                 }
               }),
-
-/*
-          Container(
-            alignment: Alignment.topCenter,
-            margin: EdgeInsets.only(top: 90),
-            child: Text(
-              cantidad,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 23),
-            ),
-          ),
-          Container(
-            alignment: Alignment.topCenter,
-            margin: EdgeInsets.only(top: 120),
-            child: Text(
-              leyenda,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14),
-            ),
-          ),
-          */
         ],
+      ),
+    );
+  }
+}
+
+class list_metas extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      //height: MediaQuery.of(context).size.height,
+      margin: EdgeInsets.only(top: 230),
+      child: SingleChildScrollView(
+        child: Align(
+          alignment: Alignment.center,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: FutureBuilder<List<Meta>>(
+                future: db.DBManager.instance.getAllRetosPasados(global.token),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        semanticsLabel: "Loading",
+                        backgroundColor: hexToColor("#cdcdcd"),
+                      ),
+                    );
+                  } else if (snapshot.hasData) {
+                    if (snapshot.data.length > 0) {
+                      return new ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {},
+                              child: Card(
+                                margin: EdgeInsets.only(bottom: 15),
+                                elevation: 0,
+                                color: hexToColor("#f2f2f2"),
+                                child: Row(
+                                  children: <Widget>[
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 0, left: 20),
+                                          child: Container(
+                                            width: 180,
+                                            margin: EdgeInsets.only(top: 15),
+                                            child: Text(
+                                              snapshot.data[index].meta
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: hexToColor("#505050"),
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 0, left: 20),
+                                          child: Container(
+                                            width: 200,
+                                            margin: EdgeInsets.all(10),
+                                            child: Text(
+                                              snapshot.data[index].fecha
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: hexToColor("#ababab"),
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    } else {
+                      return new Text("No hay retos anteriores.",
+                          style: TextStyle(color: hexToColor("#606060")));
+                    }
+                  } else if (snapshot.hasError) {
+                    return new Text("Error al obtener retos anteriores.",
+                        style: TextStyle(color: hexToColor("#606060")));
+                  }
+                }),
+          ),
+        ),
       ),
     );
   }
@@ -912,9 +984,11 @@ _showDialog(context) async {
             child:
                 Text('GUARDAR', style: TextStyle(color: hexToColor("#059696"))),
             onPressed: () {
-              db.DBManager.instance.insertReto(global.token, myTextEdit.text);
-              myTextEdit.text = "";
-              Navigator.pop(context);
+              if (myTextEdit.text != "") {
+                db.DBManager.instance.insertReto(global.token, myTextEdit.text);
+                myTextEdit.text = "";
+                Navigator.pop(context);
+              }
             })
       ],
     ),
@@ -1086,6 +1160,8 @@ class Progreso {
 
 class Meta {
   String meta;
+  String status;
+  String fecha;
 
-  Meta({this.meta});
+  Meta({this.meta, this.status, this.fecha});
 }

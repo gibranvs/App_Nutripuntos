@@ -351,7 +351,8 @@ class list_sugerencias extends StatelessWidget {
                               },
                               child: Card(
                                 margin: EdgeInsets.only(bottom: 15),
-                                elevation: 4,
+                                elevation: 0,
+                                color: hexToColor("#f2f2f2"),
                                 child: Row(
                                   children: <Widget>[
                                     Column(
