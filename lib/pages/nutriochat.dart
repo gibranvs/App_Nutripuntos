@@ -9,6 +9,7 @@ import '../src/DBManager.dart' as db;
 import 'newmenu.dart' as newmenu;
 
 final myTextEdit = TextEditingController();
+final myListView = ScrollController();
 
 class NutriochatPage extends StatefulWidget {
   @override
@@ -25,8 +26,17 @@ class _NutriochatPageState extends State<NutriochatPage> {
         mensaje:
             'Escribe a un nutriólogo a través de nutrio chat, un espacio creado para contactar a tu doctor, fácilmente');
             */
-    global.list_mensajes.sort((a, b) => a.toString().compareTo(b.toString()));
-    print(global.list_mensajes.length);
+    global.list_mensajes
+        .sort((a, b) => a.fecha.toString().compareTo(b.fecha.toString()));
+
+    Future.delayed(const Duration(milliseconds: 1000), () {      
+      myListView.animateTo(
+        myListView.position.maxScrollExtent,
+        curve: Curves.easeOut,
+        duration: const Duration(milliseconds: 300),
+      );
+    });
+
     return new Scaffold(
       drawer: new newmenu.menu(6),
       appBar: AppBar(
@@ -70,82 +80,82 @@ class list_messages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: ListView(
-        children: global.list_mensajes.map((mensaje) {
-          if (mensaje.origen == "doctor") {
-            return Row(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(left: 10),
-                  width: 40,
-                  child: Image.asset("assets/icons/recurso_2.png"),
-                ),
-                Container(
-                  margin: EdgeInsets.all(10),
-                  height: 50,
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    decoration: BoxDecoration(
-                        color: hexToColor("#bcbcbc"),
-                        borderRadius: BorderRadius.circular(5)),
+      height: MediaQuery.of(context).size.height - 130,
+      margin: EdgeInsets.only(bottom: 10),
+      child: Scrollbar(
+        child: ListView(
+          controller: myListView,
+          shrinkWrap: true,
+          //reverse: true,
+          children: global.list_mensajes.map((mensaje) {
+            if (mensaje.origen == "doctor") {
+              return Row(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(left: 10),
+                    width: 50,
+                    child: Image.asset("assets/icons/recurso_2.png"),
+                  ),
+                  Container(
+                    margin: EdgeInsets.all(10),
+                    height: 50,
                     child: Container(
-                      constraints: BoxConstraints(minWidth: 100, maxWidth:220),
-                      margin: EdgeInsets.only(left: 10, right: 10),
-                      child: AutoSizeText(
-                        mensaje.mensaje,
-                        wrapWords: true,
-                        style: TextStyle(color: hexToColor("#676767")),
+                      alignment: Alignment.centerLeft,
+                      decoration: BoxDecoration(
+                          color: hexToColor("#bcbcbc"),
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Container(
+                        constraints:
+                            BoxConstraints(minWidth: 100, maxWidth: 200),
+                        margin: EdgeInsets.only(left: 10, right: 10),
+                        child: AutoSizeText(
+                          mensaje.mensaje,
+                          wrapWords: true,
+                          style: TextStyle(color: hexToColor("#676767")),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            );
-          } else {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.all(10),
-                  height: 50,
-                  alignment: Alignment.centerRight,
-                  child: Container(
+                ],
+              );
+            } else {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.all(10),
+                    height: 50,
                     alignment: Alignment.centerRight,
-                    decoration: BoxDecoration(
-                        color: hexToColor("#059696"),
-                        borderRadius: BorderRadius.circular(5)),
                     child: Container(
-                      constraints: BoxConstraints(minWidth: 100, maxWidth: 220),
-                      margin: EdgeInsets.only(right: 10, left: 10),
-                      child: AutoSizeText(mensaje.mensaje,
-                          style: TextStyle(color: Colors.white)),
+                      alignment: Alignment.centerRight,
+                      decoration: BoxDecoration(
+                          color: hexToColor("#059696"),
+                          borderRadius: BorderRadius.circular(5)),
+                      child: Container(
+                        constraints:
+                            BoxConstraints(minWidth: 100, maxWidth: 200),
+                        margin: EdgeInsets.only(right: 10, left: 10),
+                        child: AutoSizeText(mensaje.mensaje,
+                            style: TextStyle(color: Colors.white)),
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  height: 40,
-                  width: 40,
-                  margin: EdgeInsets.only(right: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    //border: Border.all(color: Color(0xFF059696), width: 6),
-                    shape: BoxShape.circle,
-                    image: global.returnFileSelected(
-                        global.imageFile, global.imageFile.path),
+                  Container(
+                    height: 50,
+                    width: 50,
+                    margin: EdgeInsets.only(right: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      image: global.returnFileSelected(
+                          global.imageFile, global.imageFile.path),
+                    ),
                   ),
-                ),
-
-                /*
-                Container(
-                  margin: EdgeInsets.only(right: 10),
-                  width: 40,
-                  child: Image.asset("assets/icons/recurso_2.png"),
-                ),
-                */
-              ],
-            );
-          }
-        }).toList(),
+                ],
+              );
+            }
+          }).toList(),
+        ),
       ),
     );
   }
@@ -286,6 +296,13 @@ guardarMensajes(String _token, String _mensaje) async {
     var datos = json.decode(utf8.decode(response.bodyBytes));
     //print(datos);
     db.DBManager.instance.insertMensaje(_token, _mensaje);
+    global.list_mensajes.add(
+        Mensaje(origen: "usuario", mensaje: _mensaje, fecha: DateTime.now()));
+    myListView.animateTo(
+      myListView.position.maxScrollExtent,
+      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 300),
+    );
     myTextEdit.text = "";
   } catch (e) {
     print("Error guardarMensajes " + e.toString());
