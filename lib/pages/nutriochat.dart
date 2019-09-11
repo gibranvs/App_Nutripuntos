@@ -27,8 +27,9 @@ class _NutriochatPageState extends State<NutriochatPage> {
         mensaje:
             'Escribe a un nutriólogo a través de nutrio chat, un espacio creado para contactar a tu doctor, fácilmente');
             */
-    global.list_mensajes
-        .sort((a, b) => a.fecha.toString().compareTo(b.fecha.toString()));
+    if (global.list_mensajes != null) if (global.list_mensajes.length > 0)
+      global.list_mensajes
+          .sort((a, b) => a.fecha.toString().compareTo(b.fecha.toString()));
 
 /*
     Future.delayed(const Duration(milliseconds: 1000), () {      
@@ -105,8 +106,8 @@ class list_messages extends StatelessWidget {
                       decoration:
                           BoxDecoration(borderRadius: BorderRadius.circular(5)),
                       child: Container(
-                        constraints:
-                            BoxConstraints(minWidth: 20, maxWidth: 220, minHeight: 40),
+                        constraints: BoxConstraints(
+                            minWidth: 20, maxWidth: 220, minHeight: 40),
                         child: Bubble(
                           color: hexToColor("#bcbcbc"),
                           nip: BubbleNip.leftBottom,
@@ -137,8 +138,8 @@ class list_messages extends StatelessWidget {
                       decoration:
                           BoxDecoration(borderRadius: BorderRadius.circular(5)),
                       child: Container(
-                        constraints:
-                            BoxConstraints(minWidth: 20, maxWidth: 220, minHeight: 40),
+                        constraints: BoxConstraints(
+                            minWidth: 20, maxWidth: 220, minHeight: 40),
                         child: Bubble(
                           color: hexToColor("#059696"),
                           nip: BubbleNip.rightBottom,
