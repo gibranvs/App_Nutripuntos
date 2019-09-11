@@ -30,7 +30,6 @@ class _NutriochatPageState extends State<NutriochatPage> {
     if (global.list_mensajes != null) if (global.list_mensajes.length > 0)
       global.list_mensajes
           .sort((a, b) => a.fecha.toString().compareTo(b.fecha.toString()));
-
 /*
     Future.delayed(const Duration(milliseconds: 1000), () {      
       myListView.animateTo(

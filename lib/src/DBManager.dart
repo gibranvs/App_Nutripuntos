@@ -186,7 +186,6 @@ class DBManager {
           mensaje: res[i]["MENSAJE"],
           fecha: DateTime.parse(res[i]["FECHA"])));
     }
-    //globals.list_mensajes.sort((a, b) => a.toString().compareTo(b.toString()));
   }
 
   deleteAllMensajes() async {

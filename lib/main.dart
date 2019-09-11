@@ -39,6 +39,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    //db.DBManager.instance.deleteAllMensajes();
+    //db.DBManager.instance.deleteAllRetos();
     super.initState();      
     login.fetchDoctores();
     recetas.getRecetas();        
