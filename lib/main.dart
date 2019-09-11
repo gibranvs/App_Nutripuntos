@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();      
-    //login.fetchDoctores();
+    login.fetchDoctores();
     recetas.getRecetas();        
     startTime();
   }

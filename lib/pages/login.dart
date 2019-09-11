@@ -209,8 +209,8 @@ void check_login(_context, _controller, _doctorSelected) async {
 }
 
 Future<List<Doctor>> fetchDoctores() async {
-  final response =
-      await http.post(global.server + '/aplicacion/api/get_doctores');
+  final response = await http
+      .post(global.server + '/aplicacion/api', body: {'tipo': 'get_doctores'});
   var datos = json.decode(utf8.decode(response.bodyBytes));
   print(datos);
   List responseJson = json.decode(utf8.decode(response.bodyBytes));
