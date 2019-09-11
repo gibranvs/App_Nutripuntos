@@ -189,6 +189,11 @@ class DBManager {
     //globals.list_mensajes.sort((a, b) => a.toString().compareTo(b.toString()));
   }
 
+  deleteAllMensajes() async {
+    Database db = await database;
+    db.rawQuery("DELETE FROM $tableChat");
+  }
+
   ///
   /// MÉTODOS PARA USO DE RETOS:
   ///
@@ -228,6 +233,11 @@ class DBManager {
     db.rawQuery(
         'INSERT Into $tableRetos($columnTokenReto, $columnReto, $columnFecha, $columnStatus) VALUES(?,?,?,?)',
         [_token, _reto, DateTime.now().toString(), "Ok"]);
+  }
+
+  deleteAllRetos() async {
+    Database db = await database;
+    db.rawQuery("DELETE FROM $tableRetos");
   }
 }
 

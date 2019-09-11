@@ -181,7 +181,7 @@ Future<List<Doctor>> fetchDoctores(controller) async {
   List<Doctor> doctoresList;
   if (controller.text == "") {
     final response =
-        await http.post(global.server + '/aplicacion/api/get_doctores');
+        await http.post(global.server + '/aplicacion/api/', body: {"tipo": "get_doctores"});
     List responseJson = json.decode(utf8.decode(response.bodyBytes));
     doctoresList = createDoctoresList(responseJson);
   } else {

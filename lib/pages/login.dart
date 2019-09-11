@@ -181,7 +181,7 @@ void check_login(_context, _controller, _doctorSelected) async {
       "doc": _doctorSelected.id
     });
     var responseJson = json.decode(utf8.decode(response.bodyBytes));
-    //print(responseJson);
+    print(responseJson);
     if (responseJson["status"] == 1) {
       global.nombre_user = responseJson["response"][0]["nombre"];
       global.apellidos_user = responseJson["response"][0]["apellidos"];
@@ -212,7 +212,7 @@ Future<List<Doctor>> fetchDoctores() async {
   final response = await http
       .post(global.server + '/aplicacion/api', body: {'tipo': 'get_doctores'});
   var datos = json.decode(utf8.decode(response.bodyBytes));
-  print(datos);
+  //print(datos);
   List responseJson = json.decode(utf8.decode(response.bodyBytes));
   List<Doctor> doctoresList = createDoctoresList(responseJson);
   return doctoresList;
