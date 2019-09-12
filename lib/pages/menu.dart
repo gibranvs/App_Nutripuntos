@@ -214,8 +214,8 @@ class MenuState extends State<Menu> {
                               border: Border.all(
                                   color: Color(0xFF059696), width: 6),
                               shape: BoxShape.circle,
-                              image:
-                                  global.returnFileSelected(global.imageFile, global.imageFile.path),
+                              image: global.image_foto,
+                                  //global.returnFileSelected(global.imageFile, global.imageFile.path),
                               /*
                             DecorationImage(
                               fit: BoxFit.contain,

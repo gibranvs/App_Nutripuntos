@@ -32,6 +32,7 @@ int selected_index = 0;
 File imageFile = new File("assets/images/photo.jpg");
 DecorationImage image_foto = new DecorationImage(image: AssetImage("assets/images/photo.jpg"));
 String imageFilePath;
+/*
 DecorationImage returnFileSelected(File file, String filePath) {
   try {
     image_foto = new DecorationImage(
@@ -49,6 +50,7 @@ DecorationImage returnFileSelected(File file, String filePath) {
     );
   }
 }
+*/
 
 ///
 /// RECETAS
