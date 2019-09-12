@@ -72,31 +72,31 @@ class _HomePageState extends State<HomePage> {
       var imageFile =
           await ImagePicker.pickImage(source: source).whenComplete(() {});
       setState(() {
-        global.imageFile = imageFile;
-        global.imageFilePath = imageFile.path;
-        global.image_foto = DecorationImage(image: AssetImage(imageFile.path));
-        List<int> fileBytes = imageFile.readAsBytesSync();
+        //global.imageFile = imageFile;
+        //global.imageFilePath = imageFile.path;
+        //List<int> fileBytes = imageFile.readAsBytesSync();
         //String base64File = base64Encode(fileBytes);
+        global.image_foto = DecorationImage(image: AssetImage(imageFile.path));
 
         db.DBManager.instance.insertUsuario(global.nombre_user,
-            global.apellidos_user, global.token, global.imageFilePath);
+            global.apellidos_user, global.token, imageFile.path);
       });
       Navigator.of(context, rootNavigator: true).pop('dialog');
     } catch (e) {
       print("Error pickImageFrom " + e.toString());
-      return new DecorationImage(
-        fit: BoxFit.contain,
-        image: new AssetImage("assets/images/photo.jpg"),
-      );
+      setState(() {
+        global.image_foto =
+            DecorationImage(image: AssetImage("assets/images/photo.jpg"));
+      });
     }
-  }  
+  }
 
   @override
   Widget build(BuildContext context) {
     return new WillPopScope(
       onWillPop: () {
         SystemNavigator.pop();
-      }, //async => false,
+      },
       child: Scaffold(
         //drawer: new menu.Menu(),
         drawer: new newmenu.menu(0),
@@ -249,7 +249,8 @@ class foto extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(width: 0, color: Colors.white),
           shape: BoxShape.circle,
-          image: new DecorationImage(image: AssetImage("assets/images/photo.jpg")),          
+          image:
+              new DecorationImage(image: AssetImage("assets/images/photo.jpg")),
         ),
       );
     }

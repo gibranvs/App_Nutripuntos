@@ -29,10 +29,11 @@ int selected_index = 0;
 ///
 /// HOME
 ///
-File imageFile = new File("assets/images/photo.jpg");
-DecorationImage image_foto = new DecorationImage(image: AssetImage("assets/images/photo.jpg"));
-String imageFilePath;
+DecorationImage image_foto =
+    new DecorationImage(image: AssetImage("assets/images/photo.jpg"));
 /*
+File imageFile = new File("assets/images/photo.jpg");
+String imageFilePath;
 DecorationImage returnFileSelected(File file, String filePath) {
   try {
     image_foto = new DecorationImage(
@@ -71,7 +72,6 @@ List<Platillo> list_platillos_restaurante;
 /// AGENDA
 ///
 List<Citas> list_citas;
-
 
 ///
 /// MENSAJES

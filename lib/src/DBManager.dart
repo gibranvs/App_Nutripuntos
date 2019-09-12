@@ -141,10 +141,9 @@ class DBManager {
         globals.nombre_user = res[res.length - 1]["NOMBRE"].toString();
         globals.apellidos_user = res[res.length - 1]["APELLIDO"].toString();
         globals.token = res[res.length - 1]["TOKEN"].toString();
-        globals.imageFilePath = res[res.length - 1]["FOTO"].toString();
         globals.image_foto = new DecorationImage(
-            image: AssetImage(res[res.length - 1]["FOTO"].toString()));
-        //print(globals.imageFilePath);
+            image: AssetImage(res[res.length - 1]["FOTO"].toString()));        
+        //globals.imageFilePath = res[res.length - 1]["FOTO"].toString();
 
         globals.list_mensajes = new List<chat.Mensaje>();
         getMensajes(globals.token);
@@ -158,7 +157,9 @@ class DBManager {
         });
       }
     } catch (_ex) {
-      globals.imageFilePath = "assets/images/photo.jpg";
+      //globals.imageFilePath = "assets/images/photo.jpg";
+      globals.image_foto = new DecorationImage(
+            image: AssetImage("assets/images/photo.jpg"));
     }
   }
 
