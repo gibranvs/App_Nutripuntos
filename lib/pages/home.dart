@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:nutripuntos_app/pages/progreso.dart';
+import 'package:flutter/services.dart';
 import 'menu.dart' as menu;
 import 'newmenu.dart' as newmenu;
 import 'package:nutripuntos_app/globals.dart' as global;
@@ -90,7 +91,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return new 
+    WillPopScope(
+      onWillPop: () {
+        SystemNavigator.pop();
+      }, //async => false,
+      child:
+    Scaffold(
       //drawer: new menu.Menu(),
       drawer: new newmenu.menu(0),
       drawerDragStartBehavior: DragStartBehavior.start,
@@ -178,6 +185,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
+    ),
     );
   }
 }
