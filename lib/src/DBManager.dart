@@ -43,7 +43,7 @@ class DBManager {
   // This is the actual database filename that is saved in the docs directory.
   static final _databaseName = "RegistroUsuario.db";
   // Increment this version when you need to change the schema.
-  static final _databaseVersion = 8;
+  static final _databaseVersion = 11;
 
   // Make this a singleton class.
   DBManager._privateConstructor();
@@ -74,7 +74,7 @@ class DBManager {
                 $columnNombre VARCHAR(100) NOT NULL,
                 $columnApellido VARCHAR(100) NOT NULL,
                 $columnToken VARCHAR(200) NOT NULL,
-                $columnFoto TEXT NOT NULL
+                $columnFoto BLOB NOT NULL
                 )
               ''');
   }
@@ -117,7 +117,7 @@ class DBManager {
           "INSERT Into $tableRegistro($columnNombre, $columnApellido, $columnToken, $columnFoto) VALUES (?,?,?,?);",
           [_nombre, _apellido, _token, _foto]);
     } else {
-      print("update");
+      //print("update");
       await db.rawQuery(
           "UPDATE $tableRegistro SET $columnNombre = ?, $columnApellido = ?, $columnToken = ?, $columnFoto = ?",
           [_nombre, _apellido, _token, _foto]);
@@ -128,7 +128,7 @@ class DBManager {
     try {
       Database db = await database;
       var res = await db.rawQuery("SELECT * FROM $tableRegistro");
-      //print("res=" + res.toString());
+      print(res[res.length - 1]["FOTO"]);
       if (res.isEmpty == true) {
         print("No hay usuario");
         globals.user_exist = false;
@@ -142,6 +142,8 @@ class DBManager {
         globals.apellidos_user = res[res.length - 1]["APELLIDO"].toString();
         globals.token = res[res.length - 1]["TOKEN"].toString();
         globals.imageFilePath = res[res.length - 1]["FOTO"].toString();
+        globals.image_foto = new DecorationImage(
+            image: AssetImage(res[res.length - 1]["FOTO"].toString()));
         //print(globals.imageFilePath);
 
         globals.list_mensajes = new List<chat.Mensaje>();

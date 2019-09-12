@@ -74,10 +74,12 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         global.imageFile = imageFile;
         global.imageFilePath = imageFile.path;
+        global.image_foto = DecorationImage(image: AssetImage(imageFile.path));
         List<int> fileBytes = imageFile.readAsBytesSync();
-        String base64File = base64Encode(fileBytes);
+        //String base64File = base64Encode(fileBytes);
+
         db.DBManager.instance.insertUsuario(global.nombre_user,
-            global.apellidos_user, global.token, imageFile.path);
+            global.apellidos_user, global.token, global.imageFilePath);
       });
       Navigator.of(context, rootNavigator: true).pop('dialog');
     } catch (e) {
@@ -87,105 +89,103 @@ class _HomePageState extends State<HomePage> {
         image: new AssetImage("assets/images/photo.jpg"),
       );
     }
-  }
+  }  
 
   @override
   Widget build(BuildContext context) {
-    return new 
-    WillPopScope(
+    return new WillPopScope(
       onWillPop: () {
         SystemNavigator.pop();
       }, //async => false,
-      child:
-    Scaffold(
-      //drawer: new menu.Menu(),
-      drawer: new newmenu.menu(0),
-      drawerDragStartBehavior: DragStartBehavior.start,
-      appBar: new AppBar(
-        centerTitle: true,
-        elevation: 0,
-        title: Image.asset(
-          'assets/icons/recurso_1.png',
-          width: MediaQuery.of(context).size.width * 0.22,
-        ),
-      ),
-      body: Container(
-        decoration: new BoxDecoration(
-          color: const Color(0x00FFCC00),
-          image: new DecorationImage(
-            image: new AssetImage("assets/images/fondo.jpg"),
-            colorFilter: new ColorFilter.mode(
-                Colors.black.withOpacity(0.2), BlendMode.dstATop),
-            fit: BoxFit.cover,
+      child: Scaffold(
+        //drawer: new menu.Menu(),
+        drawer: new newmenu.menu(0),
+        drawerDragStartBehavior: DragStartBehavior.start,
+        appBar: new AppBar(
+          centerTitle: true,
+          elevation: 0,
+          title: Image.asset(
+            'assets/icons/recurso_1.png',
+            width: MediaQuery.of(context).size.width * 0.22,
           ),
         ),
-        child: PreferredSize(
-          preferredSize: Size.fromHeight(0),
-          child: Container(
-            child: Column(
-              children: <Widget>[
-                Stack(
-                  children: <Widget>[
-                    ///
-                    /// FONDO VERDE
-                    ///
-                    header(),
+        body: Container(
+          decoration: new BoxDecoration(
+            color: const Color(0x00FFCC00),
+            image: new DecorationImage(
+              image: new AssetImage("assets/images/fondo.jpg"),
+              colorFilter: new ColorFilter.mode(
+                  Colors.black.withOpacity(0.2), BlendMode.dstATop),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: PreferredSize(
+            preferredSize: Size.fromHeight(0),
+            child: Container(
+              child: Column(
+                children: <Widget>[
+                  Stack(
+                    children: <Widget>[
+                      ///
+                      /// FONDO VERDE
+                      ///
+                      header(),
 
-                    ///
-                    /// FONDO FOTO
-                    ///
-                    fondo_foto(),
+                      ///
+                      /// FONDO FOTO
+                      ///
+                      fondo_foto(),
 
-                    ///
-                    /// IMAGEN FOTO
-                    ///
-                    GestureDetector(
-                      onTap: () {
-                        showAlertOption();
-                      },
-                      child: foto(),
-                    ),
+                      ///
+                      /// IMAGEN FOTO
+                      ///
+                      GestureDetector(
+                        onTap: () {
+                          showAlertOption();
+                        },
+                        child: foto(),
+                      ),
 
-                    ///
-                    /// LABEL NOMBRE
-                    ///
-                    label_nombre(),
+                      ///
+                      /// LABEL NOMBRE
+                      ///
+                      label_nombre(),
 
-                    ///
-                    /// LABEL STATUS
-                    ///
-                    label_status(),
+                      ///
+                      /// LABEL STATUS
+                      ///
+                      label_status(),
 
-                    Container(
-                      padding: EdgeInsets.only(top: 5),
-                      margin: const EdgeInsets.only(top: 200),
-                      height: 312,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: Stack(
-                          children: <Widget>[
-                            ///
-                            /// PROXIMA CITA
-                            ///
-                            card_proxima_cita(),
+                      Container(
+                        padding: EdgeInsets.only(top: 5),
+                        margin: const EdgeInsets.only(top: 200),
+                        height: 312,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: Stack(
+                            children: <Widget>[
+                              ///
+                              /// PROXIMA CITA
+                              ///
+                              card_proxima_cita(),
 
-                            ///
-                            /// BUTONS
-                            ///
-                            botones(),
-                          ],
+                              ///
+                              /// BUTONS
+                              ///
+                              botones(),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
+              width: MediaQuery.of(context).size.width,
             ),
-            width: MediaQuery.of(context).size.width,
           ),
         ),
       ),
-    ),
     );
   }
 }
@@ -227,18 +227,32 @@ class fondo_foto extends StatelessWidget {
 class foto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 80,
-      width: 80,
-      alignment: Alignment.topCenter,
-      margin: EdgeInsets.only(left: 145, top: 23.5),
-      decoration: BoxDecoration(
-        border: Border.all(width: 0, color: Colors.white),
-        shape: BoxShape.circle,
-        image:
-            global.returnFileSelected(global.imageFile, global.imageFile.path),
-      ),
-    );
+    try {
+      return Container(
+        height: 80,
+        width: 80,
+        alignment: Alignment.topCenter,
+        margin: EdgeInsets.only(left: 145, top: 23.5),
+        decoration: BoxDecoration(
+          border: Border.all(width: 0, color: Colors.white),
+          shape: BoxShape.circle,
+          image: global.image_foto,
+          //global.returnFileSelected(global.imageFile, global.imageFile.path),
+        ),
+      );
+    } catch (e) {
+      return Container(
+        height: 80,
+        width: 80,
+        alignment: Alignment.topCenter,
+        margin: EdgeInsets.only(left: 145, top: 23.5),
+        decoration: BoxDecoration(
+          border: Border.all(width: 0, color: Colors.white),
+          shape: BoxShape.circle,
+          image: new DecorationImage(image: AssetImage("assets/images/photo.jpg")),          
+        ),
+      );
+    }
   }
 }
 

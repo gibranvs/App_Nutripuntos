@@ -30,15 +30,17 @@ int selected_index = 0;
 /// HOME
 ///
 File imageFile = new File("assets/images/photo.jpg");
+DecorationImage image_foto = new DecorationImage(image: AssetImage("assets/images/photo.jpg"));
 String imageFilePath;
 DecorationImage returnFileSelected(File file, String filePath) {
   try {
-    return new DecorationImage(
+    image_foto = new DecorationImage(
       fit: BoxFit.contain,
       image: file == null
           ? new AssetImage("assets/images/photo.jpg")
           : new AssetImage(imageFilePath),
     );
+    return image_foto;
   } catch (e) {
     print("Error returnFileSelected " + e.toString());
     return new DecorationImage(

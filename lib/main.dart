@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'pages/login.dart' as login;
@@ -28,7 +29,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   startTime() async {
-    
     var _duration = new Duration(seconds: 5);
     return new Timer(_duration, navigationPage);
   }
@@ -38,12 +38,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  void initState() {
+  Future initState() {
     //db.DBManager.instance.deleteAllMensajes();
     //db.DBManager.instance.deleteAllRetos();
-    super.initState();      
+    super.initState();
     login.fetchDoctores();
-    recetas.getRecetas();        
+    recetas.getRecetas();
     startTime();
   }
 

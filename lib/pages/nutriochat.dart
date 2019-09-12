@@ -162,8 +162,8 @@ class list_messages extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
-                      image: global.returnFileSelected(
-                          global.imageFile, global.imageFile.path),
+                      image: global.image_foto,
+                      //global.returnFileSelected(global.imageFile, global.imageFile.path),
                     ),
                   ),
                 ],
