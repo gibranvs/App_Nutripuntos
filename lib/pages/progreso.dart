@@ -17,7 +17,6 @@ void main() {
 class ProgresoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //GetProgreso();
     return Scaffold(
       drawer: new newmenu.menu(2),
       appBar: AppBar(
