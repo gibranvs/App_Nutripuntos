@@ -127,8 +127,7 @@ class DBManager {
   getUsuario(_context) async {
     try {
       Database db = await database;
-      var res = await db.rawQuery("SELECT * FROM $tableRegistro");
-      print(res[res.length - 1]["FOTO"]);
+      var res = await db.rawQuery("SELECT * FROM $tableRegistro");      
       if (res.isEmpty == true) {
         print("No hay usuario");
         globals.user_exist = false;
