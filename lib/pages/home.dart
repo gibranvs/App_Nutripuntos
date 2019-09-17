@@ -12,6 +12,7 @@ import 'plan.dart';
 import '../src/HexToColor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:http/http.dart' as http;
 import '../src/DBManager.dart' as db;
 
@@ -484,28 +485,86 @@ class botones extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => new ProgresoPage()));
             },
             child: Container(
-              margin: EdgeInsets.only(left: 210),
+              margin: EdgeInsets.only(left: 175, top:10),
               child: Column(
                 children: <Widget>[
                   Image.asset(
                     "assets/icons/recurso_8.png",
                     width: MediaQuery.of(context).size.width * 0.2,
                   ),
-                  Text(
-                    "Baja 2 kg",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  Text(
-                    "meta cumplida",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
+                  FutureBuilder<Meta>(
+                      future: db.DBManager.instance.getReto(global.token),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              semanticsLabel: "Loading",
+                              backgroundColor: hexToColor("#cdcdcd"),
+                            ),
+                          );
+                        } else if (snapshot.hasData) {
+                          if (snapshot.data != null) {
+                            if (snapshot.data.meta == "NA") {
+                              return new Container(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  alignment: Alignment.topLeft,
+                                  margin: EdgeInsets.only(top: 0),
+                                  constraints: BoxConstraints(
+                                      minWidth: 100, maxWidth: 100),
+                                  child: AutoSizeText(
+                                    "Presiona para agregar reto",
+                                    textAlign: TextAlign.center,
+                                    maxFontSize: 16,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 16),
+                                  ),
+                                ),
+                              );
+                            } else {
+                              return new Container(
+                                alignment: Alignment.center,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.only(
+                                      bottom:
+                                          MediaQuery.of(context).size.height *
+                                              0.335),
+                                  constraints: BoxConstraints(
+                                      minWidth: 100,
+                                      maxWidth: 100,
+                                      maxHeight: 80,
+                                      minHeight: 80),
+                                  child: AutoSizeText(
+                                    snapshot.data.meta,
+                                    maxLines: 3,
+                                    maxFontSize: 16,
+                                    wrapWords: false,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 16),
+                                  ),
+                                ),
+                              );
+                            }
+                          } else {
+                            return new Center(
+                                child: Text("No hay méta próxima.",
+                                    style: TextStyle(
+                                        color: hexToColor("#606060"))));
+                          }
+                        } else if (snapshot.hasError) {
+                          return new Center(
+                              child: Text("Error al obtener meta próxima.",
+                                  style:
+                                      TextStyle(color: hexToColor("#606060"))));
+                        }
+                      }),
                 ],
               ),
             ),

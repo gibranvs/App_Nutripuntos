@@ -39,7 +39,7 @@ class ProgresoPage extends StatelessWidget {
           length: 3,
           child: Scaffold(
             appBar: AppBar(
-              title: TabBar(
+              title: TabBar(                
                 tabs: [
                   Tab(
                     text: "Peso",
@@ -845,7 +845,7 @@ class circle_image extends StatelessWidget {
                       child: Text("Error al obtener meta próxima.",
                           style: TextStyle(color: hexToColor("#606060"))));
                 }
-              }),
+              }), 
         ],
       ),
     );

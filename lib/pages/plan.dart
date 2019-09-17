@@ -42,6 +42,7 @@ class _PlanPageState extends State<PlanPage> {
           child: Scaffold(
             appBar: AppBar(
               title: TabBar(
+                isScrollable: true,
                 tabs: [
                   Tab(
                     text: "Desayunos",
