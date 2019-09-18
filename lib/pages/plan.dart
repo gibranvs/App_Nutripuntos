@@ -34,7 +34,7 @@ class _PlanPageState extends State<PlanPage> {
               ],
             ),
           ),
-        ),
+        ),        
       ),
       body: MaterialApp(
         home: DefaultTabController(
@@ -42,7 +42,9 @@ class _PlanPageState extends State<PlanPage> {
           child: Scaffold(
             appBar: AppBar(
               title: TabBar(
+                indicatorSize: TabBarIndicatorSize.tab,                        
                 isScrollable: true,
+                indicatorColor: Colors.white,
                 tabs: [
                   Tab(
                     text: "Desayunos",
