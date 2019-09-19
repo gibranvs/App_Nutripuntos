@@ -12,10 +12,13 @@ import 'restaurantes.dart';
 import 'plan.dart';
 import '../src/HexToColor.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:http/http.dart' as http;
 import '../src/DBManager.dart' as db;
+
+File croppedFile;
 
 class HomePage extends StatefulWidget {
   String prueba;
@@ -71,26 +74,42 @@ class _HomePageState extends State<HomePage> {
 
   pickImageFrom(context, ImageSource source) async {
     try {
-      var imageFile =
-          await ImagePicker.pickImage(source: source).whenComplete(() {});
-      setState(() {
-        //global.imageFile = imageFile;
-        //global.imageFilePath = imageFile.path;
-        //List<int> fileBytes = imageFile.readAsBytesSync();
-        //String base64File = base64Encode(fileBytes);
-        global.image_foto = DecorationImage(image: AssetImage(imageFile.path));
-
+      File img = await ImagePicker.pickImage(source: source);
+        print(img);
+      if (img != null) {
+        global.image_foto = DecorationImage(image: AssetImage(img.path));
         db.DBManager.instance.insertUsuario(global.id_user, global.nombre_user,
-            global.apellidos_user, global.token, imageFile.path);
-      });
-      Navigator.of(context, rootNavigator: true).pop('dialog');
+            global.apellidos_user, global.token, croppedFile.path);
+            /*
+        croppedFile = await ImageCropper.cropImage(
+          sourcePath: img.path,
+          ratioX: 1.0,
+          ratioY: 1.0,
+          maxWidth: 512,
+          maxHeight: 512,
+        );
+        */
+        Navigator.of(context, rootNavigator: true).pop('dialog');
+        setState(() {
+        });
+      }
+      //Navigator.of(context, rootNavigator: true).pop('dialog');
     } catch (e) {
       print("Error pickImageFrom " + e.toString());
       setState(() {
-        global.image_foto =
-            DecorationImage(image: AssetImage("assets/images/photo.jpg"));
+        global.image_foto = DecorationImage(image: AssetImage("assets/images/photo.jpg"));
       });
     }
+  }
+
+  Future cropImage(File image) async {
+    File croppedFile = await ImageCropper.cropImage(
+      sourcePath: image.path,
+      ratioX: 1.0,
+      ratioY: 1.0,
+      maxWidth: 512,
+      maxHeight: 512,
+    );
   }
 
   @override
@@ -239,9 +258,11 @@ class foto extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(width: 0, color: Colors.white),
           shape: BoxShape.circle,
-          image: global.image_foto,
+          image: croppedFile == null
+              ? DecorationImage(image: AssetImage("assets/images/photo.jpg"))
+              : global.image_foto,
           //global.returnFileSelected(global.imageFile, global.imageFile.path),
-        ),
+        ),        
       );
     } catch (e) {
       return Container(
@@ -386,50 +407,6 @@ class card_proxima_cita extends StatelessWidget {
           }
         },
       ),
-
-      /*
-      Card(
-        child: Row(
-          children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 12, left: 15, bottom: 2),
-                  child: Text(
-                    "11\nOCT",
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF059696)),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 2, left: 15, bottom: 12),
-                  child: Text("10:00 AM"),
-                ),
-              ],
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 12, left: 25, bottom: 4),
-                  child: Text(
-                    "Próxima cita",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 4, left: 25, bottom: 12),
-                  child: Text("Seguimiento de peso"),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      */
     );
   }
 }
