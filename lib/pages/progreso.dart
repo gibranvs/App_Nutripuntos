@@ -984,7 +984,7 @@ _showDialog(context) async {
                 Text('GUARDAR', style: TextStyle(color: hexToColor("#059696"))),
             onPressed: () {
               if (myTextEdit.text != "") {
-                db.DBManager.instance.insertReto(global.token, myTextEdit.text);
+                db.DBManager.instance.insertReto(global.id_user, global.token, myTextEdit.text);
                 myTextEdit.text = "";
                 Navigator.pop(context);
               }

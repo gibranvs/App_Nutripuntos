@@ -16,6 +16,7 @@ import 'src/DBManager.dart' as db;
 String server = "http://c1370875.ferozo.com";
 
 bool user_exist;
+int id_user;
 String token;
 String recovery_token;
 String nombre_user;

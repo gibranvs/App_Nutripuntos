@@ -188,6 +188,7 @@ void check_login(_context, _controller, _doctorSelected) async {
       global.token = responseJson["response"][0]["token"];
       global.recovery_token = responseJson["response"][0]["recoverytk"];
       db.DBManager.instance.insertUsuario(
+          1,
           responseJson["response"][0]["nombre"].toString(),
           responseJson["response"][0]["apellidos"].toString(),
           responseJson["response"][0]["token"].toString(),

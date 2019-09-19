@@ -10,6 +10,7 @@ import 'src/DBManager.dart' as db;
 
 void main() {
   runApp(new MaterialApp(
+    title: "Nutripuntos",
     home: new MyApp(),
     //routes: <String, WidgetBuilder>{'/HomeScreen': (BuildContext context) => new login.LoginPage()},
     theme: ThemeData(
@@ -39,12 +40,14 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Future initState() {
+    //db.DBManager.instance.deleteAllRegistros();
     //db.DBManager.instance.deleteAllMensajes();
     //db.DBManager.instance.deleteAllRetos();
     super.initState();
     login.fetchDoctores();
     recetas.getRecetas();
-    startTime();
+    db.DBManager.instance.getUsuario(context);
+    //startTime();
   }
 
   @override

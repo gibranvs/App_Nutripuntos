@@ -16,6 +16,7 @@ import '../pages/nutriochat.dart' as chat;
 /// TABLA REGISTRO
 ///
 final String tableRegistro = "REGISTRO";
+final String columnID = "ID";
 final String columnNombre = "NOMBRE";
 final String columnApellido = "APELLIDO";
 final String columnToken = "TOKEN";
@@ -43,7 +44,7 @@ class DBManager {
   // This is the actual database filename that is saved in the docs directory.
   static final _databaseName = "RegistroUsuario.db";
   // Increment this version when you need to change the schema.
-  static final _databaseVersion = 11;
+  static final _databaseVersion = 13;
 
   // Make this a singleton class.
   DBManager._privateConstructor();
@@ -81,22 +82,32 @@ class DBManager {
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
     if (oldVersion < newVersion) {
-      //db.execute("DROP TABLE IF EXISTS $tableRegistro");
-      //db.execute('DROP TABLE IF EXISTS $tableRetos');
-      /*
-      db.execute(
-          '''CREATE TABLE $tableRetos (
+      db.execute("DROP TABLE IF EXISTS $tableRegistro");
+      db.execute('DROP TABLE IF EXISTS $tableRetos');
+      db.execute('DROP TABLE IF EXISTS $tableChat');
+
+      db.execute('''CREATE TABLE $tableRetos (
+            $columnID INT NOT NULL,
             $columnTokenReto VARCHAR(200) NOT NULL,
             $columnReto VARCHAR(200) NOT NULL,
             $columnFecha VARCHAR(100) NOT NULL,
             $columnStatus VARCHAR(2) NOT NULL)''');
-      */
-      /*
+
       db.execute('''CREATE TABLE $tableChat (
+            $columnID INT NOT NULL,
             $columnTokenMsj VARCHAR(200) NOT NULL,
             $columnMensaje TEXT NOT NULL,            
             $columnEnviado VARCHAR(100) NOT NULL)''');
-      */
+
+      db.execute('''
+              CREATE TABLE $tableRegistro (    
+                $columnID INT NOT NULL,     
+                $columnNombre VARCHAR(100) NOT NULL,
+                $columnApellido VARCHAR(100) NOT NULL,
+                $columnToken VARCHAR(200) NOT NULL,
+                $columnFoto BLOB NOT NULL
+                )
+              ''');
     }
   }
 
@@ -107,15 +118,14 @@ class DBManager {
   ///
   /// MÉTODOS PARA USO DE USUARIO:
   ///
-  insertUsuario(_nombre, _apellido, _token, _foto) async {
+  insertUsuario(_id, _nombre, _apellido, _token, _foto) async {
     Database db = await database;
-
     var queryResult = await db.rawQuery("SELECT * FROM $tableRegistro");
 
     if (queryResult.isEmpty == true) {
       await db.rawInsert(
-          "INSERT Into $tableRegistro($columnNombre, $columnApellido, $columnToken, $columnFoto) VALUES (?,?,?,?);",
-          [_nombre, _apellido, _token, _foto]);
+          "INSERT Into $tableRegistro($columnID, $columnNombre, $columnApellido, $columnToken, $columnFoto) VALUES (?,?,?,?,?);",
+          [_id, _nombre, _apellido, _token, _foto]);
     } else {
       //print("update");
       await db.rawQuery(
@@ -136,19 +146,19 @@ class DBManager {
           _context,
           MaterialPageRoute(builder: (context) => LoginPage()),
         );
-      } else {
+      } else {      
+        globals.id_user = int.parse(res[res.length - 1]["ID"].toString());
         globals.nombre_user = res[res.length - 1]["NOMBRE"].toString();
         globals.apellidos_user = res[res.length - 1]["APELLIDO"].toString();
         globals.token = res[res.length - 1]["TOKEN"].toString();
         globals.image_foto = new DecorationImage(
-            image: AssetImage(res[res.length - 1]["FOTO"].toString()));        
+            image: AssetImage(res[res.length - 1]["FOTO"].toString()));
         //globals.imageFilePath = res[res.length - 1]["FOTO"].toString();
-
-        globals.list_mensajes = new List<chat.Mensaje>();
-        getMensajes(globals.token);
+        
+        getMensajes(globals.id_user, globals.token);
         chat.getMensajesServer(globals.token);
 
-        Future.delayed(const Duration(milliseconds: 300), () {
+        Future.delayed(const Duration(milliseconds: 5000), () {
           Navigator.push(
             _context,
             MaterialPageRoute(builder: (context) => HomePage()),
@@ -157,8 +167,8 @@ class DBManager {
       }
     } catch (_ex) {
       //globals.imageFilePath = "assets/images/photo.jpg";
-      globals.image_foto = new DecorationImage(
-            image: AssetImage("assets/images/photo.jpg"));
+      globals.image_foto =
+          new DecorationImage(image: AssetImage("assets/images/photo.jpg"));
     }
   }
 
@@ -170,18 +180,18 @@ class DBManager {
   ///
   /// MÉTODOS PARA USO DE CHAT:
   ///
-  insertMensaje(String _token, String _mensaje) async {
+  insertMensaje(int _id, String _token, String _mensaje) async {
     Database db = await database;
     db.rawQuery(
-        'INSERT Into $tableChat($columnTokenMsj, $columnMensaje, $columnEnviado) VALUES(?,?,?);',
-        [_token, _mensaje, DateTime.now().toString()]);
+        'INSERT Into $tableChat($columnID, $columnTokenMsj, $columnMensaje, $columnEnviado) VALUES(?,?,?,?);',
+        [_id, _token, _mensaje, DateTime.now().toString()]);
   }
 
-  getMensajes(String _token) async {
+  getMensajes(int _id, String _token) async {    
     Database db = await database;
     var res = await db.rawQuery(
-        'SELECT * FROM $tableChat WHERE $columnTokenMsj = ?', [_token]);
-
+        'SELECT * FROM $tableChat WHERE $columnID = ?', [_id]);        
+    globals.list_mensajes = new List<chat.Mensaje>();        
     for (int i = 0; i < res.length; i++) {
       globals.list_mensajes.add(chat.Mensaje(
           origen: "usuario",
@@ -229,11 +239,11 @@ class DBManager {
     return list;
   }
 
-  insertReto(String _token, String _reto) async {
+  insertReto(int _id, String _token, String _reto) async {
     Database db = await database;
     db.rawQuery(
-        'INSERT Into $tableRetos($columnTokenReto, $columnReto, $columnFecha, $columnStatus) VALUES(?,?,?,?)',
-        [_token, _reto, DateTime.now().toString(), "Ok"]);
+        'INSERT Into $tableRetos($columnID, $columnTokenReto, $columnReto, $columnFecha, $columnStatus) VALUES(?,?,?,?,?)',
+        [_id, _token, _reto, DateTime.now().toString(), "Ok"]);
   }
 
   deleteAllRetos() async {

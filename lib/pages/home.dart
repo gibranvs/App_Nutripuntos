@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:nutripuntos_app/pages/progreso.dart';
@@ -79,7 +80,7 @@ class _HomePageState extends State<HomePage> {
         //String base64File = base64Encode(fileBytes);
         global.image_foto = DecorationImage(image: AssetImage(imageFile.path));
 
-        db.DBManager.instance.insertUsuario(global.nombre_user,
+        db.DBManager.instance.insertUsuario(global.id_user, global.nombre_user,
             global.apellidos_user, global.token, imageFile.path);
       });
       Navigator.of(context, rootNavigator: true).pop('dialog');
@@ -96,7 +97,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return new WillPopScope(
       onWillPop: () {
-        SystemNavigator.pop();
+        //SystemNavigator.pop();
+        exit(0);
       },
       child: Scaffold(
         //drawer: new menu.Menu(),
@@ -485,7 +487,7 @@ class botones extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => new ProgresoPage()));
             },
             child: Container(
-              margin: EdgeInsets.only(left: 175, top:10),
+              margin: EdgeInsets.only(left: 175, top: 10),
               child: Column(
                 children: <Widget>[
                   Image.asset(
@@ -529,11 +531,8 @@ class botones extends StatelessWidget {
                               return new Container(
                                 alignment: Alignment.center,
                                 child: Container(
-                                  alignment: Alignment.center,
-                                  margin: EdgeInsets.only(
-                                      bottom:
-                                          MediaQuery.of(context).size.height *
-                                              0.335),
+                                  alignment: Alignment.topCenter,
+                                  margin: EdgeInsets.only(top: 0),
                                   constraints: BoxConstraints(
                                       minWidth: 100,
                                       maxWidth: 100,
@@ -541,7 +540,7 @@ class botones extends StatelessWidget {
                                       minHeight: 80),
                                   child: AutoSizeText(
                                     snapshot.data.meta,
-                                    maxLines: 3,
+                                    maxLines: 2,
                                     maxFontSize: 16,
                                     wrapWords: false,
                                     textAlign: TextAlign.center,

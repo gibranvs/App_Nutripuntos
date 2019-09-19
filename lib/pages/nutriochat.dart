@@ -81,98 +81,102 @@ class _NutriochatPageState extends State<NutriochatPage> {
 
 class list_messages extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height - 130,
-      margin: EdgeInsets.only(bottom: 10),
-      child: Scrollbar(
-        child: ListView(
-          controller: myListView,
-          shrinkWrap: true,
-          children: global.list_mensajes.map((mensaje) {
-            if (mensaje.origen == "doctor") {
-              return Row(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(left: 10),
-                    width: 50,
-                    child: Image.asset("assets/icons/recurso_2.png"),
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      decoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(5)),
+  Widget build(BuildContext context) {    
+    if (global.list_mensajes != null && global.list_mensajes.length > 0) {
+      return Container(
+        height: MediaQuery.of(context).size.height - 130,
+        margin: EdgeInsets.only(bottom: 10),
+        child: Scrollbar(
+          child: ListView(
+            controller: myListView,
+            shrinkWrap: true,
+            children: global.list_mensajes.map((mensaje) {
+              if (mensaje.origen == "doctor") {
+                return Row(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(left: 10),
+                      width: 50,
+                      child: Image.asset("assets/icons/recurso_2.png"),
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(10),
                       child: Container(
-                        constraints: BoxConstraints(
-                            minWidth: 20, maxWidth: 220, minHeight: 40),
-                        child: Bubble(
-                          color: hexToColor("#bcbcbc"),
-                          nip: BubbleNip.leftBottom,
-                          nipWidth: 15,
-                          nipHeight: 10,
-                          radius: Radius.zero,
-                          margin: BubbleEdges.only(top: 10),
-                          stick: true,
-                          child: Text(
-                            mensaje.mensaje,
-                            style: TextStyle(color: hexToColor("#676767")),
+                        alignment: Alignment.centerLeft,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Container(
+                          constraints: BoxConstraints(
+                              minWidth: 20, maxWidth: 220, minHeight: 40),
+                          child: Bubble(
+                            color: hexToColor("#bcbcbc"),
+                            nip: BubbleNip.leftBottom,
+                            nipWidth: 15,
+                            nipHeight: 10,
+                            radius: Radius.zero,
+                            margin: BubbleEdges.only(top: 10),
+                            stick: true,
+                            child: Text(
+                              mensaje.mensaje,
+                              style: TextStyle(color: hexToColor("#676767")),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              );
-            } else {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    alignment: Alignment.centerRight,
-                    child: Container(
+                  ],
+                );
+              } else {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.all(10),
                       alignment: Alignment.centerRight,
-                      decoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(5)),
                       child: Container(
-                        constraints: BoxConstraints(
-                            minWidth: 20, maxWidth: 220, minHeight: 40),
-                        child: Bubble(
-                          color: hexToColor("#059696"),
-                          nip: BubbleNip.rightBottom,
-                          nipWidth: 15,
-                          nipHeight: 10,
-                          radius: Radius.zero,
-                          margin: BubbleEdges.only(top: 10),
-                          stick: true,
-                          child: Text(
-                            mensaje.mensaje,
-                            style: TextStyle(color: Colors.white),
+                        alignment: Alignment.centerRight,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5)),
+                        child: Container(
+                          constraints: BoxConstraints(
+                              minWidth: 20, maxWidth: 220, minHeight: 40),
+                          child: Bubble(
+                            color: hexToColor("#059696"),
+                            nip: BubbleNip.rightBottom,
+                            nipWidth: 15,
+                            nipHeight: 10,
+                            radius: Radius.zero,
+                            margin: BubbleEdges.only(top: 10),
+                            stick: true,
+                            child: Text(
+                              mensaje.mensaje,
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    height: 50,
-                    width: 50,
-                    margin: EdgeInsets.only(right: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      image: global.image_foto,
-                      //global.returnFileSelected(global.imageFile, global.imageFile.path),
+                    Container(
+                      height: 50,
+                      width: 50,
+                      margin: EdgeInsets.only(right: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        image: global.image_foto,
+                        //global.returnFileSelected(global.imageFile, global.imageFile.path),
+                      ),
                     ),
-                  ),
-                ],
-              );
-            }
-          }).toList(),
+                  ],
+                );
+              }
+            }).toList(),
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return Container();
+    }
   }
 }
 
@@ -286,12 +290,11 @@ Future<T> show_Dialog<T>({
 }
 
 getMensajesServer(String _token) async {
-  try {
+  try {    
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "get_mensajes", "token": _token});
-    var datos = json.decode(utf8.decode(response.bodyBytes));
+    var datos = json.decode(utf8.decode(response.bodyBytes));    
     //print(datos);
-
     for (int i = 0; i < datos["response"].length; i++) {
       global.list_mensajes.add(Mensaje(
           origen: "doctor",
@@ -310,7 +313,7 @@ guardarMensajes(String _token, String _mensaje) async {
         body: {"tipo": "guarda_mensaje", "token": _token, "mensaje": _mensaje});
     var datos = json.decode(utf8.decode(response.bodyBytes));
     //print(datos);
-    db.DBManager.instance.insertMensaje(_token, _mensaje);
+    db.DBManager.instance.insertMensaje(global.id_user, _token, _mensaje);
     global.list_mensajes.add(
         Mensaje(origen: "usuario", mensaje: _mensaje, fecha: DateTime.now()));
     myListView.animateTo(
