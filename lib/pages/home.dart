@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
         db.DBManager.instance.insertUsuario(global.id_user, global.nombre_user,
             global.apellidos_user, global.token, croppedFile.path);
         /*
-        croppedFile = await ImageCropper.cropImage(
+        croppedFile = await ImageCropper.cYropImage(
           sourcePath: img.path,
           ratioX: 1.0,
           ratioY: 1.0,
