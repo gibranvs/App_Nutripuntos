@@ -81,7 +81,7 @@ class _NutriochatPageState extends State<NutriochatPage> {
 
 class list_messages extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     if (global.list_mensajes != null && global.list_mensajes.length > 0) {
       return Container(
         height: MediaQuery.of(context).size.height - 130,
@@ -163,7 +163,10 @@ class list_messages extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
-                        image: global.image_foto,
+                        image: global.image_foto == null
+                            ? DecorationImage(
+                                image: AssetImage("assets/images/photo.jpg"))
+                            : global.image_foto,
                         //global.returnFileSelected(global.imageFile, global.imageFile.path),
                       ),
                     ),
@@ -290,10 +293,10 @@ Future<T> show_Dialog<T>({
 }
 
 getMensajesServer(String _token) async {
-  try {    
+  try {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "get_mensajes", "token": _token});
-    var datos = json.decode(utf8.decode(response.bodyBytes));    
+    var datos = json.decode(utf8.decode(response.bodyBytes));
     //print(datos);
     for (int i = 0; i < datos["response"].length; i++) {
       global.list_mensajes.add(Mensaje(

@@ -8,8 +8,6 @@ import 'receta_detalle.dart' as detalle;
 import 'package:http/http.dart' as http;
 import 'dart:math';
 
-List<dynamic> listRecetas = [];
-
 class RecetasPage extends StatefulWidget {
   @override
   _RecetasPageState createState() => new _RecetasPageState();
@@ -48,7 +46,94 @@ class _RecetasPageState extends State<RecetasPage> {
         alignment: Alignment.topLeft,
         margin: new EdgeInsets.only(top: 0.0, left: 0.0),
         child: new Scrollbar(
-          child: new ListView(
+          child: FutureBuilder<List<Receta>>(
+              future: getRecetas(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      semanticsLabel: "Loading",
+                      backgroundColor: hexToColor("#cdcdcd"),
+                    ),
+                  );
+                } else if (snapshot.hasData) {
+                  if (snapshot.data.length > 0) {
+                    return new ListView.builder(                        
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            color: hexToColor("#f2f2f2"),
+                            elevation: 0,
+                            margin: new EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 15),
+                            child: ListTile(
+                              leading: Container(
+                                margin: EdgeInsets.only(left: 10),
+                                height: 80,
+                                child: new Image.asset(
+                                    "assets/icons/Recurso_26.png"),
+                              ),
+                              title: new Text(
+                                snapshot.data[index].nombre,
+                                style: new TextStyle(
+                                    fontSize: 13.0,
+                                    fontFamily: "PT Sans",
+                                    fontWeight: FontWeight.bold,
+                                    color: hexToColor("#666666")),
+                              ),
+                              subtitle: new Container(
+                                alignment: Alignment.topLeft,
+                                margin:
+                                    new EdgeInsets.only(top: 8.0, left: 0.0),
+                                child: new Column(
+                                  children: <Widget>[
+                                    new Container(
+                                      alignment: Alignment.centerLeft,
+                                      child: new ColorCirclesWidget(
+                                          snapshot.data[index].azul,
+                                          snapshot.data[index].verde,
+                                          snapshot.data[index].naranja,
+                                          snapshot.data[index].amarillo),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              contentPadding: new EdgeInsets.symmetric(
+                                  horizontal: 0.0, vertical: 0.0),
+                              selected: true,
+                              trailing: new Icon(
+                                Icons.keyboard_arrow_right,
+                                color: hexToColor("#3f95ac"),
+                                size: 40,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            detalle.RecetaPage(
+                                                context,
+                                                snapshot.data[index].id,
+                                                snapshot.data[index].nombre)));
+                              },
+                            ),
+                          );
+                        });
+                  } else {
+                    return new Text("No hay sugerencias de comida.",
+                        style: TextStyle(color: hexToColor("#606060")));
+                  }
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text("Error al obtener sugerencias de comida."),
+                  );
+                }
+              }),
+
+          /*
+          new ListView(
             children: listRecetas.map((receta) {
               return Card(
                 color: hexToColor("#f2f2f2"), 
@@ -99,21 +184,23 @@ class _RecetasPageState extends State<RecetasPage> {
                 ),
               );
             }).toList(),
+
           ),
+            */
         ),
       ),
     );
   }
 }
 
-void getRecetas() async {
+Future<List<Receta>> getRecetas() async {
   try {
     var response = await http
         .post(global.server + "/aplicacion/api", body: {"tipo": "get_recetas"});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    print(datos["response"].length);
-    listRecetas.clear();
+    //print(datos["response"].length);    
 
+    List<Receta> list = new List<Receta>();
     if (datos["status"] == 1) {
       var azul;
       var verde;
@@ -153,7 +240,7 @@ void getRecetas() async {
         } else
           amarillo = "0";
 
-        listRecetas.add(Receta(
+        list.add(Receta(
           id: int.parse(datos["response"][i]["id"]),
           nombre: datos["response"][i]["nombre"],
           azul: azul,
@@ -162,6 +249,7 @@ void getRecetas() async {
           amarillo: amarillo,
         ));
       }
+      return list;
     }
   } catch (e) {
     print("Error getRecetas: " + e.toString());

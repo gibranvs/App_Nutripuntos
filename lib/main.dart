@@ -5,7 +5,8 @@ import 'pages/login.dart' as login;
 import 'pages/recetas.dart' as recetas;
 import 'pages/menu.dart' as menu;
 import 'globals.dart' as global;
-import 'pages/home.dart';
+import 'pages/home.dart' as home;
+import 'pages/agenda.dart' as agenda;
 import 'src/DBManager.dart' as db;
 
 void main() {
@@ -44,8 +45,7 @@ class _MyAppState extends State<MyApp> {
     //db.DBManager.instance.deleteAllMensajes();
     //db.DBManager.instance.deleteAllRetos();
     super.initState();
-    login.fetchDoctores();
-    recetas.getRecetas();
+    login.fetchDoctores();    
     db.DBManager.instance.getUsuario(context);
     //startTime();
   }

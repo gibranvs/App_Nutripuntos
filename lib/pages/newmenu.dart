@@ -97,7 +97,6 @@ class datos extends StatelessWidget {
         Row(
           children: <Widget>[
             GestureDetector(
-              
               onTap: () {
                 //print("Back");
                 if (global.selected_index == 0)
@@ -117,7 +116,10 @@ class datos extends StatelessWidget {
                     border: Border.all(color: Color(0xFF059696), width: 6),
                     color: Colors.white,
                     shape: BoxShape.circle,
-                    image: global.image_foto,
+                    image: global.image_foto == null
+                        ? DecorationImage(
+                            image: AssetImage("assets/images/photo.jpg"))
+                        : global.image_foto,
                     //global.returnFileSelected(global.imageFile, global.imageFile.path),
                     /*
                   DecorationImage(
@@ -145,18 +147,18 @@ class item_menu extends StatelessWidget {
   item_menu(this.selected_index, this.index_item, this.titulo, this.path_imagen,
       this.size_imagen);
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     Decoration decoration;
     Color color_font;
     if (selected_index == index_item) {
       decoration = BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF35B9C5),
-                Color(0xFF348CB4),
-              ],
-            ),
-          );
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFF35B9C5),
+            Color(0xFF348CB4),
+          ],
+        ),
+      );
       color_font = Colors.white;
     } else {
       decoration = null;

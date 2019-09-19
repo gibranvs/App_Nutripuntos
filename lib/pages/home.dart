@@ -31,8 +31,7 @@ class _HomePageState extends State<HomePage> {
   String prueb;
   _HomePageState({this.prueb});
 
-  showAlertOption() {
-    // set up the AlertDialog
+  showAlertOption() {    
     AlertDialog alert = AlertDialog(
       title: Text("Selecciona una fuente..."),
       content: new Container(
@@ -75,12 +74,11 @@ class _HomePageState extends State<HomePage> {
   pickImageFrom(context, ImageSource source) async {
     try {
       File img = await ImagePicker.pickImage(source: source);
-        print(img);
       if (img != null) {
         global.image_foto = DecorationImage(image: AssetImage(img.path));
         db.DBManager.instance.insertUsuario(global.id_user, global.nombre_user,
             global.apellidos_user, global.token, croppedFile.path);
-            /*
+        /*
         croppedFile = await ImageCropper.cropImage(
           sourcePath: img.path,
           ratioX: 1.0,
@@ -90,14 +88,13 @@ class _HomePageState extends State<HomePage> {
         );
         */
         Navigator.of(context, rootNavigator: true).pop('dialog');
-        setState(() {
-        });
-      }
-      //Navigator.of(context, rootNavigator: true).pop('dialog');
+        setState(() {});
+      }      
     } catch (e) {
       print("Error pickImageFrom " + e.toString());
       setState(() {
-        global.image_foto = DecorationImage(image: AssetImage("assets/images/photo.jpg"));
+        global.image_foto =
+            DecorationImage(image: AssetImage("assets/images/photo.jpg"));
       });
     }
   }
@@ -179,9 +176,9 @@ class _HomePageState extends State<HomePage> {
                       label_status(),
 
                       Container(
-                        padding: EdgeInsets.only(top: 5),
+                        padding: EdgeInsets.only(top: 0),
                         margin: const EdgeInsets.only(top: 200),
-                        height: 312,
+                        height: MediaQuery.of(context).size.height - 280, //312,
                         child: SingleChildScrollView(
                           scrollDirection: Axis.vertical,
                           child: Stack(
@@ -235,7 +232,7 @@ class fondo_foto extends StatelessWidget {
     return Container(
       height: 100,
       alignment: Alignment.topCenter,
-      margin: EdgeInsets.only(top: 10, left: 30),
+      margin: EdgeInsets.only(top: 10, left: 20),
       decoration: BoxDecoration(
         image: new DecorationImage(
           image: new AssetImage("assets/icons/recurso_4.png"),
@@ -254,15 +251,15 @@ class foto extends StatelessWidget {
         height: 80,
         width: 80,
         alignment: Alignment.topCenter,
-        margin: EdgeInsets.only(left: 145, top: 23.5),
+        margin: EdgeInsets.only( top: 23.5, left: 140),
         decoration: BoxDecoration(
           border: Border.all(width: 0, color: Colors.white),
           shape: BoxShape.circle,
-          image: croppedFile == null
+          image: global.image_foto == null
               ? DecorationImage(image: AssetImage("assets/images/photo.jpg"))
               : global.image_foto,
           //global.returnFileSelected(global.imageFile, global.imageFile.path),
-        ),        
+        ),
       );
     } catch (e) {
       return Container(
@@ -305,7 +302,7 @@ class label_status extends StatelessWidget {
       padding: EdgeInsets.only(top: 0),
       margin: EdgeInsets.only(left: 0, top: 150),
       child: Text(
-        "Activo" + "     |     " + "10 citas",
+        "Activo     |     " + global.num_citas + " citas",
         style: TextStyle(fontSize: 14, color: Colors.white),
       ),
     );
@@ -317,7 +314,7 @@ class card_proxima_cita extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.topCenter,
-      margin: const EdgeInsets.only(top: 0),
+      margin: const EdgeInsets.only(top: 5),
       //padding: EdgeInsets.all(10),
       child: FutureBuilder<List<Citas>>(
         future: getCitasProximas(global.token),
@@ -332,6 +329,7 @@ class card_proxima_cita extends StatelessWidget {
             );
           } else if (snapshot.hasData) {
             if (snapshot.data.length > 0) {
+              global.num_citas = snapshot.data.length.toString();
               return Card(
                 child: Row(
                   children: <Widget>[

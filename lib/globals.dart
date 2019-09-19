@@ -21,6 +21,7 @@ String token;
 String recovery_token;
 String nombre_user;
 String apellidos_user;
+String num_citas = "0";
 
 ///
 /// MENU
