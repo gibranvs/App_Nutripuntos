@@ -144,7 +144,7 @@ class Calendario extends StatelessWidget {
       showHeader: true,
       markedDateShowIcon: false,
       markedDates: _markedDates,
-      locale: "es",
+      locale: "es_ES",
       markedDateWidget: Container(
         margin: EdgeInsets.only(top: 22, left: 18),
         child: Icon(

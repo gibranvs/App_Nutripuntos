@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:nutripuntos_app/pages/progreso.dart';
 import 'package:flutter/services.dart';
+import 'dart:async';
 import 'menu.dart' as menu;
 import 'newmenu.dart' as newmenu;
 import 'package:nutripuntos_app/globals.dart' as global;
@@ -12,9 +13,9 @@ import 'restaurantes.dart';
 import 'plan.dart';
 import '../src/HexToColor.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+//import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
 import '../src/DBManager.dart' as db;
 
@@ -31,7 +32,7 @@ class _HomePageState extends State<HomePage> {
   String prueb;
   _HomePageState({this.prueb});
 
-  showAlertOption() {    
+  showAlertOption() {
     AlertDialog alert = AlertDialog(
       title: Text("Selecciona una fuente..."),
       content: new Container(
@@ -71,14 +72,17 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+//CameraController controller;
   pickImageFrom(context, ImageSource source) async {
+    File img;
     try {
-      File img = await ImagePicker.pickImage(source: source);
+      img = await ImagePicker.pickImage(source: source);
       if (img != null) {
         global.image_foto = DecorationImage(image: AssetImage(img.path));
         db.DBManager.instance.insertUsuario(global.id_user, global.nombre_user,
-            global.apellidos_user, global.token, croppedFile.path);
-        /*
+            global.apellidos_user, global.token, img.path);
+      }
+      /*
         croppedFile = await ImageCropper.cYropImage(
           sourcePath: img.path,
           ratioX: 1.0,
@@ -87,9 +91,7 @@ class _HomePageState extends State<HomePage> {
           maxHeight: 512,
         );
         */
-        Navigator.of(context, rootNavigator: true).pop('dialog');
-        setState(() {});
-      }      
+      setState(() {});
     } catch (e) {
       print("Error pickImageFrom " + e.toString());
       setState(() {
@@ -97,16 +99,6 @@ class _HomePageState extends State<HomePage> {
             DecorationImage(image: AssetImage("assets/images/photo.jpg"));
       });
     }
-  }
-
-  Future cropImage(File image) async {
-    File croppedFile = await ImageCropper.cropImage(
-      sourcePath: image.path,
-      ratioX: 1.0,
-      ratioY: 1.0,
-      maxWidth: 512,
-      maxHeight: 512,
-    );
   }
 
   @override
@@ -251,7 +243,7 @@ class foto extends StatelessWidget {
         height: 80,
         width: 80,
         alignment: Alignment.topCenter,
-        margin: EdgeInsets.only( top: 23.5, left: 140),
+        margin: EdgeInsets.only(top: 23.5, left: 140),
         decoration: BoxDecoration(
           border: Border.all(width: 0, color: Colors.white),
           shape: BoxShape.circle,
