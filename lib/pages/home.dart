@@ -72,11 +72,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-//CameraController controller;
-  pickImageFrom(context, ImageSource source) async {
+  
+  pickImageFrom(context, ImageSource source) async {    
+    
     File img;
     try {
-      img = await ImagePicker.pickImage(source: source);
+      img = await ImagePicker.pickImage(source: source, maxHeight: 400, maxWidth: 400);
       if (img != null) {
         global.image_foto = DecorationImage(image: AssetImage(img.path));
         db.DBManager.instance.insertUsuario(global.id_user, global.nombre_user,
