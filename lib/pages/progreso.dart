@@ -10,22 +10,24 @@ import 'package:nutripuntos_app/globals.dart' as global;
 
 final myTextEdit = TextEditingController();
 
-class ProgresoPage extends StatefulWidget {  
+class ProgresoPage extends StatefulWidget {
   final int index_tab;
   ProgresoPage(this.index_tab);
   @override
   _ProgresoPage createState() => new _ProgresoPage(index_tab);
 }
 
-class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {  
+class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {
   final int index_tab;
   _ProgresoPage(this.index_tab);
   TabController _tabController;
   @override
   void initState() {
-    _tabController = new TabController(length: 3, vsync: this, initialIndex: index_tab);
+    _tabController =
+        new TabController(length: 3, vsync: this, initialIndex: index_tab);
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,8 +52,8 @@ class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {
           length: 3,
           child: Scaffold(
             appBar: AppBar(
-              title: TabBar(       
-                controller: _tabController,                      
+              title: TabBar(
+                controller: _tabController,
                 tabs: [
                   Tab(
                     text: "Peso",
@@ -76,6 +78,7 @@ class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {
               ),
             ),
             body: TabBarView(
+              controller: _tabController,
               children: [
                 ///
                 /// TAB PESO
@@ -209,7 +212,7 @@ class cuadro_informacion_peso extends StatelessWidget {
           children: <Widget>[
             Container(
               alignment: Alignment.topCenter,
-              margin: EdgeInsets.only(top: 10),
+              margin: EdgeInsets.only(top: 0),
               child: FutureBuilder<String>(
                   future: GetLastPeso(),
                   builder: (context, snapshot) {
@@ -223,12 +226,31 @@ class cuadro_informacion_peso extends StatelessWidget {
                       );
                     } else if (snapshot.hasData) {
                       if (snapshot.data != null) {
-                        return Text(
-                          snapshot.data + " KG",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22),
+                        return Column(
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.topCenter,
+                              margin: EdgeInsets.only(top: 10),
+                              child: Text(
+                                snapshot.data + " KG",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 22),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.topCenter,
+                              margin: EdgeInsets.only(top: 5),
+                              child: Text(
+                                leyenda,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 15),
+                              ),
+                            ),
+                          ],
                         );
                       } else {
                         return new Text("No existe",
@@ -239,17 +261,6 @@ class cuadro_informacion_peso extends StatelessWidget {
                           style: TextStyle(color: hexToColor("#606060")));
                     }
                   }),
-            ),
-            Container(
-              alignment: Alignment.topCenter,
-              margin: EdgeInsets.only(top: 40),
-              child: Text(
-                leyenda,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 15),
-              ),
             ),
           ],
         ),
@@ -277,7 +288,7 @@ class cuadro_informacion_grasa extends StatelessWidget {
           children: <Widget>[
             Container(
               alignment: Alignment.topCenter,
-              margin: EdgeInsets.only(top: 10),
+              margin: EdgeInsets.only(top: 0),
               child: FutureBuilder<String>(
                   future: GetLastGrasa(),
                   builder: (context, snapshot) {
@@ -291,12 +302,31 @@ class cuadro_informacion_grasa extends StatelessWidget {
                       );
                     } else if (snapshot.hasData) {
                       if (snapshot.data != null) {
-                        return Text(
-                          snapshot.data + " Kcal",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22),
+                        return Column(
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.topCenter,
+                              margin: EdgeInsets.only(top: 10),
+                              child: Text(
+                                snapshot.data + " Kcal",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 22),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.topCenter,
+                              margin: EdgeInsets.only(top: 5),
+                              child: Text(
+                                leyenda,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 15),
+                              ),
+                            ),
+                          ],
                         );
                       } else {
                         return new Text("No existe",
@@ -307,17 +337,6 @@ class cuadro_informacion_grasa extends StatelessWidget {
                           style: TextStyle(color: hexToColor("#606060")));
                     }
                   }),
-            ),
-            Container(
-              alignment: Alignment.topCenter,
-              margin: EdgeInsets.only(top: 40),
-              child: Text(
-                leyenda,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 15),
-              ),
             ),
           ],
         ),
@@ -346,8 +365,8 @@ class cuadro_grafica_peso extends StatelessWidget {
             Container(
               alignment: Alignment.centerLeft,
               margin: EdgeInsets.only(top: 20, left: 40),
-              height: 185,
-              child: new Image.asset("assets/icons/ejes.png"),
+              height: 185,              
+              child: new Image.asset("assets/icons/ejes.png",),
             ),
 
             ///
@@ -857,7 +876,7 @@ class circle_image extends StatelessWidget {
                       child: Text("Error al obtener meta próxima.",
                           style: TextStyle(color: hexToColor("#606060"))));
                 }
-              }), 
+              }),
         ],
       ),
     );
@@ -996,7 +1015,8 @@ _showDialog(context) async {
                 Text('GUARDAR', style: TextStyle(color: hexToColor("#059696"))),
             onPressed: () {
               if (myTextEdit.text != "") {
-                db.DBManager.instance.insertReto(global.id_user, global.token, myTextEdit.text);
+                db.DBManager.instance
+                    .insertReto(global.id_user, global.token, myTextEdit.text);
                 myTextEdit.text = "";
                 Navigator.pop(context);
               }
