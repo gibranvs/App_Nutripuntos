@@ -72,17 +72,26 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  
-  pickImageFrom(context, ImageSource source) async {    
-    
-    File img;
+  void pickImageFrom(context, ImageSource source) async {
+    //File img;
     try {
-      img = await ImagePicker.pickImage(source: source, maxHeight: 400, maxWidth: 400);
-      if (img != null) {
-        global.image_foto = DecorationImage(image: AssetImage(img.path));
-        db.DBManager.instance.insertUsuario(global.id_user, global.nombre_user,
-            global.apellidos_user, global.token, img.path);
-      }
+      //img = await
+      ImagePicker.pickImage(source: source)
+          .then((File img) {
+        Navigator.pop(context);
+        setState(() {
+          if (img != null) {
+            global.image_foto = DecorationImage(image: AssetImage(img.path));
+            db.DBManager.instance.insertUsuario(
+                global.id_user,
+                global.nombre_user,
+                global.apellidos_user,
+                global.token,
+                img.path);
+          }
+        });
+      });
+
       /*
         croppedFile = await ImageCropper.cYropImage(
           sourcePath: img.path,
@@ -452,7 +461,7 @@ class botones extends StatelessWidget {
             onTap: () {
               global.selected_index = 2;
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => new ProgresoPage()));
+                  MaterialPageRoute(builder: (context) => new ProgresoPage(2)));
             },
             child: Container(
               margin: EdgeInsets.only(left: 175, top: 10),

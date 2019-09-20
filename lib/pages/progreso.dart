@@ -10,11 +10,22 @@ import 'package:nutripuntos_app/globals.dart' as global;
 
 final myTextEdit = TextEditingController();
 
-void main() {
-  runApp(ProgresoPage());
+class ProgresoPage extends StatefulWidget {  
+  final int index_tab;
+  ProgresoPage(this.index_tab);
+  @override
+  _ProgresoPage createState() => new _ProgresoPage(index_tab);
 }
 
-class ProgresoPage extends StatelessWidget {
+class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {  
+  final int index_tab;
+  _ProgresoPage(this.index_tab);
+  TabController _tabController;
+  @override
+  void initState() {
+    _tabController = new TabController(length: 3, vsync: this, initialIndex: index_tab);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +50,8 @@ class ProgresoPage extends StatelessWidget {
           length: 3,
           child: Scaffold(
             appBar: AppBar(
-              title: TabBar(                
+              title: TabBar(       
+                controller: _tabController,                      
                 tabs: [
                   Tab(
                     text: "Peso",

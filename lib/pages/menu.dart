@@ -44,7 +44,7 @@ class MenuState extends State<Menu> {
         return new PlanPage();
       case 1:
         global.selected_index = 0;
-        return new ProgresoPage();
+        return new ProgresoPage(0);
       case 2:
         global.selected_index = 0;        
         return new AgendaPage();

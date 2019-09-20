@@ -189,7 +189,7 @@ class item_menu extends StatelessWidget {
               break;
             case 2:
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProgresoPage()));
+                  MaterialPageRoute(builder: (context) => ProgresoPage(0)));
               break;
             case 3:
               Navigator.push(context,
