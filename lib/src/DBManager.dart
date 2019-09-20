@@ -147,6 +147,7 @@ class DBManager {
           MaterialPageRoute(builder: (context) => LoginPage()),
         );
       } else {      
+        //print(res);
         globals.id_user = int.parse(res[res.length - 1]["ID"].toString());
         globals.nombre_user = res[res.length - 1]["NOMBRE"].toString();
         globals.apellidos_user = res[res.length - 1]["APELLIDO"].toString();
