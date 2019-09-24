@@ -74,6 +74,8 @@ class _HomePageState extends State<HomePage> {
 
   void pickImageFrom(context, ImageSource source) async {
     //File img;
+    ImagePicker picker = new ImagePicker();
+  
     try {
       //img = await
       ImagePicker.pickImage(source: source)
