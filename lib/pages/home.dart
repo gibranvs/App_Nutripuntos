@@ -76,8 +76,7 @@ class _HomePageState extends State<HomePage> {
 
   final cropKey = GlobalKey<CropState>();
   File _file;
-  File _lastCropped;
-  String base64Image;
+  File _lastCropped;  
 
   void pickImageFrom(_context, ImageSource source) async {
     try {
@@ -91,10 +90,10 @@ class _HomePageState extends State<HomePage> {
                 global.token,
                 img.path);
 
-            List<int> imageBytes = img.readAsBytesSync();
-            base64Image = base64Encode(imageBytes);
-            writeFileContent(base64Image);
-            readFileContent();
+            List<int> imageBytes = img.readAsBytesSync();            
+            writeFileContent(base64Encode(imageBytes));     
+            readFileContent();       
+
             Navigator.pop(context);
           }
         });
@@ -167,7 +166,7 @@ class _HomePageState extends State<HomePage> {
     debugPrint('$file');
   }
 
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     return new WillPopScope(
       onWillPop: () {
         //SystemNavigator.pop();
@@ -206,19 +205,27 @@ class _HomePageState extends State<HomePage> {
                       ///
                       header(),
 
-                      ///
-                      /// FONDO FOTO
-                      ///
-                      fondo_foto(),
+                      Container(
+                        alignment: Alignment.topLeft,
+                        width: MediaQuery.of(context).size.width,
+                        child: GestureDetector(
+                          onTap: () {
+                            showAlertOption();
+                          },
+                          child: Stack(
+                            children: <Widget>[
+                              ///
+                              /// FONDO FOTO
+                              ///
+                              fondo_foto(),
 
-                      ///
-                      /// IMAGEN FOTO
-                      ///
-                      GestureDetector(
-                        onTap: () {
-                          showAlertOption();
-                        },
-                        child: foto(),
+                              ///
+                              /// IMAGEN FOTO
+                              ///
+                              foto(),
+                            ],
+                          ),
+                        ),
                       ),
 
                       ///
@@ -287,8 +294,9 @@ class fondo_foto extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 100,
-      alignment: Alignment.topCenter,
-      margin: EdgeInsets.only(top: 10, left: 20),
+      alignment: Alignment.topLeft,
+      margin: EdgeInsets.only(
+          left: 10), //MediaQuery.of(context).size.width * 0.5 - 150),
       decoration: BoxDecoration(
         image: new DecorationImage(
           image: new AssetImage("assets/icons/recurso_4.png"),
@@ -302,34 +310,22 @@ class fondo_foto extends StatelessWidget {
 class foto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    try {
-      return Container(
-        height: 80,
-        width: 80,
-        alignment: Alignment.topCenter,
-        margin: EdgeInsets.only(top: 23.5, left: 140),
-        decoration: BoxDecoration(
-          border: Border.all(width: 0, color: Colors.white),
-          shape: BoxShape.circle,
-          image: global.image_foto == null
-              ? DecorationImage(image: AssetImage("assets/images/photo.jpg"))
-              : global.image_foto,
-        ),
-      );
-    } catch (e) {
-      return Container(
-        height: 80,
-        width: 80,
-        alignment: Alignment.topCenter,
-        margin: EdgeInsets.only(left: 145, top: 23.5),
-        decoration: BoxDecoration(
-          border: Border.all(width: 0, color: Colors.white),
-          shape: BoxShape.circle,
-          image:
-              new DecorationImage(image: AssetImage("assets/images/photo.jpg")),
-        ),
-      );
-    }
+    return Container(
+      width: 80,
+      height: 80,
+      alignment: Alignment.topLeft,
+      margin: EdgeInsets.only(
+          top: 14, left: MediaQuery.of(context).size.width * 0.5 - 45), //130),
+      decoration: BoxDecoration(
+        //border: Border.all(width: 1, color: Colors.black),
+        shape: BoxShape.circle,
+        image: global.image_foto == null
+            ? DecorationImage(
+                image: AssetImage("assets/images/photo.jpg"),
+                fit: BoxFit.contain)
+            : global.image_foto,
+      ),
+    );
   }
 }
 
@@ -686,18 +682,21 @@ Future<File> get _localFile async {
   return File('$path/fotoBase64.txt');
 }
 
-Future<File> writeFileContent(String _base64) async {
+//Future<File> writeFileContent(String _base64) async {
+writeFileContent(String _base64) async {
   final file = await _localFile;
-  return file.writeAsString(_base64);
+  file.writeAsString(_base64);  
+  //return file.writeAsString(_base64);
 }
 
-Future<String> readFileContent() async {
+//Future<String> readFileContent() async {
+readFileContent() async {
   try {
     final file = await _localFile;
     String contents = await file.readAsString();
     Image img = Image.memory(base64Decode(contents));
     global.image_foto = new DecorationImage(image: img.image);
-    return contents;
+    //return contents;
   } catch (e) {
     return 'Error';
   }
