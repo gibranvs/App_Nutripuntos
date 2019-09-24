@@ -137,7 +137,7 @@ class DBManager {
   getUsuario(_context) async {
     try {
       Database db = await database;
-      var res = await db.rawQuery("SELECT * FROM $tableRegistro");      
+      var res = await db.rawQuery("SELECT * FROM $tableRegistro");
       if (res.isEmpty == true) {
         print("No hay usuario");
         globals.user_exist = false;
@@ -146,18 +146,19 @@ class DBManager {
           _context,
           MaterialPageRoute(builder: (context) => LoginPage()),
         );
-      } else {      
+      } else {
         //print(res);
         globals.id_user = int.parse(res[res.length - 1]["ID"].toString());
         globals.nombre_user = res[res.length - 1]["NOMBRE"].toString();
         globals.apellidos_user = res[res.length - 1]["APELLIDO"].toString();
         globals.token = res[res.length - 1]["TOKEN"].toString();
-        globals.image_foto = new DecorationImage(
-            image: AssetImage(res[res.length - 1]["FOTO"].toString()));
+        //globals.image_foto = new DecorationImage(image: AssetImage(res[res.length - 1]["FOTO"].toString()));
         //globals.imageFilePath = res[res.length - 1]["FOTO"].toString();
-        
+
         getMensajes(globals.id_user, globals.token);
         chat.getMensajesServer(globals.token);
+
+        readFileContent();
 
         Future.delayed(const Duration(milliseconds: 5000), () {
           Navigator.push(
@@ -188,11 +189,11 @@ class DBManager {
         [_id, _token, _mensaje, DateTime.now().toString()]);
   }
 
-  getMensajes(int _id, String _token) async {    
+  getMensajes(int _id, String _token) async {
     Database db = await database;
-    var res = await db.rawQuery(
-        'SELECT * FROM $tableChat WHERE $columnID = ?', [_id]);        
-    globals.list_mensajes = new List<chat.Mensaje>();        
+    var res = await db
+        .rawQuery('SELECT * FROM $tableChat WHERE $columnID = ?', [_id]);
+    globals.list_mensajes = new List<chat.Mensaje>();
     for (int i = 0; i < res.length; i++) {
       globals.list_mensajes.add(chat.Mensaje(
           origen: "usuario",

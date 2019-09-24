@@ -5,14 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:nutripuntos_app/pages/progreso.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'menu.dart' as menu;
+//import 'menu.dart' as menu;
 import 'newmenu.dart' as newmenu;
 import 'package:nutripuntos_app/globals.dart' as global;
 import 'recetas.dart';
 import 'restaurantes.dart';
 import 'plan.dart';
 import '../src/HexToColor.dart';
-import 'package:image_picker/image_picker.dart';
+//import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_modern/image_picker_modern.dart';
+import 'package:image_crop/image_crop.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 //import 'package:camera/camera.dart';
@@ -72,38 +75,32 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void pickImageFrom(context, ImageSource source) async {
-    //File img;
-    ImagePicker picker = new ImagePicker();
-  
+  final cropKey = GlobalKey<CropState>();
+  File _file;
+  File _sample;
+  File _lastCropped;
+  String base64Image;
+
+  void pickImageFrom(_context, ImageSource source) async {
     try {
-      //img = await
-      ImagePicker.pickImage(source: source)
-          .then((File img) {
-        Navigator.pop(context);
+      ImagePicker.pickImage(source: source).then((File img) {
         setState(() {
           if (img != null) {
-            global.image_foto = DecorationImage(image: AssetImage(img.path));
             db.DBManager.instance.insertUsuario(
                 global.id_user,
                 global.nombre_user,
                 global.apellidos_user,
                 global.token,
                 img.path);
+
+            List<int> imageBytes = img.readAsBytesSync();
+            base64Image = base64Encode(imageBytes);
+            writeFileContent(base64Image);
+            readFileContent();
+            Navigator.pop(context);
           }
         });
       });
-
-      /*
-        croppedFile = await ImageCropper.cYropImage(
-          sourcePath: img.path,
-          ratioX: 1.0,
-          ratioY: 1.0,
-          maxWidth: 512,
-          maxHeight: 512,
-        );
-        */
-      setState(() {});
     } catch (e) {
       print("Error pickImageFrom " + e.toString());
       setState(() {
@@ -114,6 +111,67 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    _file?.delete();
+    _lastCropped?.delete();
+  }
+
+  @override
+  Widget buildCroppingImage() {
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Crop.file(_file, key: cropKey),
+        ),
+        Container(
+          padding: const EdgeInsets.only(top: 20.0),
+          alignment: AlignmentDirectional.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              FlatButton(
+                child: Text(
+                  'Crop Image',
+                  style: Theme.of(context)
+                      .textTheme
+                      .button
+                      .copyWith(color: Colors.white),
+                ),
+                onPressed: () => _cropImage(),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  Future<void> _cropImage() async {
+    final scale = cropKey.currentState.scale;
+    final area = cropKey.currentState.area;
+    if (area == null) {
+      // cannot crop, widget is not setup
+      return;
+    }
+    // scale up to use maximum possible number of pixels
+    // this will sample image in higher resolution to make cropped image larger
+    final sample = await ImageCrop.sampleImage(
+      file: _file,
+      preferredSize: (2000 / scale).round(),
+    );
+
+    final file = await ImageCrop.cropImage(
+      file: sample,
+      area: area,
+    );
+
+    sample.delete();
+    _lastCropped?.delete();
+    _lastCropped = file;
+    debugPrint('$file');
+  }
+
   Widget build(BuildContext context) {
     return new WillPopScope(
       onWillPop: () {
@@ -121,7 +179,6 @@ class _HomePageState extends State<HomePage> {
         exit(0);
       },
       child: Scaffold(
-        //drawer: new menu.Menu(),
         drawer: new newmenu.menu(0),
         drawerDragStartBehavior: DragStartBehavior.start,
         appBar: new AppBar(
@@ -622,6 +679,34 @@ class botones extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+Future<String> get _localPath async {
+  final directory = await getApplicationDocumentsDirectory();
+  //print(directory.path);
+  return directory.path;
+}
+
+Future<File> get _localFile async {
+  final path = await _localPath;
+  return File('$path/fotoBase64.txt');
+}
+
+Future<File> writeFileContent(String _base64) async {
+  final file = await _localFile;
+  return file.writeAsString(_base64);
+}
+
+Future<String> readFileContent() async {
+  try {
+    final file = await _localFile;
+    String contents = await file.readAsString();    
+    Image img = Image.memory(base64Decode(contents));
+    global.image_foto = new DecorationImage(image: img.image);
+    return contents;
+  } catch (e) {
+    return 'Error';
   }
 }
 

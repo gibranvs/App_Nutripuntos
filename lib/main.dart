@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
 import 'pages/login.dart' as login;
 import 'pages/recetas.dart' as recetas;
@@ -10,6 +11,13 @@ import 'pages/agenda.dart' as agenda;
 import 'src/DBManager.dart' as db;
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarBrightness: Brightness.dark,
+    statusBarIconBrightness: Brightness.light,
+    systemNavigationBarIconBrightness: Brightness.light,
+  ));
+
   runApp(new MaterialApp(
     title: "Nutripuntos",
     home: new MyApp(),
