@@ -44,7 +44,7 @@ class _RestaurantesPageState extends State<RestaurantesPage> {
         ),
         child: Center(
           child: Padding(
-            padding: EdgeInsets.only(top: 30),
+            padding: EdgeInsets.only(top: 0),            
             child: FutureBuilder<List<Restaurante>>(
                 future: fetchRestaurantes(),
                 builder: (context, snapshot) {

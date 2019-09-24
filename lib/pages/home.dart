@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:nutripuntos_app/pages/progreso.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-//import 'menu.dart' as menu;
 import 'newmenu.dart' as newmenu;
 import 'package:nutripuntos_app/globals.dart' as global;
 import 'recetas.dart';
@@ -77,7 +76,6 @@ class _HomePageState extends State<HomePage> {
 
   final cropKey = GlobalKey<CropState>();
   File _file;
-  File _sample;
   File _lastCropped;
   String base64Image;
 
@@ -315,7 +313,7 @@ class foto extends StatelessWidget {
           shape: BoxShape.circle,
           image: global.image_foto == null
               ? DecorationImage(image: AssetImage("assets/images/photo.jpg"))
-              : global.image_foto,          
+              : global.image_foto,
         ),
       );
     } catch (e) {
@@ -679,7 +677,7 @@ class botones extends StatelessWidget {
 }
 
 Future<String> get _localPath async {
-  final directory = await getApplicationDocumentsDirectory();  
+  final directory = await getApplicationDocumentsDirectory();
   return directory.path;
 }
 
@@ -696,7 +694,7 @@ Future<File> writeFileContent(String _base64) async {
 Future<String> readFileContent() async {
   try {
     final file = await _localFile;
-    String contents = await file.readAsString();    
+    String contents = await file.readAsString();
     Image img = Image.memory(base64Decode(contents));
     global.image_foto = new DecorationImage(image: img.image);
     return contents;
@@ -715,8 +713,8 @@ Future<List<Citas>> getCitasProximas(_token) async {
     var datos = json.decode(utf8.decode(response.bodyBytes));
     //print(datos);
     List<Citas> list_citas = new List<Citas>();
-    for (int i = 0; i < datos["response"].length; i++) {      
-      timeCita = DateTime.parse(datos["response"][i]["fecha"]);      
+    for (int i = 0; i < datos["response"].length; i++) {
+      timeCita = DateTime.parse(datos["response"][i]["fecha"]);
       if (timeNow.difference(timeCita).inDays < 0) {
         list_citas.add(Citas(
             objetivo: datos["response"][i]["objetivo"],

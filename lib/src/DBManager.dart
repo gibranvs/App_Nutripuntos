@@ -151,9 +151,7 @@ class DBManager {
         globals.id_user = int.parse(res[res.length - 1]["ID"].toString());
         globals.nombre_user = res[res.length - 1]["NOMBRE"].toString();
         globals.apellidos_user = res[res.length - 1]["APELLIDO"].toString();
-        globals.token = res[res.length - 1]["TOKEN"].toString();
-        //globals.image_foto = new DecorationImage(image: AssetImage(res[res.length - 1]["FOTO"].toString()));
-        //globals.imageFilePath = res[res.length - 1]["FOTO"].toString();
+        globals.token = res[res.length - 1]["TOKEN"].toString();        
 
         getMensajes(globals.id_user, globals.token);
         chat.getMensajesServer(globals.token);
