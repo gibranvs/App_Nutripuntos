@@ -685,7 +685,9 @@ Future<File> get _localFile async {
 //Future<File> writeFileContent(String _base64) async {
 writeFileContent(String _base64) async {
   final file = await _localFile;
-  file.writeAsString(_base64);  
+  file.writeAsString(_base64).then((_) {
+    readFileContent();  
+  });  
   //return file.writeAsString(_base64);
 }
 
