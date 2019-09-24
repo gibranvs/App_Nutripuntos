@@ -151,11 +151,8 @@ class _HomePageState extends State<HomePage> {
     final scale = cropKey.currentState.scale;
     final area = cropKey.currentState.area;
     if (area == null) {
-      // cannot crop, widget is not setup
       return;
     }
-    // scale up to use maximum possible number of pixels
-    // this will sample image in higher resolution to make cropped image larger
     final sample = await ImageCrop.sampleImage(
       file: _file,
       preferredSize: (2000 / scale).round(),
@@ -318,8 +315,7 @@ class foto extends StatelessWidget {
           shape: BoxShape.circle,
           image: global.image_foto == null
               ? DecorationImage(image: AssetImage("assets/images/photo.jpg"))
-              : global.image_foto,
-          //global.returnFileSelected(global.imageFile, global.imageFile.path),
+              : global.image_foto,          
         ),
       );
     } catch (e) {
@@ -683,8 +679,7 @@ class botones extends StatelessWidget {
 }
 
 Future<String> get _localPath async {
-  final directory = await getApplicationDocumentsDirectory();
-  //print(directory.path);
+  final directory = await getApplicationDocumentsDirectory();  
   return directory.path;
 }
 
@@ -720,12 +715,8 @@ Future<List<Citas>> getCitasProximas(_token) async {
     var datos = json.decode(utf8.decode(response.bodyBytes));
     //print(datos);
     List<Citas> list_citas = new List<Citas>();
-    for (int i = 0; i < datos["response"].length; i++) {
-      //print(datos["response"][i]);
-      timeCita = DateTime.parse(datos["response"][i]["fecha"]);
-      //print(timeNow);
-      //print(timeCita);
-      //print(timeNow.difference(timeCita).inDays.toString());
+    for (int i = 0; i < datos["response"].length; i++) {      
+      timeCita = DateTime.parse(datos["response"][i]["fecha"]);      
       if (timeNow.difference(timeCita).inDays < 0) {
         list_citas.add(Citas(
             objetivo: datos["response"][i]["objetivo"],

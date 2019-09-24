@@ -32,28 +32,6 @@ int selected_index = 0;
 /// HOME
 ///
 DecorationImage image_foto = null;
-    //new DecorationImage(image: AssetImage("assets/images/photo.jpg"));
-/*
-File imageFile = new File("assets/images/photo.jpg");
-String imageFilePath;
-DecorationImage returnFileSelected(File file, String filePath) {
-  try {
-    image_foto = new DecorationImage(
-      fit: BoxFit.contain,
-      image: file == null
-          ? new AssetImage("assets/images/photo.jpg")
-          : new AssetImage(imageFilePath),
-    );
-    return image_foto;
-  } catch (e) {
-    print("Error returnFileSelected " + e.toString());
-    return new DecorationImage(
-      fit: BoxFit.contain,
-      image: new AssetImage("assets/images/photo.jpg"),
-    );
-  }
-}
-*/
 
 ///
 /// RECETAS
