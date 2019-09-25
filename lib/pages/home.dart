@@ -83,6 +83,8 @@ class _HomePageState extends State<HomePage> {
       ImagePicker.pickImage(source: source).then((File img) {
         setState(() {
           if (img != null) {
+            _file = img;
+            buildCroppingImage();
             global.image_foto = new DecorationImage(image: Image.file(img).image);
             db.DBManager.instance.insertUsuario(
                 global.id_user,
@@ -123,7 +125,9 @@ class _HomePageState extends State<HomePage> {
           child: Crop.file(_file, key: cropKey),
         ),
         Container(
-          padding: const EdgeInsets.only(top: 20.0),
+          //padding: const EdgeInsets.only(top: 20.0),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
           alignment: AlignmentDirectional.center,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
