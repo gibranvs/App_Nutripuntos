@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
 
   final cropKey = GlobalKey<CropState>();
   File _file;
-  File _lastCropped;  
+  File _lastCropped;
 
   void pickImageFrom(_context, ImageSource source) async {
     try {
@@ -90,9 +90,9 @@ class _HomePageState extends State<HomePage> {
                 global.token,
                 img.path);
 
-            List<int> imageBytes = img.readAsBytesSync();            
-            writeFileContent(base64Encode(imageBytes));     
-            readFileContent();       
+            List<int> imageBytes = img.readAsBytesSync();
+            writeFileContent(base64Encode(imageBytes));
+            readFileContent();
 
             Navigator.pop(context);
           }
@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
     debugPrint('$file');
   }
 
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     return new WillPopScope(
       onWillPop: () {
         //SystemNavigator.pop();
@@ -183,89 +183,83 @@ class _HomePageState extends State<HomePage> {
             width: MediaQuery.of(context).size.width * 0.22,
           ),
         ),
-        body: Container(
-          decoration: new BoxDecoration(
-            color: const Color(0x00FFCC00),
-            image: new DecorationImage(
-              image: new AssetImage("assets/images/fondo.jpg"),
-              colorFilter: new ColorFilter.mode(
-                  Colors.black.withOpacity(0.2), BlendMode.dstATop),
-              fit: BoxFit.cover,
+        body: Stack(
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: new BoxDecoration(
+                color: const Color(0x00FFCC00),
+                image: new DecorationImage(
+                  image: new AssetImage("assets/images/fondo.jpg"),
+                  colorFilter: new ColorFilter.mode(
+                      Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
-          ),
-          child: PreferredSize(
-            preferredSize: Size.fromHeight(0),
-            child: Container(
-              child: Column(
-                children: <Widget>[
-                  Stack(
+            Stack(
+              children: <Widget>[
+                ///
+                /// SCROLLEABLE AREA
+                ///
+                Container(
+                  margin: EdgeInsets.only(top: 170),
+                  child: ListView(
                     children: <Widget>[
                       ///
-                      /// FONDO VERDE
+                      /// PROXIMA CITA
                       ///
-                      header(),
-
-                      Container(
-                        alignment: Alignment.topLeft,
-                        width: MediaQuery.of(context).size.width,
-                        child: GestureDetector(
-                          onTap: () {
-                            showAlertOption();
-                          },
-                          child: Stack(
-                            children: <Widget>[
-                              ///
-                              /// FONDO FOTO
-                              ///
-                              fondo_foto(),
-
-                              ///
-                              /// IMAGEN FOTO
-                              ///
-                              foto(),
-                            ],
-                          ),
-                        ),
-                      ),
+                      card_proxima_cita(),
 
                       ///
-                      /// LABEL NOMBRE
+                      /// BUTONS
                       ///
-                      label_nombre(),
-
-                      ///
-                      /// LABEL STATUS
-                      ///
-                      label_status(),
-
-                      Container(
-                        padding: EdgeInsets.only(top: 0),
-                        margin: const EdgeInsets.only(top: 200),
-                        height: MediaQuery.of(context).size.height - 280, //312,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.vertical,
-                          child: Stack(
-                            children: <Widget>[
-                              ///
-                              /// PROXIMA CITA
-                              ///
-                              card_proxima_cita(),
-
-                              ///
-                              /// BUTONS
-                              ///
-                              botones(),
-                            ],
-                          ),
-                        ),
-                      ),
+                      botones(),
                     ],
                   ),
-                ],
-              ),
-              width: MediaQuery.of(context).size.width,
+                ),
+
+                ///
+                /// FONDO VERDE
+                ///
+                header(),
+
+                Container(
+                  alignment: Alignment.topLeft,
+                  width: MediaQuery.of(context).size.width,
+                  child: GestureDetector(
+                    onTap: () {
+                      showAlertOption();
+                    },
+                    child: Stack(
+                      children: <Widget>[
+                        ///
+                        /// FONDO FOTO
+                        ///
+                        fondo_foto(),
+
+                        ///
+                        /// IMAGEN FOTO
+                        ///
+                        foto(),
+                      ],
+                    ),
+                  ),
+                ),
+
+                ///
+                /// LABEL NOMBRE
+                ///
+                label_nombre(),
+
+                ///
+                /// LABEL STATUS
+                ///
+                label_status(),
+              ],
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -365,8 +359,7 @@ class card_proxima_cita extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.topCenter,
-      margin: const EdgeInsets.only(top: 5),
-      //padding: EdgeInsets.all(10),
+      margin: const EdgeInsets.only(top: 40),
       child: FutureBuilder<List<Citas>>(
         future: getCitasProximas(global.token),
         builder: (context, snapshot) {
@@ -465,7 +458,7 @@ class botones extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      margin: const EdgeInsets.only(left: 0, top: 100, bottom: 10),
+      margin: const EdgeInsets.only(left: 0, top: 20, bottom: 20),
       child: Stack(
         children: <Widget>[
           ///
@@ -686,8 +679,8 @@ Future<File> get _localFile async {
 writeFileContent(String _base64) async {
   final file = await _localFile;
   file.writeAsString(_base64).then((_) {
-    readFileContent();  
-  });  
+    readFileContent();
+  });
   //return file.writeAsString(_base64);
 }
 

@@ -44,7 +44,7 @@ class DBManager {
   // This is the actual database filename that is saved in the docs directory.
   static final _databaseName = "RegistroUsuario.db";
   // Increment this version when you need to change the schema.
-  static final _databaseVersion = 14;
+  static final _databaseVersion = 15;
 
   // Make this a singleton class.
   DBManager._privateConstructor();
