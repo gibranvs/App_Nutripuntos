@@ -13,7 +13,7 @@ import 'plan.dart';
 import '../src/HexToColor.dart';
 //import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_modern/image_picker_modern.dart';
-import 'package:image_crop/image_crop.dart';
+//import 'package:image_crop/image_crop.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -74,17 +74,19 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+/*
   final cropKey = GlobalKey<CropState>();
   File _file;
   File _lastCropped;
+*/
 
   void pickImageFrom(_context, ImageSource source) async {
     try {
       ImagePicker.pickImage(source: source).then((File img) {
         setState(() {
           if (img != null) {
-            _file = img;
-            buildCroppingImage();
+            //_file = img;
+            //buildCroppingImage();
             global.image_foto = new DecorationImage(image: Image.file(img).image);
             db.DBManager.instance.insertUsuario(
                 global.id_user,
@@ -110,6 +112,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+/*
   @override
   void dispose() {
     super.dispose();
@@ -170,6 +173,7 @@ class _HomePageState extends State<HomePage> {
     _lastCropped = file;
     debugPrint('$file');
   }
+*/
 
   Widget build(BuildContext context) {
     return new WillPopScope(
