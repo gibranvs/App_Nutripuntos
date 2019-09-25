@@ -365,8 +365,10 @@ class cuadro_grafica_peso extends StatelessWidget {
             Container(
               alignment: Alignment.centerLeft,
               margin: EdgeInsets.only(top: 20, left: 40),
-              height: 185,              
-              child: new Image.asset("assets/icons/ejes.png",),
+              height: 185,
+              child: new Image.asset(
+                "assets/icons/ejes.png",
+              ),
             ),
 
             ///
@@ -804,79 +806,81 @@ class circle_image extends StatelessWidget {
             alignment: Alignment.topCenter,
             margin: EdgeInsets.only(top: 50),
             height: 130,
-            child: new Image.asset("assets/icons/Recurso_27.png"),
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: Image.asset("assets/icons/Recurso_27.png").image)),
+            child: //new Image.asset("assets/icons/Recurso_27.png"),
+                FutureBuilder<Meta>(
+                    future: db.DBManager.instance.getReto(global.token),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            semanticsLabel: "Loading",
+                            backgroundColor: hexToColor("#cdcdcd"),
+                          ),
+                        );
+                      } else if (snapshot.hasData) {
+                        if (snapshot.data != null) {
+                          if (snapshot.data.meta == "NA") {
+                            return new Container(
+                              alignment: Alignment.center,
+                              child: Container(
+                                alignment: Alignment.topLeft,
+                                //margin: EdgeInsets.only(top: 100),
+                                constraints:
+                                    BoxConstraints(minWidth: 80, maxWidth: 80),
+                                child: AutoSizeText(
+                                  "Presiona para agregar reto",
+                                  textAlign: TextAlign.center,
+                                  maxFontSize: 20,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 23),
+                                ),
+                              ),
+                            );
+                          } else {
+                            return new Container(
+                              alignment: Alignment.center,
+                              child: Container(
+                                alignment: Alignment.center,                                
+                                constraints: BoxConstraints(
+                                    minWidth: 80,
+                                    maxWidth: 80,
+                                    maxHeight: 80,
+                                    minHeight: 80),
+                                child: AutoSizeText(
+                                  snapshot.data.meta,
+                                  maxLines: 3,
+                                  maxFontSize: 20,
+                                  wrapWords: false,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
+                              ),
+                            );
+                          }
+                        } else {
+                          return new Center(
+                              child: Text("No hay méta próxima.",
+                                  style:
+                                      TextStyle(color: hexToColor("#606060"))));
+                        }
+                      } else if (snapshot.hasError) {
+                        return new Center(
+                            child: Text("Error al obtener meta próxima.",
+                                style:
+                                    TextStyle(color: hexToColor("#606060"))));
+                      }
+                    }),
           ),
-          FutureBuilder<Meta>(
-              future: db.DBManager.instance.getReto(global.token),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      semanticsLabel: "Loading",
-                      backgroundColor: hexToColor("#cdcdcd"),
-                    ),
-                  );
-                } else if (snapshot.hasData) {
-                  if (snapshot.data != null) {
-                    if (snapshot.data.meta == "NA") {
-                      return new Container(
-                        alignment: Alignment.center,
-                        child: Container(
-                          alignment: Alignment.topLeft,
-                          margin: EdgeInsets.only(top: 100),
-                          constraints:
-                              BoxConstraints(minWidth: 80, maxWidth: 80),
-                          child: AutoSizeText(
-                            "Presiona para agregar reto",
-                            textAlign: TextAlign.center,
-                            maxFontSize: 20,
-                            maxLines: 2,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 23),
-                          ),
-                        ),
-                      );
-                    } else {
-                      return new Container(
-                        alignment: Alignment.center,
-                        child: Container(
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.only(
-                              bottom:
-                                  MediaQuery.of(context).size.height * 0.335),
-                          constraints: BoxConstraints(
-                              minWidth: 80,
-                              maxWidth: 80,
-                              maxHeight: 80,
-                              minHeight: 80),
-                          child: AutoSizeText(
-                            snapshot.data.meta,
-                            maxLines: 3,
-                            maxFontSize: 20,
-                            wrapWords: false,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                        ),
-                      );
-                    }
-                  } else {
-                    return new Center(
-                        child: Text("No hay méta próxima.",
-                            style: TextStyle(color: hexToColor("#606060"))));
-                  }
-                } else if (snapshot.hasError) {
-                  return new Center(
-                      child: Text("Error al obtener meta próxima.",
-                          style: TextStyle(color: hexToColor("#606060"))));
-                }
-              }),
         ],
       ),
     );
