@@ -83,6 +83,7 @@ class _HomePageState extends State<HomePage> {
       ImagePicker.pickImage(source: source).then((File img) {
         setState(() {
           if (img != null) {
+            global.image_foto = new DecorationImage(image: Image.file(img).image);
             db.DBManager.instance.insertUsuario(
                 global.id_user,
                 global.nombre_user,
@@ -559,7 +560,7 @@ class botones extends StatelessWidget {
                                       minHeight: 80),
                                   child: AutoSizeText(
                                     snapshot.data.meta,
-                                    maxLines: 2,
+                                    maxLines: 3,
                                     maxFontSize: 16,
                                     wrapWords: false,
                                     textAlign: TextAlign.center,

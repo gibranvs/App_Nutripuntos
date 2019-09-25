@@ -508,7 +508,7 @@ Future<T> show_Dialog<T>({
                   width: 400,
                   height: 600,
                   margin: EdgeInsets.only(
-                      left: 30, right: 30, top: 170, bottom: 10),
+                      left: 30, right: 30, top: 175, bottom: 10),
                   decoration: new BoxDecoration(
                       color: hexToColor("#505050"),
                       borderRadius:
