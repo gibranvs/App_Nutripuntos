@@ -14,10 +14,10 @@ import '../src/HexToColor.dart';
 import 'package:image_picker/image_picker.dart';
 //import 'package:image_picker_modern/image_picker_modern.dart';
 //import 'package:image_crop/image_crop.dart';
+//import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-//import 'package:camera/camera.dart';
 import 'package:http/http.dart' as http;
 import '../src/DBManager.dart' as db;
 
@@ -81,6 +81,7 @@ class _HomePageState extends State<HomePage> {
 */
 
   void pickImageFrom(_context, ImageSource source) async {
+    
     try {
       ImagePicker.pickImage(source: source).then((File img) {
         setState(() {
