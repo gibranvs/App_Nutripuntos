@@ -38,15 +38,15 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  /*
   startTime() async {
     var _duration = new Duration(seconds: 5);
     return new Timer(_duration, navigationPage);
   }
-
   void navigationPage() {
     db.DBManager.instance.getUsuario(context);
   }
-
+  */
   @override
   Future initState() {
     //db.DBManager.instance.deleteAllRegistros();
