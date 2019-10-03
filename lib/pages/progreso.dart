@@ -828,7 +828,7 @@ class circle_image extends StatelessWidget {
                               alignment: Alignment.center,
                               child: Container(
                                 alignment: Alignment.topLeft,
-                                //margin: EdgeInsets.only(top: 100),
+                                margin: EdgeInsets.only(top: 50),
                                 constraints:
                                     BoxConstraints(minWidth: 80, maxWidth: 80),
                                 child: AutoSizeText(
@@ -849,8 +849,8 @@ class circle_image extends StatelessWidget {
                               child: Container(
                                 alignment: Alignment.center,                                
                                 constraints: BoxConstraints(
-                                    minWidth: 80,
-                                    maxWidth: 80,
+                                    minWidth: 70,
+                                    maxWidth: 70,
                                     maxHeight: 80,
                                     minHeight: 80),
                                 child: AutoSizeText(
