@@ -178,8 +178,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget build(BuildContext context) {
     return new WillPopScope(
-      onWillPop: () {
-        //SystemNavigator.pop();
+      onWillPop: () {        
         exit(0);
       },
       child: Scaffold(
