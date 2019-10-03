@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
             writeFileContent(base64Encode(imageBytes));
             readFileContent();
 
-            Navigator.pop(context);
+            //Navigator.pop(context);
           }
         });
       });
