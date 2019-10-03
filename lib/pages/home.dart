@@ -240,7 +240,8 @@ class _HomePageState extends State<HomePage> {
                   width: MediaQuery.of(context).size.width,
                   child: GestureDetector(
                     onTap: () {
-                      showAlertOption();
+                      //showAlertOption();
+                      pickImageFrom(context, ImageSource.gallery);
                     },
                     child: Stack(
                       children: <Widget>[
