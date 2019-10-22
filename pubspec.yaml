@@ -30,6 +30,7 @@ dependencies:
   intl: ^0.15.8
   sqflite: ^1.0.0
   auto_size_text: ^2.1.0    
+  charts_flutter: ^0.8.1
   #camera: 0.5.4+1
   
 

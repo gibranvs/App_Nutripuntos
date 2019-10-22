@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'dart:math';
 import 'package:nutripuntos_app/src/HexToColor.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 import 'newmenu.dart' as newmenu;
 import '../src/DBManager.dart' as db;
 import 'package:http/http.dart' as http;
@@ -96,9 +98,11 @@ class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    label_titulo("Gráfica de peso"),
-                    cuadro_informacion_peso("Último peso medido"),
-                    cuadro_grafica_peso("Peso en Kg"),
+                    Label_titulo("Gráfica de peso"),
+                    Cuadro_informacion_peso("Último peso medido"),
+                    Back_grafica("Peso en Kg"),
+                    PesoChart(),
+                    //Grafica_peso("Peso en Kg"),
                   ],
                 ),
 
@@ -118,9 +122,11 @@ class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    label_titulo("Gráfica de Calorías"),
-                    cuadro_informacion_grasa("Última medida"),
-                    cuadro_grafica_grasa("Progreso en Kcal"),
+                    Label_titulo("Gráfica de Calorías"),
+                    Cuadro_informacion_grasa("Última medida"),
+                    Back_grafica("Progreso en Kcal"),
+                    GrasaChart(),
+                    //Grafica_grasa("Progreso en Kcal"),
                   ],
                 ),
 
@@ -140,10 +146,10 @@ class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    label_titulo("Próxima Meta"),
-                    circle_image(context),
-                    label_subtitulo("Retos anteriores"),
-                    list_metas(),
+                    Label_titulo("Próxima Meta"),
+                    Circle_image(context),
+                    Label_subtitulo("Retos anteriores"),
+                    List_metas(),
                   ],
                 ),
               ],
@@ -155,9 +161,9 @@ class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {
   }
 }
 
-class label_titulo extends StatelessWidget {
+class Label_titulo extends StatelessWidget {
   final String titulo;
-  label_titulo(this.titulo);
+  Label_titulo(this.titulo);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -174,9 +180,9 @@ class label_titulo extends StatelessWidget {
   }
 }
 
-class label_subtitulo extends StatelessWidget {
+class Label_subtitulo extends StatelessWidget {
   final String subtitulo;
-  label_subtitulo(this.subtitulo);
+  Label_subtitulo(this.subtitulo);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -193,9 +199,9 @@ class label_subtitulo extends StatelessWidget {
   }
 }
 
-class cuadro_informacion_peso extends StatelessWidget {
+class Cuadro_informacion_peso extends StatelessWidget {
   final String leyenda;
-  cuadro_informacion_peso(this.leyenda);
+  Cuadro_informacion_peso(this.leyenda);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -269,9 +275,9 @@ class cuadro_informacion_peso extends StatelessWidget {
   }
 }
 
-class cuadro_informacion_grasa extends StatelessWidget {
+class Cuadro_informacion_grasa extends StatelessWidget {
   final String leyenda;
-  cuadro_informacion_grasa(this.leyenda);
+  Cuadro_informacion_grasa(this.leyenda);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -345,32 +351,24 @@ class cuadro_informacion_grasa extends StatelessWidget {
   }
 }
 
-class cuadro_grafica_peso extends StatelessWidget {
+class Back_grafica extends StatelessWidget {
   final String leyenda_y;
-  cuadro_grafica_peso(this.leyenda_y);
+  Back_grafica(this.leyenda_y);
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.topCenter,
-      margin: EdgeInsets.only(top: 170, bottom: 20),
+      alignment: Alignment.center,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.75,
         height: MediaQuery.of(context).size.width * 0.75,
+        margin: EdgeInsets.only(top: 130),
         decoration: BoxDecoration(
           color: hexToColor("#78c826"),
           borderRadius: BorderRadius.all(Radius.circular(15)),
         ),
         child: Stack(
           children: <Widget>[
-            Container(
-              alignment: Alignment.centerLeft,
-              margin: EdgeInsets.only(top: 20, left: 40),
-              height: 185,
-              child: new Image.asset(
-                "assets/icons/ejes.png",
-              ),
-            ),
-
             ///
             /// LABEL AXIS Y
             ///
@@ -417,151 +415,6 @@ class cuadro_grafica_peso extends StatelessWidget {
                         fontSize: 13)),
               ),
             ),
-
-            ///
-            /// MESES GRÁFICA
-            ///
-            Container(
-              alignment: Alignment.centerLeft,
-              margin: EdgeInsets.only(top: 15, left: 40),
-              child: FutureBuilder<List<Progreso>>(
-                  future: GetProgreso(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          semanticsLabel: "Loading",
-                          backgroundColor: hexToColor("#cdcdcd"),
-                        ),
-                      );
-                    } else if (snapshot.hasData) {
-                      if (snapshot.data.length > 0) {
-                        return new ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                alignment: Alignment.bottomLeft,
-                                margin: EdgeInsets.only(
-                                    top: 170, left: 7, bottom: 10),
-                                child: Column(
-                                  children: <Widget>[
-                                    Container(
-                                      alignment: Alignment.bottomLeft,
-                                      padding: EdgeInsets.only(left: 10),
-                                      child: Text(snapshot.data[index].mes,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            });
-                      } else {
-                        return new Center(
-                            child: Text("No hay datos.",
-                                style:
-                                    TextStyle(color: hexToColor("#606060"))));
-                      }
-                    } else if (snapshot.hasError) {
-                      return new Center(
-                          child: Text("Error al obtener datos.",
-                              style: TextStyle(color: hexToColor("#606060"))));
-                    }
-                  }),
-            ),
-
-            ///
-            /// DATOS GRÁFICA
-            ///
-            Container(
-              alignment: Alignment.centerLeft,
-              margin: EdgeInsets.only(top: 10, left: 44),
-              child: FutureBuilder<List<Progreso>>(
-                  future: GetProgreso(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                          /*
-                        child:
-                        CircularProgressIndicator(
-                          strokeWidth: 2,
-                          semanticsLabel: "Loading",
-                          backgroundColor: hexToColor("#cdcdcd"),
-                        ),
-                        */
-                          );
-                    } else if (snapshot.hasData) {
-                      if (snapshot.data.length > 0) {
-                        return new ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (context, index) {
-                              //List<double> heights = [85, 86, 86, 86, 86];
-                              double height;
-                              String text;
-                              if (double.parse(snapshot.data[index].peso) ==
-                                  0) {
-                                height = 1;
-                                text = "00.00";
-                              } else {
-                                height =
-                                    double.parse(snapshot.data[index].peso);
-                                text = snapshot.data[index].peso;
-                              }
-                              return Container(
-                                alignment: Alignment.bottomLeft,
-                                margin: EdgeInsets.only(bottom: 0, left: 10),
-                                child: Column(
-                                  children: <Widget>[
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                        //top: 155 - heights[index],
-                                        top: 155 - height,
-                                        bottom: 5,
-                                      ),
-                                      child: Text(text,
-                                          style: TextStyle(
-                                              fontSize: 10,
-                                              color: Colors.white)),
-                                    ),
-                                    Container(
-                                      alignment: Alignment.topLeft,
-                                      //height: heights[index],
-                                      height: height,
-                                      width: 20,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: AssetImage(
-                                              "assets/icons/barra_graphic.png"),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            });
-                      } else {
-                        return new Center(
-                            child: Text("No hay datos.",
-                                style:
-                                    TextStyle(color: hexToColor("#606060"))));
-                      }
-                    } else if (snapshot.hasError) {
-                      return new Center(
-                          child: Text("Error al obtener datos.",
-                              style: TextStyle(color: hexToColor("#606060"))));
-                    }
-                  }),
-            ),
           ],
         ),
       ),
@@ -569,61 +422,178 @@ class cuadro_grafica_peso extends StatelessWidget {
   }
 }
 
-class cuadro_grafica_grasa extends StatelessWidget {
+class PesoChart extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      width: MediaQuery.of(context).size.width * 0.65,
+      height: MediaQuery.of(context).size.width * 0.65,
+      margin: EdgeInsets.only(
+          top: 150, left: MediaQuery.of(context).size.width * 0.23),
+      child: FutureBuilder<List<Progreso>>(
+          future: GetProgreso(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  semanticsLabel: "Loading",
+                  backgroundColor: hexToColor("#cdcdcd"),
+                ),
+              );
+            } else if (snapshot.hasData) {
+              if (snapshot.data != null) {
+                List<charts.Series<Medidas, num>> seriesList;
+                var data = [
+                  new Medidas(0, 'Enero', double.parse(snapshot.data[0].peso)),
+                  new Medidas(1, 'Febrero', double.parse(snapshot.data[1].peso)),
+                  new Medidas(2, 'Marzo', double.parse(snapshot.data[2].peso)),
+                  new Medidas(3, 'Abril', double.parse(snapshot.data[3].peso)),
+                  new Medidas(4, 'Mayo', double.parse(snapshot.data[4].peso)),
+                ];
+                seriesList = new List<charts.Series<Medidas, num>>();
+                seriesList.add(
+                  new charts.Series<Medidas, int>(
+                    data: data,
+                    domainFn: (Medidas sales, _) => sales.mes,
+                    measureFn: (Medidas sales, _) => sales.medida,
+                    labelAccessorFn: (Medidas sales, _) => sales.nameMes,
+                    //hexToColor("#059696"),
+                    colorFn: (_, __) =>
+                        charts.MaterialPalette.blue.shadeDefault,
+                    id: 'Peso',
+                  ),
+                );
+                return charts.LineChart(
+                  seriesList,
+                  //animate: false,
+                  defaultRenderer: new charts.LineRendererConfig(
+                    includePoints: true,
+                    strokeWidthPx: 2,
+                    includeLine: true,
+                    radiusPx: 5,
+                  ),
+                );
+              } else {
+                return new Center(
+                    child: Text("No hay datos.",
+                        style: TextStyle(color: hexToColor("#606060"))));
+              }
+            } else if (snapshot.hasError) {
+              return new Center(
+                  child: Text("Error al obtener datos.",
+                      style: TextStyle(color: hexToColor("#606060"))));
+            }
+          }),
+    );
+  }
+}
+
+class GrasaChart extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.bottomCenter,
+      width: MediaQuery.of(context).size.width * 0.65,
+      height: MediaQuery.of(context).size.width * 0.65,
+      margin: EdgeInsets.only(
+          top: 150, left: MediaQuery.of(context).size.width * 0.23),
+      child: FutureBuilder<List<Progreso>>(
+          future: GetProgreso(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  semanticsLabel: "Loading",
+                  backgroundColor: hexToColor("#cdcdcd"),
+                ),
+              );
+            } else if (snapshot.hasData) {
+              if (snapshot.data != null) {
+                List<charts.Series<Medidas, num>> seriesList;
+                var data = [
+                  new Medidas(0, 'Enero', double.parse(snapshot.data[0].grasa)),
+                  new Medidas(1, 'Febrero', double.parse(snapshot.data[1].grasa)),
+                  new Medidas(2, 'Marzo', double.parse(snapshot.data[2].grasa)),
+                  new Medidas(3, 'Abril', double.parse(snapshot.data[3].grasa)),
+                  new Medidas(4, 'Mayo', double.parse(snapshot.data[4].grasa)),
+                ];
+                seriesList = new List<charts.Series<Medidas, num>>();
+                seriesList.add(
+                  new charts.Series<Medidas, int>(
+                    data: data,
+                    domainFn: (Medidas sales, _) => sales.mes,
+                    measureFn: (Medidas sales, _) => sales.medida,
+                    labelAccessorFn: (Medidas sales, _) => sales.nameMes,
+                    //hexToColor("#059696"),
+                    colorFn: (_, __) =>
+                        charts.MaterialPalette.blue.shadeDefault,
+                    id: 'Grasa',
+                  ),
+                );
+                return charts.LineChart(
+                  seriesList,
+                  //animate: false,
+                  defaultRenderer: new charts.LineRendererConfig(
+                    includePoints: true,
+                    strokeWidthPx: 2,
+                    includeLine: true,
+                    radiusPx: 5,
+                  ),
+                );
+              } else {
+                return new Center(
+                    child: Text("No hay datos.",
+                        style: TextStyle(color: hexToColor("#606060"))));
+              }
+            } else if (snapshot.hasError) {
+              return new Center(
+                  child: Text("Error al obtener datos.",
+                      style: TextStyle(color: hexToColor("#606060"))));
+            }
+          }),
+    );
+  }
+}
+
+class Medidas {
+  final int mes;
+  final String nameMes;
+  final double medida;
+
+  Medidas(this.mes, this.nameMes, this.medida);
+}
+
+class Grafica_peso extends StatelessWidget {
   final String leyenda_y;
-  cuadro_grafica_grasa(this.leyenda_y);
+  Grafica_peso(this.leyenda_y);
+
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.topCenter,
       margin: EdgeInsets.only(top: 170, bottom: 20),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.75,
-        height: MediaQuery.of(context).size.width * 0.75,
-        decoration: BoxDecoration(
-          color: hexToColor("#78c826"),
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Stack(
-          children: <Widget>[
-            Container(
-              alignment: Alignment.centerLeft,
-              margin: EdgeInsets.only(top: 20, left: 40),
-              height: 185,
-              child: new Image.asset("assets/icons/ejes.png"),
+      child: Stack(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.centerLeft,
+            margin: EdgeInsets.only(top: 20, left: 40),
+            height: 185,
+            child: new Image.asset(
+              "assets/icons/ejes.png",
             ),
+          ),
 
-            ///
-            /// LABEL AXIS Y
-            ///
-            RotatedBox(
-              quarterTurns: -1,
-              child: Container(
-                alignment: Alignment.topCenter,
-                margin: EdgeInsets.only(top: 10, left: 0),
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
-                  width: 115,
-                  height: 20,
-                  margin: EdgeInsets.only(top: 0, left: 5),
-                  child: Text(leyenda_y,
-                      style: TextStyle(
-                          color: hexToColor("#059696"),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13)),
-                ),
-              ),
-            ),
-
-            ///
-            /// LABEL AXIS X
-            ///
-            Container(
-              alignment: Alignment.bottomCenter,
-              margin: EdgeInsets.only(bottom: 10),
+          ///
+          /// LABEL AXIS Y
+          ///
+          RotatedBox(
+            quarterTurns: -1,
+            child: Container(
+              alignment: Alignment.topCenter,
+              margin: EdgeInsets.only(top: 10, left: 0),
               child: Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
@@ -632,84 +602,106 @@ class cuadro_grafica_grasa extends StatelessWidget {
                 width: 115,
                 height: 20,
                 margin: EdgeInsets.only(top: 0, left: 5),
-                child: Text("Citas por mes",
+                child: Text(leyenda_y,
                     style: TextStyle(
                         color: hexToColor("#059696"),
                         fontWeight: FontWeight.bold,
                         fontSize: 13)),
               ),
             ),
+          ),
 
-            ///
-            /// MESES GRÁFICA
-            ///
-            Container(
-              alignment: Alignment.centerLeft,
-              margin: EdgeInsets.only(top: 15, left: 40),
-              child: FutureBuilder<List<Progreso>>(
-                  future: GetProgreso(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          semanticsLabel: "Loading",
-                          backgroundColor: hexToColor("#cdcdcd"),
-                        ),
-                      );
-                    } else if (snapshot.hasData) {
-                      if (snapshot.data.length > 0) {
-                        return new ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                alignment: Alignment.bottomLeft,
-                                margin: EdgeInsets.only(
-                                    top: 170, left: 7, bottom: 10),
-                                child: Column(
-                                  children: <Widget>[
-                                    Container(
-                                      alignment: Alignment.bottomLeft,
-                                      padding: EdgeInsets.only(left: 10),
-                                      child: Text(snapshot.data[index].mes,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.bold)),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            });
-                      } else {
-                        return new Center(
-                            child: Text("No hay datos.",
-                                style:
-                                    TextStyle(color: hexToColor("#606060"))));
-                      }
-                    } else if (snapshot.hasError) {
+          ///
+          /// LABEL AXIS X
+          ///
+          Container(
+            alignment: Alignment.bottomCenter,
+            margin: EdgeInsets.only(bottom: 10),
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              width: 115,
+              height: 20,
+              margin: EdgeInsets.only(top: 0, left: 5),
+              child: Text("Citas por mes",
+                  style: TextStyle(
+                      color: hexToColor("#059696"),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13)),
+            ),
+          ),
+
+          ///
+          /// MESES GRÁFICA
+          ///
+          Container(
+            alignment: Alignment.centerLeft,
+            margin: EdgeInsets.only(top: 15, left: 40),
+            child: FutureBuilder<List<Progreso>>(
+                future: GetProgreso(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        semanticsLabel: "Loading",
+                        backgroundColor: hexToColor("#cdcdcd"),
+                      ),
+                    );
+                  } else if (snapshot.hasData) {
+                    if (snapshot.data.length > 0) {
+                      return new ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              alignment: Alignment.bottomLeft,
+                              margin: EdgeInsets.only(
+                                  top: 170, left: 7, bottom: 10),
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    alignment: Alignment.bottomLeft,
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: Text(snapshot.data[index].mes,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
+                    } else {
                       return new Center(
-                          child: Text("Error al obtener datos.",
+                          child: Text("No hay datos.",
                               style: TextStyle(color: hexToColor("#606060"))));
                     }
-                  }),
-            ),
+                  } else if (snapshot.hasError) {
+                    return new Center(
+                        child: Text("Error al obtener datos.",
+                            style: TextStyle(color: hexToColor("#606060"))));
+                  }
+                }),
+          ),
 
-            ///
-            /// DATOS GRÁFICA
-            ///
-            Container(
-              alignment: Alignment.centerLeft,
-              margin: EdgeInsets.only(top: 10, left: 44),
-              child: FutureBuilder<List<Progreso>>(
-                  future: GetProgreso(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                          /*
+          ///
+          /// DATOS GRÁFICA
+          ///
+          Container(
+            alignment: Alignment.centerLeft,
+            margin: EdgeInsets.only(top: 10, left: 44),
+            child: FutureBuilder<List<Progreso>>(
+                future: GetProgreso(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                        /*
                         child:
                         CircularProgressIndicator(
                           strokeWidth: 2,
@@ -717,83 +709,287 @@ class cuadro_grafica_grasa extends StatelessWidget {
                           backgroundColor: hexToColor("#cdcdcd"),
                         ),
                         */
-                          );
-                    } else if (snapshot.hasData) {
-                      if (snapshot.data.length > 0) {
-                        return new ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (context, index) {
-                              //List<double> heights = [85, 86, 86, 86, 86];
-                              double height;
-                              String text;
-                              if (double.parse(snapshot.data[index].grasa) ==
-                                  0) {
-                                height = 1;
-                                text = "00.00";
-                              } else {
-                                height =
-                                    double.parse(snapshot.data[index].grasa);
-                                text = snapshot.data[index].grasa;
-                              }
-                              return Container(
-                                alignment: Alignment.bottomLeft,
-                                margin: EdgeInsets.only(bottom: 0, left: 10),
-                                child: Column(
-                                  children: <Widget>[
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                        //top: 155 - heights[index],
-                                        top: 155 - height,
-                                        bottom: 5,
-                                      ),
-                                      child: Text(text,
-                                          style: TextStyle(
-                                              fontSize: 10,
-                                              color: Colors.white)),
+                        );
+                  } else if (snapshot.hasData) {
+                    if (snapshot.data.length > 0) {
+                      return new ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            //List<double> heights = [85, 86, 86, 86, 86];
+                            double height;
+                            String text;
+                            if (double.parse(snapshot.data[index].peso) == 0) {
+                              height = 1;
+                              text = "00.00";
+                            } else {
+                              height = double.parse(snapshot.data[index].peso);
+                              text = snapshot.data[index].peso;
+                            }
+                            return Container(
+                              alignment: Alignment.bottomLeft,
+                              margin: EdgeInsets.only(bottom: 0, left: 10),
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                      //top: 155 - heights[index],
+                                      top: 155 - height,
+                                      bottom: 5,
                                     ),
-                                    Container(
-                                      alignment: Alignment.topLeft,
-                                      //height: heights[index],
-                                      height: height,
-                                      width: 20,
-                                      decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: AssetImage(
-                                              "assets/icons/barra_graphic.png"),
-                                          fit: BoxFit.cover,
-                                        ),
+                                    child: Text(text,
+                                        style: TextStyle(
+                                            fontSize: 10, color: Colors.white)),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.topLeft,
+                                    //height: heights[index],
+                                    height: height,
+                                    width: 20,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                            "assets/icons/barra_graphic.png"),
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
-                                  ],
-                                ),
-                              );
-                            });
-                      } else {
-                        return new Center(
-                            child: Text("No hay datos.",
-                                style:
-                                    TextStyle(color: hexToColor("#606060"))));
-                      }
-                    } else if (snapshot.hasError) {
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
+                    } else {
                       return new Center(
-                          child: Text("Error al obtener datos.",
+                          child: Text("No hay datos.",
                               style: TextStyle(color: hexToColor("#606060"))));
                     }
-                  }),
-            ),
-          ],
-        ),
+                  } else if (snapshot.hasError) {
+                    return new Center(
+                        child: Text("Error al obtener datos.",
+                            style: TextStyle(color: hexToColor("#606060"))));
+                  }
+                }),
+          ),
+        ],
       ),
     );
   }
 }
 
-class circle_image extends StatelessWidget {
+class Grafica_grasa extends StatelessWidget {
+  final String leyenda_y;
+  Grafica_grasa(this.leyenda_y);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.topCenter,
+      margin: EdgeInsets.only(top: 170, bottom: 20),
+      child: Stack(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.centerLeft,
+            margin: EdgeInsets.only(top: 20, left: 40),
+            height: 185,
+            child: new Image.asset("assets/icons/ejes.png"),
+          ),
+
+          ///
+          /// LABEL AXIS Y
+          ///
+          RotatedBox(
+            quarterTurns: -1,
+            child: Container(
+              alignment: Alignment.topCenter,
+              margin: EdgeInsets.only(top: 10, left: 0),
+              child: Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                width: 115,
+                height: 20,
+                margin: EdgeInsets.only(top: 0, left: 5),
+                child: Text(leyenda_y,
+                    style: TextStyle(
+                        color: hexToColor("#059696"),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13)),
+              ),
+            ),
+          ),
+
+          ///
+          /// LABEL AXIS X
+          ///
+          Container(
+            alignment: Alignment.bottomCenter,
+            margin: EdgeInsets.only(bottom: 10),
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(5))),
+              width: 115,
+              height: 20,
+              margin: EdgeInsets.only(top: 0, left: 5),
+              child: Text("Citas por mes",
+                  style: TextStyle(
+                      color: hexToColor("#059696"),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13)),
+            ),
+          ),
+
+          ///
+          /// MESES GRÁFICA
+          ///
+          Container(
+            alignment: Alignment.centerLeft,
+            margin: EdgeInsets.only(top: 15, left: 40),
+            child: FutureBuilder<List<Progreso>>(
+                future: GetProgreso(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        semanticsLabel: "Loading",
+                        backgroundColor: hexToColor("#cdcdcd"),
+                      ),
+                    );
+                  } else if (snapshot.hasData) {
+                    if (snapshot.data.length > 0) {
+                      return new ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              alignment: Alignment.bottomLeft,
+                              margin: EdgeInsets.only(
+                                  top: 170, left: 7, bottom: 10),
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    alignment: Alignment.bottomLeft,
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: Text(snapshot.data[index].mes,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.bold)),
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
+                    } else {
+                      return new Center(
+                          child: Text("No hay datos.",
+                              style: TextStyle(color: hexToColor("#606060"))));
+                    }
+                  } else if (snapshot.hasError) {
+                    return new Center(
+                        child: Text("Error al obtener datos.",
+                            style: TextStyle(color: hexToColor("#606060"))));
+                  }
+                }),
+          ),
+
+          ///
+          /// DATOS GRÁFICA
+          ///
+          Container(
+            alignment: Alignment.centerLeft,
+            margin: EdgeInsets.only(top: 10, left: 44),
+            child: FutureBuilder<List<Progreso>>(
+                future: GetProgreso(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                        /*
+                        child:
+                        CircularProgressIndicator(
+                          strokeWidth: 2,
+                          semanticsLabel: "Loading",
+                          backgroundColor: hexToColor("#cdcdcd"),
+                        ),
+                        */
+                        );
+                  } else if (snapshot.hasData) {
+                    if (snapshot.data.length > 0) {
+                      return new ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            //List<double> heights = [85, 86, 86, 86, 86];
+                            double height;
+                            String text;
+                            if (double.parse(snapshot.data[index].grasa) == 0) {
+                              height = 1;
+                              text = "00.00";
+                            } else {
+                              height = double.parse(snapshot.data[index].grasa);
+                              text = snapshot.data[index].grasa;
+                            }
+                            return Container(
+                              alignment: Alignment.bottomLeft,
+                              margin: EdgeInsets.only(bottom: 0, left: 10),
+                              child: Column(
+                                children: <Widget>[
+                                  Container(
+                                    margin: EdgeInsets.only(
+                                      //top: 155 - heights[index],
+                                      top: 155 - height,
+                                      bottom: 5,
+                                    ),
+                                    child: Text(text,
+                                        style: TextStyle(
+                                            fontSize: 10, color: Colors.white)),
+                                  ),
+                                  Container(
+                                    alignment: Alignment.topLeft,
+                                    //height: heights[index],
+                                    height: height,
+                                    width: 20,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                            "assets/icons/barra_graphic.png"),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
+                    } else {
+                      return new Center(
+                          child: Text("No hay datos.",
+                              style: TextStyle(color: hexToColor("#606060"))));
+                    }
+                  } else if (snapshot.hasError) {
+                    return new Center(
+                        child: Text("Error al obtener datos.",
+                            style: TextStyle(color: hexToColor("#606060"))));
+                  }
+                }),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Circle_image extends StatelessWidget {
   final BuildContext _context;
-  circle_image(this._context);
+  Circle_image(this._context);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -847,7 +1043,7 @@ class circle_image extends StatelessWidget {
                             return new Container(
                               alignment: Alignment.center,
                               child: Container(
-                                alignment: Alignment.center,                                
+                                alignment: Alignment.center,
                                 constraints: BoxConstraints(
                                     minWidth: 70,
                                     maxWidth: 70,
@@ -887,7 +1083,7 @@ class circle_image extends StatelessWidget {
   }
 }
 
-class list_metas extends StatelessWidget {
+class List_metas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
