@@ -447,7 +447,8 @@ class PesoChart extends StatelessWidget {
                 List<charts.Series<Medidas, num>> seriesList;
                 var data = [
                   new Medidas(0, 'Enero', double.parse(snapshot.data[0].peso)),
-                  new Medidas(1, 'Febrero', double.parse(snapshot.data[1].peso)),
+                  new Medidas(
+                      1, 'Febrero', double.parse(snapshot.data[1].peso)),
                   new Medidas(2, 'Marzo', double.parse(snapshot.data[2].peso)),
                   new Medidas(3, 'Abril', double.parse(snapshot.data[3].peso)),
                   new Medidas(4, 'Mayo', double.parse(snapshot.data[4].peso)),
@@ -469,11 +470,11 @@ class PesoChart extends StatelessWidget {
                   seriesList,
                   //animate: false,
                   defaultRenderer: new charts.LineRendererConfig(
-                    includePoints: true,
-                    strokeWidthPx: 2,
-                    includeLine: true,
-                    radiusPx: 5,
-                  ),
+                      includePoints: true,
+                      strokeWidthPx: 2,
+                      includeLine: true,
+                      radiusPx: 5,
+                      ),
                 );
               } else {
                 return new Center(
@@ -515,7 +516,8 @@ class GrasaChart extends StatelessWidget {
                 List<charts.Series<Medidas, num>> seriesList;
                 var data = [
                   new Medidas(0, 'Enero', double.parse(snapshot.data[0].grasa)),
-                  new Medidas(1, 'Febrero', double.parse(snapshot.data[1].grasa)),
+                  new Medidas(
+                      1, 'Febrero', double.parse(snapshot.data[1].grasa)),
                   new Medidas(2, 'Marzo', double.parse(snapshot.data[2].grasa)),
                   new Medidas(3, 'Abril', double.parse(snapshot.data[3].grasa)),
                   new Medidas(4, 'Mayo', double.parse(snapshot.data[4].grasa)),
@@ -537,11 +539,11 @@ class GrasaChart extends StatelessWidget {
                   seriesList,
                   //animate: false,
                   defaultRenderer: new charts.LineRendererConfig(
-                    includePoints: true,
-                    strokeWidthPx: 2,
-                    includeLine: true,
-                    radiusPx: 5,
-                  ),
+                      includePoints: true,
+                      strokeWidthPx: 2,
+                      includeLine: true,
+                      radiusPx: 5,
+                      ),
                 );
               } else {
                 return new Center(
