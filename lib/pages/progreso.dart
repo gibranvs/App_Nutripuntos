@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:nutripuntos_app/src/HexToColor.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter_charts/flutter_charts.dart' as chart;
 import 'newmenu.dart' as newmenu;
 import '../src/DBManager.dart' as db;
 import 'package:http/http.dart' as http;
@@ -512,7 +513,7 @@ class GrasaChart extends StatelessWidget {
                 ),
               );
             } else if (snapshot.hasData) {
-              if (snapshot.data != null) {
+              if (snapshot.data != null) {                
                 List<charts.Series<Medidas, num>> seriesList;
                 var data = [
                   new Medidas(0, 'Enero', double.parse(snapshot.data[0].grasa)),
@@ -536,15 +537,14 @@ class GrasaChart extends StatelessWidget {
                   ),
                 );
                 return charts.LineChart(
-                  seriesList,
-                  //animate: false,
+                  seriesList,                  
                   defaultRenderer: new charts.LineRendererConfig(
                       includePoints: true,
                       strokeWidthPx: 2,
                       includeLine: true,
                       radiusPx: 5,
                       ),
-                );
+                );                
               } else {
                 return new Center(
                     child: Text("No hay datos.",
