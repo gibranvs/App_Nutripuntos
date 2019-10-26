@@ -471,6 +471,7 @@ class PesoChart extends StatelessWidget {
                   seriesList,
                   //animate: false,
                   defaultRenderer: new charts.LineRendererConfig(
+                      roundEndCaps: false,                      
                       includePoints: true,
                       strokeWidthPx: 2,
                       includeLine: true,
