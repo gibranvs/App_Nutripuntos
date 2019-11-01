@@ -1227,9 +1227,15 @@ class List_metas extends StatelessWidget {
                                       context: context,
                                       builder: (context) {
                                         return AlertDialog(
-                                          title: Text('Borrar'),
+                                          title: Text(
+                                            'Advertencia',
+                                            textAlign: TextAlign.center,
+                                          ),
                                           content: Text(
-                                              '¿Seguro que desea borrar el reto?'),
+                                              '¿Seguro que desea borrar el reto "' +
+                                                  snapshot.data[index].meta +
+                                                  '"?',
+                                              textAlign: TextAlign.center),
                                           actions: <Widget>[
                                             FlatButton(
                                                 child: Text('Cancelar'),
