@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'dart:math';
 import 'package:nutripuntos_app/src/HexToColor.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter_charts/flutter_charts.dart' as chart;
 import 'newmenu.dart' as newmenu;
@@ -12,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
 
 final myTextEdit = TextEditingController();
+final myTextUpdate = TextEditingController();
 
 class ProgresoPage extends StatefulWidget {
   final int index_tab;
@@ -150,7 +152,7 @@ class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {
                     Label_titulo("Próxima Meta"),
                     Circle_image(context),
                     Label_subtitulo("Retos anteriores"),
-                    List_metas(),
+                    List_metas(context),
                   ],
                 ),
               ],
@@ -471,12 +473,12 @@ class PesoChart extends StatelessWidget {
                   seriesList,
                   //animate: false,
                   defaultRenderer: new charts.LineRendererConfig(
-                      roundEndCaps: false,                      
-                      includePoints: true,
-                      strokeWidthPx: 2,
-                      includeLine: true,
-                      radiusPx: 5,
-                      ),
+                    roundEndCaps: false,
+                    includePoints: true,
+                    strokeWidthPx: 2,
+                    includeLine: true,
+                    radiusPx: 5,
+                  ),
                 );
               } else {
                 return new Center(
@@ -514,7 +516,7 @@ class GrasaChart extends StatelessWidget {
                 ),
               );
             } else if (snapshot.hasData) {
-              if (snapshot.data != null) {                
+              if (snapshot.data != null) {
                 List<charts.Series<Medidas, num>> seriesList;
                 var data = [
                   new Medidas(0, 'Enero', double.parse(snapshot.data[0].grasa)),
@@ -538,14 +540,14 @@ class GrasaChart extends StatelessWidget {
                   ),
                 );
                 return charts.LineChart(
-                  seriesList,                  
+                  seriesList,
                   defaultRenderer: new charts.LineRendererConfig(
-                      includePoints: true,
-                      strokeWidthPx: 2,
-                      includeLine: true,
-                      radiusPx: 5,
-                      ),
-                );                
+                    includePoints: true,
+                    strokeWidthPx: 2,
+                    includeLine: true,
+                    radiusPx: 5,
+                  ),
+                );
               } else {
                 return new Center(
                     child: Text("No hay datos.",
@@ -1087,6 +1089,8 @@ class Circle_image extends StatelessWidget {
 }
 
 class List_metas extends StatelessWidget {
+  final BuildContext _context;
+  List_metas(this._context);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -1116,54 +1120,206 @@ class List_metas extends StatelessWidget {
                           shrinkWrap: true,
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
+                            final item = snapshot.data[index];
                             return GestureDetector(
-                              onTap: () {},
-                              child: Card(
-                                margin: EdgeInsets.only(bottom: 15),
-                                elevation: 0,
-                                color: hexToColor("#f2f2f2"),
-                                child: Row(
-                                  children: <Widget>[
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                              onTap: () {
+                                myTextUpdate.text = snapshot.data[index].meta;
+                                _showUpdateDialog(
+                                    _context, snapshot.data[index].meta);
+                              },
+                              child: Slidable(
+                                key: Key('s'),
+                                actionExtentRatio: 0.25,
+                                actionPane: Card(
+                                  margin: EdgeInsets.only(bottom: 15),
+                                  elevation: 0,
+                                  color: hexToColor("#f2f2f2"),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 0, left: 20),
+                                            child: Container(
+                                              width: 180,
+                                              margin: EdgeInsets.only(top: 15),
+                                              child: Text(
+                                                snapshot.data[index].meta
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color:
+                                                        hexToColor("#505050"),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 0, left: 20),
+                                            child: Container(
+                                              width: 200,
+                                              margin: EdgeInsets.all(10),
+                                              child: Text(
+                                                snapshot.data[index].fecha
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color:
+                                                        hexToColor("#ababab"),
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Container(
+                                            alignment: Alignment.centerRight,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.18,
+                                            height: 20,
+                                            child: Icon(
+                                              Icons.edit,
+                                              color: hexToColor("#888888"),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                secondaryActions: <Widget>[
+                                  Card(
+                                    margin: EdgeInsets.only(bottom: 15),
+                                    elevation: 0,
+                                    color: Colors.red,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: <Widget>[
-                                        Padding(
-                                          padding:
-                                              EdgeInsets.only(top: 0, left: 20),
-                                          child: Container(
-                                            width: 180,
-                                            margin: EdgeInsets.only(top: 15),
-                                            child: Text(
-                                              snapshot.data[index].meta
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: hexToColor("#505050"),
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
+                                        Icon(
+                                          Icons.delete,
+                                          color: Colors.white,
                                         ),
-                                        Padding(
-                                          padding:
-                                              EdgeInsets.only(top: 0, left: 20),
-                                          child: Container(
-                                            width: 200,
-                                            margin: EdgeInsets.all(10),
-                                            child: Text(
-                                              snapshot.data[index].fecha
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: hexToColor("#ababab"),
-                                                  fontWeight:
-                                                      FontWeight.normal),
-                                            ),
-                                          ),
+                                        Text(
+                                          'Borrar',
+                                          style: TextStyle(color: Colors.white),
                                         ),
                                       ],
                                     ),
-                                  ],
+                                  ),
+                                ],
+                                dismissal: SlidableDismissal(
+                                  child: SlidableDrawerDismissal(),
+                                  onWillDismiss: (actionType) {
+                                    return showDialog<bool>(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Text('Borrar'),
+                                          content: Text(
+                                              '¿Seguro que desea borrar el reto?'),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                                child: Text('Cancelar'),
+                                                onPressed: () => {
+                                                      Navigator.of(context)
+                                                          .pop(false),
+                                                    }),
+                                            FlatButton(
+                                                child: Text('Borrar'),
+                                                onPressed: () {
+                                                  db.DBManager.instance
+                                                      .deleteReto(snapshot
+                                                          .data[index].meta);
+                                                  Navigator.of(context)
+                                                      .pop(true);
+                                                }),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                                child: Card(
+                                  margin: EdgeInsets.only(bottom: 15),
+                                  elevation: 0,
+                                  color: hexToColor("#f2f2f2"),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 0, left: 20),
+                                            child: Container(
+                                              width: 180,
+                                              margin: EdgeInsets.only(top: 15),
+                                              child: Text(
+                                                snapshot.data[index].meta
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color:
+                                                        hexToColor("#505050"),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 0, left: 20),
+                                            child: Container(
+                                              width: 200,
+                                              margin: EdgeInsets.all(10),
+                                              child: Text(
+                                                snapshot.data[index].fecha
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color:
+                                                        hexToColor("#ababab"),
+                                                    fontWeight:
+                                                        FontWeight.normal),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Container(
+                                            alignment: Alignment.centerRight,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.18,
+                                            height: 20,
+                                            child: Icon(
+                                              Icons.edit,
+                                              color: hexToColor("#888888"),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             );
@@ -1221,6 +1377,50 @@ _showDialog(context) async {
                 db.DBManager.instance
                     .insertReto(global.id_user, global.token, myTextEdit.text);
                 myTextEdit.text = "";
+                Navigator.pop(context);
+              }
+            })
+      ],
+    ),
+  );
+}
+
+_showUpdateDialog(context, _oldReto) async {
+  await showDialog<String>(
+    context: context,
+    child: new AlertDialog(
+      elevation: 4,
+      contentPadding: const EdgeInsets.all(16.0),
+      content: new Row(
+        children: <Widget>[
+          new Expanded(
+            child: new TextField(
+              controller: myTextUpdate,
+              autofocus: true,
+              cursorColor: hexToColor("#059696"),
+              decoration: new InputDecoration(
+                labelText: 'Reto',
+                hintText: 'ej. -3 KG en un mes',
+              ),
+            ),
+          )
+        ],
+      ),
+      actions: <Widget>[
+        new FlatButton(
+            child: Text('CANCELAR',
+                style: TextStyle(color: hexToColor("#059696"))),
+            onPressed: () {
+              myTextUpdate.text = "";
+              Navigator.pop(context);
+            }),
+        new FlatButton(
+            child:
+                Text('EDITAR', style: TextStyle(color: hexToColor("#059696"))),
+            onPressed: () {
+              if (myTextUpdate.text != "") {
+                db.DBManager.instance.updateReto(_oldReto, myTextUpdate.text);
+                myTextUpdate.text = "";
                 Navigator.pop(context);
               }
             })

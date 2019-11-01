@@ -151,7 +151,7 @@ class DBManager {
         globals.id_user = int.parse(res[res.length - 1]["ID"].toString());
         globals.nombre_user = res[res.length - 1]["NOMBRE"].toString();
         globals.apellidos_user = res[res.length - 1]["APELLIDO"].toString();
-        globals.token = res[res.length - 1]["TOKEN"].toString();        
+        globals.token = res[res.length - 1]["TOKEN"].toString();
 
         getMensajes(globals.id_user, globals.token);
         chat.getMensajesServer(globals.token);
@@ -244,6 +244,16 @@ class DBManager {
     db.rawQuery(
         'INSERT Into $tableRetos($columnID, $columnTokenReto, $columnReto, $columnFecha, $columnStatus) VALUES(?,?,?,?,?)',
         [_id, _token, _reto, DateTime.now().toString(), "Ok"]);
+  }
+
+  deleteReto(String _reto) async {
+    Database db = await database;
+    db.rawQuery("DELETE FROM $tableRetos WHERE $columnReto = ?", [_reto]);
+  }
+
+  updateReto(String _oldReto, String _newReto) async {
+    Database db = await database;
+    db.rawQuery("UPDATE $tableRetos SET $columnReto = ? WHERE $columnReto = ?", [_newReto, _oldReto]);
   }
 
   deleteAllRetos() async {
