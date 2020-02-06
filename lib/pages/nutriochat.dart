@@ -203,7 +203,7 @@ class message_area extends StatelessWidget {
                 suffixIcon: GestureDetector(
                   onTap: () {
                     print("Send message: " + myTextEdit.text);
-                    guardarMensajes(global.token, myTextEdit.text);
+                    guardarMensajes(context, global.token, myTextEdit.text);
                   },
                   child: Icon(
                     Icons.send,
@@ -310,7 +310,7 @@ getMensajesServer(String _token) async {
   }
 }
 
-guardarMensajes(String _token, String _mensaje) async {
+guardarMensajes(BuildContext _context, String _token, String _mensaje) async {
   try {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "guarda_mensaje", "token": _token, "mensaje": _mensaje});
@@ -322,8 +322,9 @@ guardarMensajes(String _token, String _mensaje) async {
     myListView.animateTo(
       myListView.position.maxScrollExtent,
       curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),       
     );
+     FocusScope.of(_context).requestFocus(new FocusNode());
     myTextEdit.text = "";
   } catch (e) {
     print("Error guardarMensajes " + e.toString());
