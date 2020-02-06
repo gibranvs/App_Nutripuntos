@@ -44,7 +44,7 @@ class _NutriochatPageState extends State<NutriochatPage> {
       drawer: new newmenu.menu(6),
       appBar: AppBar(
         elevation: 4,
-        title: Text("Nutriochat"),
+        title: Text("Nutrichat"),
         centerTitle: true,
         flexibleSpace: Container(
           decoration: BoxDecoration(

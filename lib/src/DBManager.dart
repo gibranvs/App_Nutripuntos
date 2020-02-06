@@ -44,7 +44,7 @@ class DBManager {
   // This is the actual database filename that is saved in the docs directory.
   static final _databaseName = "RegistroUsuario.db";
   // Increment this version when you need to change the schema.
-  static final _databaseVersion = 15;
+  static final _databaseVersion = 2;
 
   // Make this a singleton class.
   DBManager._privateConstructor();
@@ -70,21 +70,39 @@ class DBManager {
 
   // SQL string to create the database
   Future _onCreate(Database db, int version) async {
-    await db.execute('''
-              CREATE TABLE $tableRegistro (                
+    await db.execute('''CREATE TABLE $tableRegistro (    
+                $columnID INT NOT NULL,     
                 $columnNombre VARCHAR(100) NOT NULL,
                 $columnApellido VARCHAR(100) NOT NULL,
                 $columnToken VARCHAR(200) NOT NULL,
-                $columnFoto BLOB NOT NULL
-                )
-              ''');
+                $columnFoto BLOB NOT NULL)''');
+
+    await db.execute('''CREATE TABLE $tableRetos (
+            $columnID INT NOT NULL,
+            $columnTokenReto VARCHAR(200) NOT NULL,
+            $columnReto VARCHAR(200) NOT NULL,
+            $columnFecha VARCHAR(100) NOT NULL,
+            $columnStatus VARCHAR(2) NOT NULL)''');
+
+    await db.execute('''CREATE TABLE $tableChat (
+            $columnID INT NOT NULL,
+            $columnTokenMsj VARCHAR(200) NOT NULL,
+            $columnMensaje TEXT NOT NULL,            
+            $columnEnviado VARCHAR(100) NOT NULL)''');
   }
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
-    if (oldVersion < newVersion) {
+    if (oldVersion != newVersion) {
       db.execute("DROP TABLE IF EXISTS $tableRegistro");
       db.execute('DROP TABLE IF EXISTS $tableRetos');
       db.execute('DROP TABLE IF EXISTS $tableChat');
+
+      db.execute('''CREATE TABLE $tableRegistro (    
+                $columnID INT NOT NULL,     
+                $columnNombre VARCHAR(100) NOT NULL,
+                $columnApellido VARCHAR(100) NOT NULL,
+                $columnToken VARCHAR(200) NOT NULL,
+                $columnFoto BLOB NOT NULL)''');
 
       db.execute('''CREATE TABLE $tableRetos (
             $columnID INT NOT NULL,
@@ -98,16 +116,6 @@ class DBManager {
             $columnTokenMsj VARCHAR(200) NOT NULL,
             $columnMensaje TEXT NOT NULL,            
             $columnEnviado VARCHAR(100) NOT NULL)''');
-
-      db.execute('''
-              CREATE TABLE $tableRegistro (    
-                $columnID INT NOT NULL,     
-                $columnNombre VARCHAR(100) NOT NULL,
-                $columnApellido VARCHAR(100) NOT NULL,
-                $columnToken VARCHAR(200) NOT NULL,
-                $columnFoto BLOB NOT NULL
-                )
-              ''');
     }
   }
 
@@ -253,7 +261,8 @@ class DBManager {
 
   updateReto(String _oldReto, String _newReto) async {
     Database db = await database;
-    db.rawQuery("UPDATE $tableRetos SET $columnReto = ? WHERE $columnReto = ?", [_newReto, _oldReto]);
+    db.rawQuery("UPDATE $tableRetos SET $columnReto = ? WHERE $columnReto = ?",
+        [_newReto, _oldReto]);
   }
 
   deleteAllRetos() async {

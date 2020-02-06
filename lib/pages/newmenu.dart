@@ -35,7 +35,7 @@ class menu extends StatelessWidget {
                 "assets/icons/recurso_14.png", 38),
             item_menu(selected_index, 5, "Restaurantes",
                 "assets/icons/recurso_9.png", 35),
-            item_menu(selected_index, 6, "Nutriochat",
+            item_menu(selected_index, 6, "Nutrichat",
                 "assets/icons/recurso_10.png", 35),
           ],
         ),
