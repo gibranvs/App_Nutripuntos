@@ -53,7 +53,7 @@ class _PlanPageState extends State<PlanPage> {
                     text: "CM",
                   ),
                   Tab(
-                    text: "Almuerzos",
+                    text: "Comidas",
                   ),
                   Tab(
                     text: "CV",
@@ -581,19 +581,20 @@ Future<T> show_Dialog<T>({
 }
 
 Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {
+  //print (_token);
   try {
     List<Opciones_Dieta> list = new List<Opciones_Dieta>();
 
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "dieta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    //print(datos);
     if (datos["status"] == 1) {
-      for (int dias = 0; dias < datos["response"].length; dias++) {
+    //print(datos["response"]);
+      for (int dias = 0; dias < datos["response"].length; dias++) {    
         list.add(Opciones_Dieta(
           id: (dias + 1).toString(),
           nombre: "Opción " + (dias + 1).toString(),
-        ));
+        ));        
       }
       return list;
     }

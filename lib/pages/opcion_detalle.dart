@@ -420,7 +420,6 @@ Future<List<Detalle_Opcion>> getDetallesOpcion(
     _token, _index_comida, _dia) async {
   try {
   List<Detalle_Opcion> list = new List<Detalle_Opcion>();
-
   String preparacion;
 
   var response = await http.post(global.server + "/aplicacion/api",
