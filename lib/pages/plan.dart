@@ -91,9 +91,9 @@ class _PlanPageState extends State<PlanPage> {
                   ),
                   child: Stack(
                     children: <Widget>[
-                      titulo1("Desayuno En Puntos"),
+                      titulo1("Desayuno en puntos"),
                       botones_puntos("desayuno"),
-                      titulo2("Sugerencias De Desayuno"),
+                      titulo2("Sugerencias de desayuno"),
                       list_sugerencias(context, 0),
                     ],
                   ),
@@ -114,9 +114,9 @@ class _PlanPageState extends State<PlanPage> {
                   ),
                   child: Stack(
                     children: <Widget>[
-                      titulo1("Colación Matutina En Puntos"),
+                      titulo1("Colación matutina en puntos"),
                       botones_puntos("colación matutina"),
-                      titulo2("Sugerencias De Colación Matutina"),
+                      titulo2("Sugerencias de colación matutina"),
                       list_sugerencias(context, 1),
                     ],
                   ),
@@ -137,9 +137,9 @@ class _PlanPageState extends State<PlanPage> {
                   ),
                   child: Stack(
                     children: <Widget>[
-                      titulo1("Almuerzo En Puntos"),
+                      titulo1("Almuerzo en puntos"),
                       botones_puntos("almuerzo"),
-                      titulo2("Sugerencias De Almuerzo"),
+                      titulo2("Sugerencias de almuerzo"),
                       list_sugerencias(context, 2),
                     ],
                   ),
@@ -160,9 +160,9 @@ class _PlanPageState extends State<PlanPage> {
                   ),
                   child: Stack(
                     children: <Widget>[
-                      titulo1("Colación Vespertina En Puntos"),
+                      titulo1("Colación vespertina en puntos"),
                       botones_puntos("colación vespertina"),
-                      titulo2("Sugerencias De Colación Vespertina"),
+                      titulo2("Sugerencias de colación vespertina"),
                       list_sugerencias(context, 3),
                     ],
                   ),
@@ -181,9 +181,9 @@ class _PlanPageState extends State<PlanPage> {
                   ),
                   child: Stack(
                     children: <Widget>[
-                      titulo1("Cena En Puntos"),
+                      titulo1("Cena en puntos"),
                       botones_puntos("cena"),
-                      titulo2("Sugerencias De Cena"),
+                      titulo2("Sugerencias de cena"),
                       list_sugerencias(context, 4),
                     ],
                   ),
@@ -247,7 +247,7 @@ class botones_puntos extends StatelessWidget {
             //dialog(context, "assets/icons/Recurso_24.png", "GRUPO 1 VERDURAS", comida);
             show_Dialog(
               context: context,
-              titulo: "GRUPO 1 VERDURAS",
+              titulo: "GRUPO 1 LIBRE",
               imagen: "assets/icons/Recurso_24.png",
               comida: comida,
             );
@@ -263,7 +263,7 @@ class botones_puntos extends StatelessWidget {
             //dialog(context, "assets/icons/Recurso_23.png", "GRUPO 2 HARINAS", comida);
             show_Dialog(
               context: context,
-              titulo: "GRUPO 2 HARINAS",
+              titulo: "GRUPO 2 CARBOHIDRATOS",
               imagen: "assets/icons/Recurso_23.png",
               comida: comida,
             );
@@ -279,7 +279,7 @@ class botones_puntos extends StatelessWidget {
             //dialog(context, "assets/icons/Recurso_22.png", "GRUPO 3 CARNES", comida);
             show_Dialog(
               context: context,
-              titulo: "GRUPO 3 PROTEINAS",
+              titulo: "GRUPO 3 PROTEÍNAS",
               imagen: "assets/icons/Recurso_22.png",
               comida: comida,
             );
@@ -295,7 +295,7 @@ class botones_puntos extends StatelessWidget {
             //dialog(context, "assets/icons/Recurso_21.png", "GRUPO 4 LÍQUIDOS", comida);
             show_Dialog(
               context: context,
-              titulo: "GRUPO 4 LÍQUIDOS",
+              titulo: "GRUPO 4 GRASAS",
               imagen: "assets/icons/Recurso_21.png",
               comida: comida,
             );

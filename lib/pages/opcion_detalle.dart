@@ -161,7 +161,7 @@ class circle_widget extends StatelessWidget {
               if (snapshot.data != null) {
                 return ColorCirclesWidget(
                     snapshot.data.azul,
-                    snapshot.data.verde,
+                    "L",//snapshot.data.verde,
                     snapshot.data.naranja,
                     snapshot.data.amarillo);
               } else {

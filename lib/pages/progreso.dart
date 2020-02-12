@@ -64,7 +64,7 @@ class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {
                     text: "Peso",
                   ),
                   Tab(
-                    text: "Historial\nde grasa",
+                    text: "Grasa",
                   ),
                   Tab(
                     text: "Metas",
@@ -103,7 +103,7 @@ class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {
                     ),
                     Label_titulo("Gráfica de peso"),
                     Cuadro_informacion_peso("Último peso medido"),
-                    Back_grafica("Peso en Kg"),
+                    Back_grafica("Peso en kg"),
                     PesoChart(),
                     //Grafica_peso("Peso en Kg"),
                   ],
@@ -125,9 +125,9 @@ class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    Label_titulo("Gráfica de Calorías"),
+                    Label_titulo("Gráfica de grasa"),
                     Cuadro_informacion_grasa("Última medida"),
-                    Back_grafica("Progreso en Kcal"),
+                    Back_grafica("Progreso en kg"),
                     GrasaChart(),
                     //Grafica_grasa("Progreso en Kcal"),
                   ],
@@ -149,7 +149,7 @@ class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    Label_titulo("Próxima Meta"),
+                    Label_titulo("Próxima meta"),
                     Circle_image(context),
                     Label_subtitulo("Retos anteriores"),
                     List_metas(context),
@@ -241,7 +241,7 @@ class Cuadro_informacion_peso extends StatelessWidget {
                               alignment: Alignment.topCenter,
                               margin: EdgeInsets.only(top: 10),
                               child: Text(
-                                snapshot.data + " KG",
+                                snapshot.data + " kg",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -317,7 +317,7 @@ class Cuadro_informacion_grasa extends StatelessWidget {
                               alignment: Alignment.topCenter,
                               margin: EdgeInsets.only(top: 10),
                               child: Text(
-                                snapshot.data + " Kcal",
+                                snapshot.data + " kg",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -411,7 +411,7 @@ class Back_grafica extends StatelessWidget {
                 width: 115,
                 height: 20,
                 margin: EdgeInsets.only(top: 0, left: 5),
-                child: Text("Citas por mes",
+                child: Text("Fecha de cita",
                     style: TextStyle(
                         color: hexToColor("#059696"),
                         fontWeight: FontWeight.bold,
