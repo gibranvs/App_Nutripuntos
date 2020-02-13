@@ -611,6 +611,9 @@ class PesoChart extends StatelessWidget {
                     return charts.TimeSeriesChart(
                       seriesList,
                       animate: true,
+                      primaryMeasureAxis: charts.AxisSpec(
+                        showAxisLine: true,
+                      ),                      
                       defaultRenderer: charts.LineRendererConfig(
                         includePoints: true,
                         radiusPx: 5,
@@ -822,6 +825,9 @@ class GrasaChart extends StatelessWidget {
                     return charts.TimeSeriesChart(
                       seriesList,
                       animate: true,
+                      primaryMeasureAxis: charts.AxisSpec(
+                        showAxisLine: true,
+                      ),
                       defaultRenderer: charts.LineRendererConfig(
                         includePoints: true,
                         radiusPx: 5,
