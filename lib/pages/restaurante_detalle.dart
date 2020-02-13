@@ -69,13 +69,17 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
             /// FONDO FOTO
             ///
             Container(
-              height: 120,
               alignment: Alignment.topCenter,
-              margin: EdgeInsets.only(left: 30, top: 50),
-              decoration: BoxDecoration(
-                image: new DecorationImage(
-                  image: new AssetImage("assets/icons/recurso_4.png"),
-                  fit: BoxFit.contain,
+              width: MediaQuery.of(context).size.width,
+              child: Container(
+                height: 120,
+                alignment: Alignment.topCenter,
+                margin: EdgeInsets.only(left:25, top: 50),
+                decoration: BoxDecoration(
+                  image: new DecorationImage(
+                    image: new AssetImage("assets/icons/recurso_4.png"),
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ),
@@ -84,16 +88,19 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
             /// IMAGEN FOTO
             ///
             Container(
-              height: 100,
-              width: 100,
               alignment: Alignment.topCenter,
-              margin: EdgeInsets.only(left: 133, top: 63.5),
-              decoration: BoxDecoration(
-                border: Border.all(width: 0, color: Colors.white),
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: global
-                      .foto_restaurante, //global.returnFileSelected(global.imageFile),
+              width: MediaQuery.of(context).size.width,
+              child: Container(
+                height: 100,
+                width: 100,
+                margin: EdgeInsets.only(top: 63.5),
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0, color: Colors.white),
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: global
+                        .foto_restaurante, //global.returnFileSelected(global.imageFile),
+                  ),
                 ),
               ),
             ),

@@ -6,7 +6,7 @@ import 'package:nutripuntos_app/src/HexToColor.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter_charts/flutter_charts.dart' as chart;
+//import 'package:flutter_charts/flutter_charts.dart' as chart;
 import 'newmenu.dart' as newmenu;
 import '../src/DBManager.dart' as db;
 import 'package:http/http.dart' as http;
@@ -103,8 +103,8 @@ class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {
                     ),
                     Label_titulo("Gráfica de peso"),
                     Cuadro_informacion_peso("Último peso medido"),
-                    Back_grafica("Peso en kg"),
-                    PesoChart(),
+                    //Back_grafica("Peso en kg"),
+                    PesoChart("Peso en kg"),
                     //Grafica_peso("Peso en Kg"),
                   ],
                 ),
@@ -127,8 +127,8 @@ class _ProgresoPage extends State<ProgresoPage> with TickerProviderStateMixin {
                     ),
                     Label_titulo("Gráfica de grasa"),
                     Cuadro_informacion_grasa("Última medida"),
-                    Back_grafica("Progreso en kg"),
-                    GrasaChart(),
+                    //Back_grafica("Progreso en kg"),
+                    GrasaChart("Progreso en kg"),
                     //Grafica_grasa("Progreso en Kcal"),
                   ],
                 ),
@@ -426,139 +426,426 @@ class Back_grafica extends StatelessWidget {
 }
 
 class PesoChart extends StatelessWidget {
+  final String leyenda_y;
+  PesoChart(this.leyenda_y);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.bottomCenter,
-      width: MediaQuery.of(context).size.width * 0.65,
-      height: MediaQuery.of(context).size.width * 0.65,
-      margin: EdgeInsets.only(
-          top: 150, left: MediaQuery.of(context).size.width * 0.23),
-      child: FutureBuilder<List<Progreso>>(
-          future: GetProgreso(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  semanticsLabel: "Loading",
-                  backgroundColor: hexToColor("#cdcdcd"),
+    return Stack(
+      children: <Widget>[
+        Container(
+          alignment: Alignment.center,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.75,
+            height: MediaQuery.of(context).size.width * 0.75,
+            margin: EdgeInsets.only(top: 140),
+            decoration: BoxDecoration(
+              color: hexToColor("#78c826"),
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+            ),
+            child: Stack(
+              children: <Widget>[
+                ///
+                /// LABEL AXIS Y
+                ///
+                RotatedBox(
+                  quarterTurns: -1,
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 10, left: 0),
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      width: 115,
+                      height: 20,
+                      margin: EdgeInsets.only(top: 0, left: 5),
+                      child: Text(leyenda_y,
+                          style: TextStyle(
+                              color: hexToColor("#059696"),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13)),
+                    ),
+                  ),
                 ),
-              );
-            } else if (snapshot.hasData) {
-              if (snapshot.data != null) {
-                List<charts.Series<Medidas, num>> seriesList;
-                var data = [
-                  new Medidas(0, 'Enero', double.parse(snapshot.data[0].peso)),
-                  new Medidas(
-                      1, 'Febrero', double.parse(snapshot.data[1].peso)),
-                  new Medidas(2, 'Marzo', double.parse(snapshot.data[2].peso)),
-                  new Medidas(3, 'Abril', double.parse(snapshot.data[3].peso)),
-                  new Medidas(4, 'Mayo', double.parse(snapshot.data[4].peso)),
-                ];
-                seriesList = new List<charts.Series<Medidas, num>>();
-                seriesList.add(
-                  new charts.Series<Medidas, int>(
-                    data: data,
-                    domainFn: (Medidas sales, _) => sales.mes,
-                    measureFn: (Medidas sales, _) => sales.medida,
-                    labelAccessorFn: (Medidas sales, _) => sales.nameMes,
-                    //hexToColor("#059696"),
-                    colorFn: (_, __) =>
-                        charts.MaterialPalette.blue.shadeDefault,
-                    id: 'Peso',
+
+                ///
+                /// LABEL AXIS X
+                ///
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  margin: EdgeInsets.only(bottom: 10),
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    width: 115,
+                    height: 20,
+                    margin: EdgeInsets.only(top: 0, left: 5),
+                    child: Text("Fecha de cita",
+                        style: TextStyle(
+                            color: hexToColor("#059696"),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13)),
                   ),
-                );
-                return charts.LineChart(
-                  seriesList,
-                  //animate: false,
-                  defaultRenderer: new charts.LineRendererConfig(
-                    roundEndCaps: false,
-                    includePoints: true,
-                    strokeWidthPx: 2,
-                    includeLine: true,
-                    radiusPx: 5,
-                  ),
-                );
-              } else {
-                return new Center(
-                    child: Text("No hay datos.",
-                        style: TextStyle(color: hexToColor("#606060"))));
-              }
-            } else if (snapshot.hasError) {
-              return new Center(
-                  child: Text("Error al obtener datos.",
-                      style: TextStyle(color: hexToColor("#606060"))));
-            }
-          }),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        ///
+        /// Gráfica
+        ///
+        Container(
+          alignment: Alignment.bottomCenter,
+          width: MediaQuery.of(context).size.width * 0.65,
+          height: MediaQuery.of(context).size.width * 0.65,
+          margin: EdgeInsets.only(
+              top: 150, left: MediaQuery.of(context).size.width * 0.23),
+          child: FutureBuilder<List<Progreso>>(
+              future: GetProgreso(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      semanticsLabel: "Loading",
+                      backgroundColor: hexToColor("#cdcdcd"),
+                    ),
+                  );
+                } else if (snapshot.hasData) {
+                  if (snapshot.data != null) {
+                    /*
+                    List<charts.Series<Medidas, num>> seriesList;
+                    var data = [
+                      new Medidas(
+                          0, 'Enero', double.parse(snapshot.data[0].peso)),
+                      new Medidas(
+                          1, 'Febrero', double.parse(snapshot.data[1].peso)),
+                      new Medidas(
+                          2, 'Marzo', double.parse(snapshot.data[2].peso)),
+                      new Medidas(
+                          3, 'Abril', double.parse(snapshot.data[3].peso)),
+                      new Medidas(
+                          4, 'Mayo', double.parse(snapshot.data[4].peso)),
+                    ];
+                    seriesList = new List<charts.Series<Medidas, num>>();
+                    seriesList.add(
+                      new charts.Series<Medidas, int>(
+                        data: data,
+                        domainFn: (Medidas sales, _) => sales.mes,
+                        measureFn: (Medidas sales, _) => sales.medida,
+                        labelAccessorFn: (Medidas sales, _) => sales.nameMes,
+                        //hexToColor("#059696"),
+                        colorFn: (_, __) =>
+                            charts.MaterialPalette.blue.shadeDefault,
+                        id: 'Peso',
+                      ),
+                    );
+                    return charts.LineChart(
+                      seriesList,
+                      //animate: false,
+                      defaultRenderer: new charts.LineRendererConfig(
+                        roundEndCaps: false,
+                        includePoints: true,
+                        strokeWidthPx: 2,
+                        includeLine: true,
+                        radiusPx: 5,
+                      ),
+                    );
+                    */
+
+                    var data = [
+                      new TimeSeriesDatos(
+                          new DateTime(
+                              int.tryParse(
+                                  snapshot.data[0].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[0].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[0].fecha.split('-')[0])),
+                          double.parse(snapshot.data[0].peso)),
+                      new TimeSeriesDatos(
+                          new DateTime(
+                              int.tryParse(
+                                  snapshot.data[1].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[1].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[1].fecha.split('-')[0])),
+                          double.parse(snapshot.data[1].peso)),
+                      new TimeSeriesDatos(
+                          new DateTime(
+                              int.tryParse(
+                                  snapshot.data[2].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[2].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[2].fecha.split('-')[0])),
+                          double.parse(snapshot.data[2].peso)),
+                      new TimeSeriesDatos(
+                          new DateTime(
+                              int.tryParse(
+                                  snapshot.data[3].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[3].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[3].fecha.split('-')[0])),
+                          double.parse(snapshot.data[3].peso)),
+                    ];
+                    List<charts.Series<TimeSeriesDatos, DateTime>> seriesList =
+                        new List<charts.Series<TimeSeriesDatos, DateTime>>();
+                    seriesList.add(
+                      new charts.Series<TimeSeriesDatos, DateTime>(
+                        id: "Peso",
+                        colorFn: (_, __) =>
+                            charts.MaterialPalette.blue.shadeDefault,
+                        domainFn: (TimeSeriesDatos sales, _) => sales.time,
+                        measureFn: (TimeSeriesDatos sales, _) => sales.dato,
+                        data: data,
+                      ),
+                    );
+                    return charts.TimeSeriesChart(
+                      seriesList,
+                      animate: true,
+                      defaultRenderer: charts.LineRendererConfig(
+                        includePoints: true,
+                        radiusPx: 5,
+                      ),
+                      customSeriesRenderers: [
+                        new charts.PointRendererConfig(
+                          customRendererId: 'customPoint',
+                        ),
+                      ],
+                      dateTimeFactory: const charts.LocalDateTimeFactory(),
+                    );
+                  } else {
+                    return new Center(
+                        child: Text("No hay datos.",
+                            style: TextStyle(color: hexToColor("#606060"))));
+                  }
+                } else if (snapshot.hasError) {
+                  return new Center(
+                      child: Text("Error al obtener datos.",
+                          style: TextStyle(color: hexToColor("#606060"))));
+                }
+              }),
+        ),
+      ],
     );
   }
 }
 
 class GrasaChart extends StatelessWidget {
+  final String leyenda_y;
+  GrasaChart(this.leyenda_y);
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.bottomCenter,
-      width: MediaQuery.of(context).size.width * 0.65,
-      height: MediaQuery.of(context).size.width * 0.65,
-      margin: EdgeInsets.only(
-          top: 150, left: MediaQuery.of(context).size.width * 0.23),
-      child: FutureBuilder<List<Progreso>>(
-          future: GetProgreso(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  semanticsLabel: "Loading",
-                  backgroundColor: hexToColor("#cdcdcd"),
+    return Stack(
+      children: <Widget>[
+        Container(
+          alignment: Alignment.center,
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.75,
+            height: MediaQuery.of(context).size.width * 0.75,
+            margin: EdgeInsets.only(top: 140),
+            decoration: BoxDecoration(
+              color: hexToColor("#78c826"),
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+            ),
+            child: Stack(
+              children: <Widget>[
+                ///
+                /// LABEL AXIS Y
+                ///
+                RotatedBox(
+                  quarterTurns: -1,
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 10, left: 0),
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      width: 115,
+                      height: 20,
+                      margin: EdgeInsets.only(top: 0, left: 5),
+                      child: Text(leyenda_y,
+                          style: TextStyle(
+                              color: hexToColor("#059696"),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13)),
+                    ),
+                  ),
                 ),
-              );
-            } else if (snapshot.hasData) {
-              if (snapshot.data != null) {
-                List<charts.Series<Medidas, num>> seriesList;
-                var data = [
-                  new Medidas(0, 'Enero', double.parse(snapshot.data[0].grasa)),
-                  new Medidas(
-                      1, 'Febrero', double.parse(snapshot.data[1].grasa)),
-                  new Medidas(2, 'Marzo', double.parse(snapshot.data[2].grasa)),
-                  new Medidas(3, 'Abril', double.parse(snapshot.data[3].grasa)),
-                  new Medidas(4, 'Mayo', double.parse(snapshot.data[4].grasa)),
-                ];
-                seriesList = new List<charts.Series<Medidas, num>>();
-                seriesList.add(
-                  new charts.Series<Medidas, int>(
-                    data: data,
-                    domainFn: (Medidas sales, _) => sales.mes,
-                    measureFn: (Medidas sales, _) => sales.medida,
-                    labelAccessorFn: (Medidas sales, _) => sales.nameMes,
-                    //hexToColor("#059696"),
-                    colorFn: (_, __) =>
-                        charts.MaterialPalette.blue.shadeDefault,
-                    id: 'Grasa',
+
+                ///
+                /// LABEL AXIS X
+                ///
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  margin: EdgeInsets.only(bottom: 10),
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    width: 115,
+                    height: 20,
+                    margin: EdgeInsets.only(top: 0, left: 5),
+                    child: Text("Fecha de cita",
+                        style: TextStyle(
+                            color: hexToColor("#059696"),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13)),
                   ),
-                );
-                return charts.LineChart(
-                  seriesList,
-                  defaultRenderer: new charts.LineRendererConfig(
-                    includePoints: true,
-                    strokeWidthPx: 2,
-                    includeLine: true,
-                    radiusPx: 5,
-                  ),
-                );
-              } else {
-                return new Center(
-                    child: Text("No hay datos.",
-                        style: TextStyle(color: hexToColor("#606060"))));
-              }
-            } else if (snapshot.hasError) {
-              return new Center(
-                  child: Text("Error al obtener datos.",
-                      style: TextStyle(color: hexToColor("#606060"))));
-            }
-          }),
+                ),
+              ],
+            ),
+          ),
+        ),
+
+        ///
+        /// Gráfica
+        ///
+        Container(
+          alignment: Alignment.bottomCenter,
+          width: MediaQuery.of(context).size.width * 0.65,
+          height: MediaQuery.of(context).size.width * 0.65,
+          margin: EdgeInsets.only(
+              top: 150, left: MediaQuery.of(context).size.width * 0.23),
+          child: FutureBuilder<List<Progreso>>(
+              future: GetProgreso(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      semanticsLabel: "Loading",
+                      backgroundColor: hexToColor("#cdcdcd"),
+                    ),
+                  );
+                } else if (snapshot.hasData) {
+                  if (snapshot.data != null) {
+                    /*
+                    List<charts.Series<Medidas, num>> seriesList;
+                    var data = [
+                      new Medidas(
+                          0, 'Enero', double.parse(snapshot.data[0].grasa)),
+                      new Medidas(
+                          1, 'Febrero', double.parse(snapshot.data[1].grasa)),
+                      new Medidas(
+                          2, 'Marzo', double.parse(snapshot.data[2].grasa)),
+                      new Medidas(
+                          3, 'Abril', double.parse(snapshot.data[3].grasa)),
+                      new Medidas(
+                          4, 'Mayo', double.parse(snapshot.data[4].grasa)),
+                    ];                    
+                    seriesList = new List<charts.Series<Medidas, num>>();
+                    seriesList.add(
+                      new charts.Series<Medidas, int>(
+                        data: data,
+                        domainFn: (Medidas sales, _) => sales.mes,
+                        measureFn: (Medidas sales, _) => sales.medida,
+                        labelAccessorFn: (Medidas sales, _) => sales.nameMes,                        
+                        colorFn: (_, __) =>
+                            charts.MaterialPalette.blue.shadeDefault,
+                        id: 'Grasa',
+                      ),
+                    );
+                    
+                    return charts.LineChart(
+                      seriesList,
+                      defaultRenderer: new charts.LineRendererConfig(
+                        includePoints: true,
+                        strokeWidthPx: 2,
+                        includeLine: true,
+                        radiusPx: 5,
+                      ),
+                    );
+                    */
+                    var data = [
+                      new TimeSeriesDatos(
+                          new DateTime(
+                              int.tryParse(
+                                  snapshot.data[0].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[0].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[0].fecha.split('-')[0])),
+                          double.parse(snapshot.data[0].grasa)),
+                      new TimeSeriesDatos(
+                          new DateTime(
+                              int.tryParse(
+                                  snapshot.data[1].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[1].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[1].fecha.split('-')[0])),
+                          double.parse(snapshot.data[1].grasa)),
+                      new TimeSeriesDatos(
+                          new DateTime(
+                              int.tryParse(
+                                  snapshot.data[2].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[2].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[2].fecha.split('-')[0])),
+                          double.parse(snapshot.data[2].grasa)),
+                      new TimeSeriesDatos(
+                          new DateTime(
+                              int.tryParse(
+                                  snapshot.data[3].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[3].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[3].fecha.split('-')[0])),
+                          double.parse(snapshot.data[3].grasa)),
+                    ];
+                    List<charts.Series<TimeSeriesDatos, DateTime>> seriesList =
+                        new List<charts.Series<TimeSeriesDatos, DateTime>>();
+                    seriesList.add(
+                      new charts.Series<TimeSeriesDatos, DateTime>(
+                        id: "Grasa",
+                        colorFn: (_, __) =>
+                            charts.MaterialPalette.blue.shadeDefault,
+                        domainFn: (TimeSeriesDatos sales, _) => sales.time,
+                        measureFn: (TimeSeriesDatos sales, _) => sales.dato,
+                        data: data,
+                      ),
+                    );
+                    return charts.TimeSeriesChart(
+                      seriesList,
+                      animate: true,
+                      defaultRenderer: charts.LineRendererConfig(
+                        includePoints: true,
+                        radiusPx: 5,
+                      ),
+                      customSeriesRenderers: [
+                        new charts.PointRendererConfig(
+                          customRendererId: 'customPoint',
+                        ),
+                      ],
+                      dateTimeFactory: const charts.LocalDateTimeFactory(),
+                    );
+                  } else {
+                    return new Center(
+                        child: Text("No hay datos.",
+                            style: TextStyle(color: hexToColor("#606060"))));
+                  }
+                } else if (snapshot.hasError) {
+                  return new Center(
+                      child: Text("Error al obtener datos.",
+                          style: TextStyle(color: hexToColor("#606060"))));
+                }
+              }),
+        ),
+      ],
     );
   }
 }
@@ -1184,6 +1471,7 @@ class List_metas extends StatelessWidget {
                                         children: <Widget>[
                                           Container(
                                             alignment: Alignment.centerRight,
+                                            margin: EdgeInsets.only(right: 0),
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
@@ -1533,27 +1821,27 @@ Future<List<Progreso>> GetProgreso() async {
           list.add(Progreso(
               peso: datos["response"][i]["peso"].toString(),
               grasa: datos["response"][i]["grasa"].toString(),
-              fecha: new DateFormat("dd-MMM-yyyy")
+              fecha: new DateFormat("dd-MM-yyyy")
                   .format(DateTime.parse(datos["response"][i]["fecha"]))
                   .toString(),
               dia: DateTime.parse(datos["response"][i]["fecha"]).day,
-              mes: DateFormat("MMM")
+              mes: DateFormat("MM")
                   .format(DateTime.parse(datos["response"][i]["fecha"]))
                   .toString(),
               anio: DateTime.parse(datos["response"][i]["fecha"]).year));
         } else {
-          if (DateFormat("MMM")
+          if (DateFormat("MM")
                   .format(DateTime.parse(datos["response"][i]["fecha"]))
                   .toString() !=
               list[list.length - 1].mes) {
             list.add(Progreso(
                 peso: datos["response"][i]["peso"].toString(),
                 grasa: datos["response"][i]["grasa"].toString(),
-                fecha: new DateFormat("dd-MMM-yyyy")
+                fecha: new DateFormat("dd-MM-yyyy")
                     .format(DateTime.parse(datos["response"][i]["fecha"]))
                     .toString(),
                 dia: DateTime.parse(datos["response"][i]["fecha"]).day,
-                mes: DateFormat("MMM")
+                mes: DateFormat("MM")
                     .format(DateTime.parse(datos["response"][i]["fecha"]))
                     .toString(),
                 anio: DateTime.parse(datos["response"][i]["fecha"]).year));
@@ -1562,11 +1850,11 @@ Future<List<Progreso>> GetProgreso() async {
             list.add(Progreso(
                 peso: datos["response"][i]["peso"].toString(),
                 grasa: datos["response"][i]["grasa"].toString(),
-                fecha: new DateFormat("dd-MMM-yyyy")
+                fecha: new DateFormat("dd-MM-yyyy")
                     .format(DateTime.parse(datos["response"][i]["fecha"]))
                     .toString(),
                 dia: DateTime.parse(datos["response"][i]["fecha"]).day,
-                mes: DateFormat("MMM")
+                mes: DateFormat("MM")
                     .format(DateTime.parse(datos["response"][i]["fecha"]))
                     .toString(),
                 anio: DateTime.parse(datos["response"][i]["fecha"]).year));
@@ -1604,4 +1892,11 @@ class Meta {
   String fecha;
 
   Meta({this.meta, this.status, this.fecha});
+}
+
+class TimeSeriesDatos {
+  final DateTime time;
+  final double dato;
+
+  TimeSeriesDatos(this.time, this.dato);
 }

@@ -101,13 +101,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.0+2"
-  decimal:
-    dependency: transitive
-    description:
-      name: decimal
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.5"
   expandable:
     dependency: "direct main"
     description:
@@ -120,13 +113,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_charts:
-    dependency: "direct main"
-    description:
-      name: flutter_charts
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.10"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -244,13 +230,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
-  rational:
-    dependency: transitive
-    description:
-      name: rational
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.6"
   sky_engine:
     dependency: transitive
     description: flutter

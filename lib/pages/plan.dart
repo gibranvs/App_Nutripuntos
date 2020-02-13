@@ -34,7 +34,7 @@ class _PlanPageState extends State<PlanPage> {
               ],
             ),
           ),
-        ),        
+        ),
       ),
       body: MaterialApp(
         home: DefaultTabController(
@@ -42,7 +42,7 @@ class _PlanPageState extends State<PlanPage> {
           child: Scaffold(
             appBar: AppBar(
               title: TabBar(
-                indicatorSize: TabBarIndicatorSize.tab,                        
+                indicatorSize: TabBarIndicatorSize.tab,
                 isScrollable: true,
                 indicatorColor: Colors.white,
                 tabs: [
@@ -240,73 +240,96 @@ class botones_puntos extends StatelessWidget {
   botones_puntos(this.comida);
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        GestureDetector(
-          onTap: () {
-            //dialog(context, "assets/icons/Recurso_24.png", "GRUPO 1 VERDURAS", comida);
-            show_Dialog(
-              context: context,
-              titulo: "GRUPO 1 LIBRE",
-              imagen: "assets/icons/Recurso_24.png",
-              comida: comida,
-            );
-          },
-          child: Container(
-            height: 70,
-            margin: EdgeInsets.only(top: 50, left: 20),
-            child: Image.asset("assets/icons/Recurso_24.png"),
+    return Container(      
+      height: 70,
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(top: 50),
+      alignment: Alignment.center,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  //dialog(context, "assets/icons/Recurso_24.png", "GRUPO 1 VERDURAS", comida);
+                  show_Dialog(
+                    context: context,
+                    titulo: "GRUPO 1 LIBRE",
+                    imagen: "assets/icons/Recurso_24.png",
+                    comida: comida,
+                  );
+                },
+                child: Container(
+                  height: 70,                  
+                  child: Image.asset("assets/icons/Recurso_24.png"),
+                ),
+              ),
+            ],
           ),
-        ),
-        GestureDetector(
-          onTap: () {
-            //dialog(context, "assets/icons/Recurso_23.png", "GRUPO 2 HARINAS", comida);
-            show_Dialog(
-              context: context,
-              titulo: "GRUPO 2 CARBOHIDRATOS",
-              imagen: "assets/icons/Recurso_23.png",
-              comida: comida,
-            );
-          },
-          child: Container(
-            height: 70,
-            margin: EdgeInsets.only(top: 50, left: 105),
-            child: Image.asset("assets/icons/Recurso_23.png"),
+          Column(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  //dialog(context, "assets/icons/Recurso_23.png", "GRUPO 2 HARINAS", comida);
+                  show_Dialog(
+                    context: context,
+                    titulo: "GRUPO 2 CARBOHIDRATOS",
+                    imagen: "assets/icons/Recurso_23.png",
+                    comida: comida,
+                  );
+                },
+                child: Container(
+                  height: 70,
+                  margin: EdgeInsets.only(left: 20),
+                  child: Image.asset("assets/icons/Recurso_23.png"),
+                ),
+              ),
+            ],
           ),
-        ),
-        GestureDetector(
-          onTap: () {
-            //dialog(context, "assets/icons/Recurso_22.png", "GRUPO 3 CARNES", comida);
-            show_Dialog(
-              context: context,
-              titulo: "GRUPO 3 PROTEÍNAS",
-              imagen: "assets/icons/Recurso_22.png",
-              comida: comida,
-            );
-          },
-          child: Container(
-            height: 70,
-            margin: EdgeInsets.only(top: 50, left: 185),
-            child: Image.asset("assets/icons/Recurso_22.png"),
+          Column(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  //dialog(context, "assets/icons/Recurso_22.png", "GRUPO 3 CARNES", comida);
+                  show_Dialog(
+                    context: context,
+                    titulo: "GRUPO 3 PROTEÍNAS",
+                    imagen: "assets/icons/Recurso_22.png",
+                    comida: comida,
+                  );
+                },
+                child: Container(
+                  height: 70,
+                  margin: EdgeInsets.only(left: 20),
+                  child: Image.asset("assets/icons/Recurso_22.png"),
+                ),
+              ),
+            ],
           ),
-        ),
-        GestureDetector(
-          onTap: () {
-            //dialog(context, "assets/icons/Recurso_21.png", "GRUPO 4 LÍQUIDOS", comida);
-            show_Dialog(
-              context: context,
-              titulo: "GRUPO 4 GRASAS",
-              imagen: "assets/icons/Recurso_21.png",
-              comida: comida,
-            );
-          },
-          child: Container(
-            height: 70,
-            margin: EdgeInsets.only(top: 50, left: 270),
-            child: Image.asset("assets/icons/Recurso_21.png"),
+          Column(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  //dialog(context, "assets/icons/Recurso_21.png", "GRUPO 4 LÍQUIDOS", comida);
+                  show_Dialog(
+                    context: context,
+                    titulo: "GRUPO 4 GRASAS",
+                    imagen: "assets/icons/Recurso_21.png",
+                    comida: comida,
+                  );
+                },
+                child: Container(
+                  height: 70,
+                  margin: EdgeInsets.only(left: 20),
+                  child: Image.asset("assets/icons/Recurso_21.png"),
+                ),
+              ),
+            ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -589,12 +612,12 @@ Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {
         body: {"tipo": "dieta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
     if (datos["status"] == 1) {
-    //print(datos["response"]);
-      for (int dias = 0; dias < datos["response"].length; dias++) {    
+      //print(datos["response"]);
+      for (int dias = 0; dias < datos["response"].length; dias++) {
         list.add(Opciones_Dieta(
           id: (dias + 1).toString(),
           nombre: "Opción " + (dias + 1).toString(),
-        ));        
+        ));
       }
       return list;
     }

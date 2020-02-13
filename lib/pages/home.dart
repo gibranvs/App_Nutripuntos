@@ -81,14 +81,14 @@ class _HomePageState extends State<HomePage> {
 */
 
   void pickImageFrom(_context, ImageSource source) async {
-    
     try {
       ImagePicker.pickImage(source: source).then((File img) {
         setState(() {
           if (img != null) {
             //_file = img;
             //buildCroppingImage();
-            global.image_foto = new DecorationImage(image: Image.file(img).image);
+            global.image_foto =
+                new DecorationImage(image: Image.file(img).image);
             db.DBManager.instance.insertUsuario(
                 global.id_user,
                 global.nombre_user,
@@ -178,7 +178,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget build(BuildContext context) {
     return new WillPopScope(
-      onWillPop: () {        
+      onWillPop: () {
         exit(0);
       },
       child: Scaffold(
@@ -468,206 +468,265 @@ class botones extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.centerLeft,
-      margin: const EdgeInsets.only(left: 0, top: 20, bottom: 20),
-      child: Stack(
+      width: MediaQuery.of(context).size.width,
+      height: 300,
+      margin: const EdgeInsets.only(left: 0, top: 0, bottom: 20),
+      child: Column(
         children: <Widget>[
-          ///
-          /// BOTON 1
-          ///
-          GestureDetector(
-            onTap: () {
-              global.selected_index = 4;
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => new RecetasPage()));
-            },
-            child: Container(
-              margin: EdgeInsets.only(left: 30),
-              child: Column(
-                children: <Widget>[
-                  Image.asset(
-                    "assets/icons/recurso_5.png",
-                    width: MediaQuery.of(context).size.width * 0.2,
-                  ),
-                  Container(
-                    width: 150,
-                    child: SizedBox(
-                      child: Text(
-                        "Nuevas recetas disponibles",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          ///
-          /// BOTON 2
-          ///
-          GestureDetector(
-            onTap: () {
-              global.selected_index = 2;
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => new ProgresoPage(2)));
-            },
-            child: Container(
-              margin: EdgeInsets.only(left: 175, top: 10),
-              child: Column(
-                children: <Widget>[
-                  Image.asset(
-                    "assets/icons/recurso_8.png",
-                    width: MediaQuery.of(context).size.width * 0.2,
-                  ),
-                  FutureBuilder<Meta>(
-                      future: db.DBManager.instance.getReto(global.token),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              semanticsLabel: "Loading",
-                              backgroundColor: hexToColor("#cdcdcd"),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ///
+              /// BOTON 1
+              ///
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        global.selected_index = 4;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => new RecetasPage()));
+                      },
+                      child: Container(
+                        width: 150,
+                        height: 150,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Image.asset(
+                              "assets/icons/recurso_5.png",
+                              width: MediaQuery.of(context).size.width * 0.2,
                             ),
-                          );
-                        } else if (snapshot.hasData) {
-                          if (snapshot.data != null) {
-                            if (snapshot.data.meta == "NA") {
-                              return new Container(
-                                alignment: Alignment.center,
-                                child: Container(
-                                  alignment: Alignment.topLeft,
-                                  margin: EdgeInsets.only(top: 0),
-                                  constraints: BoxConstraints(
-                                      minWidth: 100, maxWidth: 100),
-                                  child: AutoSizeText(
-                                    "Presiona para agregar reto",
-                                    textAlign: TextAlign.center,
-                                    maxFontSize: 16,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 16),
+                            Container(
+                              width: 150,
+                              child: SizedBox(
+                                child: Text(
+                                  "Nuevas recetas disponibles",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.normal,
                                   ),
                                 ),
-                              );
-                            } else {
-                              return new Container(
-                                alignment: Alignment.center,
-                                child: Container(
-                                  alignment: Alignment.topCenter,
-                                  margin: EdgeInsets.only(top: 0),
-                                  constraints: BoxConstraints(
-                                      minWidth: 100,
-                                      maxWidth: 100,
-                                      maxHeight: 80,
-                                      minHeight: 80),
-                                  child: AutoSizeText(
-                                    snapshot.data.meta,
-                                    maxLines: 3,
-                                    maxFontSize: 16,
-                                    wrapWords: false,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 16),
-                                  ),
-                                ),
-                              );
-                            }
-                          } else {
-                            return new Center(
-                                child: Text("No hay méta próxima.",
-                                    style: TextStyle(
-                                        color: hexToColor("#606060"))));
-                          }
-                        } else if (snapshot.hasError) {
-                          return new Center(
-                              child: Text("Error al obtener meta próxima.",
-                                  style:
-                                      TextStyle(color: hexToColor("#606060"))));
-                        }
-                      }),
-                ],
-              ),
-            ),
-          ),
-
-          ///
-          /// BOTON 3
-          ///
-          GestureDetector(
-            onTap: () {
-              global.selected_index = 1;
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => new PlanPage()));
-            },
-            child: Container(
-              margin: EdgeInsets.only(left: 30.0, top: 150),
-              child: Column(
-                children: <Widget>[
-                  Image.asset(
-                    "assets/icons/recurso_7.png",
-                    width: MediaQuery.of(context).size.width * 0.2,
-                  ),
-                  Container(
-                    width: 150,
-                    child: SizedBox(
-                      child: Text(
-                        "Nuevo plan de alimentación disponible",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
                         ),
+                      ),
+                    ),
+                  ]),
+
+              ///
+              /// BOTON 2
+              ///
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      global.selected_index = 2;
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => new ProgresoPage(2)));
+                    },
+                    child: Container(                      
+                      width: 150,
+                      height: 150,
+                      margin: EdgeInsets.only(top: 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            "assets/icons/recurso_8.png",
+                            width: MediaQuery.of(context).size.width * 0.2,
+                          ),
+                          FutureBuilder<Meta>(
+                              future:
+                                  db.DBManager.instance.getReto(global.token),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Center(
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      semanticsLabel: "Loading",
+                                      backgroundColor: hexToColor("#cdcdcd"),
+                                    ),
+                                  );
+                                } else if (snapshot.hasData) {
+                                  if (snapshot.data != null) {
+                                    if (snapshot.data.meta == "NA") {
+                                      return new Container(
+                                        alignment: Alignment.center,
+                                        child: Container(
+                                          alignment: Alignment.topLeft,
+                                          margin: EdgeInsets.only(top: 0),
+                                          constraints: BoxConstraints(
+                                              minWidth: 100, maxWidth: 100),
+                                          child: AutoSizeText(
+                                            "Presiona para agregar reto",
+                                            textAlign: TextAlign.center,
+                                            maxFontSize: 16,
+                                            maxLines: 2,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return new Container(
+                                        alignment: Alignment.center,
+                                        child: Container(
+                                          alignment: Alignment.topCenter,
+                                          margin: EdgeInsets.only(top: 0),
+                                          constraints: BoxConstraints(
+                                              minWidth: 150,
+                                              maxWidth: 150,
+                                              maxHeight: 30,
+                                              minHeight: 30),
+                                          child: AutoSizeText(
+                                            snapshot.data.meta,
+                                            maxLines: 3,
+                                            maxFontSize: 16,
+                                            wrapWords: false,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.normal,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  } else {
+                                    return new Center(
+                                        child: Text("No hay méta próxima.",
+                                            style: TextStyle(
+                                                color: hexToColor("#606060"))));
+                                  }
+                                } else if (snapshot.hasError) {
+                                  return new Center(
+                                      child: Text(
+                                          "Error al obtener meta próxima.",
+                                          style: TextStyle(
+                                              color: hexToColor("#606060"))));
+                                }
+                              }),
+                        ],
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
+            ],
           ),
-
-          ///
-          /// BOTON 4
-          ///
-          GestureDetector(
-            onTap: () {
-              global.selected_index = 5;
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => new RestaurantesPage()));
-            },
-            child: Container(
-              margin: EdgeInsets.only(left: 190, top: 150),
-              child: Column(
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ///
+              /// BOTON 3
+              ///
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.asset(
-                    "assets/icons/recurso_6.png",
-                    width: MediaQuery.of(context).size.width * 0.2,
-                  ),
-                  Container(
-                    width: 150,
-                    child: SizedBox(
-                      child: Text(
-                        "Restaurantes disponibles en tu zona",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal,
-                        ),
+                  GestureDetector(
+                    onTap: () {
+                      global.selected_index = 1;
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => new PlanPage()));
+                    },
+                    child: Container(
+                      width: 150,
+                      height: 150,
+                      margin: EdgeInsets.only(left: 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            "assets/icons/recurso_7.png",
+                            width: MediaQuery.of(context).size.width * 0.2,
+                          ),
+                          Container(
+                            width: 150,
+                            child: SizedBox(
+                              child: Text(
+                                "Nuevo plan de alimentación disponible",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
+
+              ///
+              /// BOTON 4
+              ///
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: () {
+                      global.selected_index = 5;
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => new RestaurantesPage()));
+                    },
+                    child: Container(
+                      width: 150,
+                      height: 150,
+                      margin: EdgeInsets.only(left: 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Image.asset(
+                            "assets/icons/recurso_6.png",
+                            width: MediaQuery.of(context).size.width * 0.2,
+                          ),
+                          Container(
+                            width: 150,
+                            child: SizedBox(
+                              child: Text(
+                                "Restaurantes disponibles en tu zona",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),

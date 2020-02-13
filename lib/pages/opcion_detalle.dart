@@ -23,7 +23,7 @@ class OpcionDetallePage extends StatelessWidget {
     return MaterialApp(
       home: new Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(70.0),
+          preferredSize: Size.fromHeight(50.0),
           child: AppBar(
             elevation: 4,
             flexibleSpace: Container(
