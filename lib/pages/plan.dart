@@ -52,8 +52,7 @@ class _PlanPageState extends State<PlanPage> {
               int items = snapshot.data.length;
               List<Tab> tabs = new List<Tab>();
               List<Container> pages = new List<Container>();
-              for (int i = 0; i < items; i++) {
-                print(snapshot.data[i].nombre);
+              for (int i = 0; i < items; i++) {                
                 tabs.add(Tab(
                   text: snapshot.data[i].nombre,
                 ));
@@ -696,8 +695,6 @@ Future<List<Data_pestanas>> getPestanas(_token) async {
       4, "Cenas", "Cena en puntos", "Sugerencias de cena", "cena"));
   List<Data_pestanas> list = new List<Data_pestanas>();
 
-  //List<String> nombres = ["Desayunos", "CM", "Comidas", "CV", "Cenas"];
-  //List<Tab> list = new List<Tab>();
   DateTime time = DateTime.now();
   String weekday = time.weekday.toString();
 
@@ -705,10 +702,8 @@ Future<List<Data_pestanas>> getPestanas(_token) async {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "dieta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    if (datos["status"] == 1) {
-      //print(datos["response"]["d" + weekday].length);
-      for (int i = 0; i < datos["response"]["d" + weekday].length; i++) {
-        //print(nombres[pestana]);
+    if (datos["status"] == 1) {      
+      for (int i = 0; i < datos["response"]["d" + weekday].length; i++) {        
         list.add(list_pestanas[i]);
       }
       return list;
@@ -718,27 +713,19 @@ Future<List<Data_pestanas>> getPestanas(_token) async {
   }
 }
 
-class Data_pestanas {
-  int index;
-  String nombre;
-  String titulo1;
-  String titulo2;
-  String boton;
-  Data_pestanas(
-      this.index, this.nombre, this.titulo1, this.titulo2, this.boton);
-}
-
 Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {
   //print (_token);
   try {
     List<Opciones_Dieta> list = new List<Opciones_Dieta>();
 
+    DateTime time = DateTime.now();
+    String weekday = time.weekday.toString();
+
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "dieta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    if (datos["status"] == 1) {
-      //print(datos["response"]["d7"]);
-      for (int dias = 0; dias < datos["response"].length; dias++) {
+    if (datos["status"] == 1) {      
+      for (int dias = 0; dias < datos["response"]["d" + weekday].length; dias++) {
         list.add(Opciones_Dieta(
           id: (dias + 1).toString(),
           nombre: "Opción " + (dias + 1).toString(),
@@ -756,4 +743,14 @@ class Opciones_Dieta {
   String nombre;
 
   Opciones_Dieta({this.id, this.nombre});
+}
+
+class Data_pestanas {
+  int index;
+  String nombre;
+  String titulo1;
+  String titulo2;
+  String boton;
+  Data_pestanas(
+      this.index, this.nombre, this.titulo1, this.titulo2, this.boton);
 }
