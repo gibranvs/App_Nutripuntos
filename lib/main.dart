@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
     //db.DBManager.instance.deleteAllMensajes();
     //db.DBManager.instance.deleteAllRetos();
     super.initState();
-    login.fetchDoctores();    
+    login.fetchDoctores();        
     db.DBManager.instance.getUsuario(context);
     //startTime();
   }

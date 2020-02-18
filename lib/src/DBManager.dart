@@ -9,6 +9,7 @@ import '../globals.dart' as globals;
 import 'package:intl/intl.dart';
 import '../pages/home.dart';
 import '../pages/login.dart';
+import 'package:device_info/device_info.dart';
 import '../pages/progreso.dart' as progreso;
 import '../pages/nutriochat.dart' as chat;
 
@@ -143,6 +144,18 @@ class DBManager {
   }
 
   getUsuario(_context) async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    try {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      print(androidInfo.device);
+      globals.dispositivo_utilizado = "android";
+    } catch (_) {}
+    try {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      print(iosInfo.name);
+      globals.dispositivo_utilizado = "ios";
+    } catch (_) {}
+
     try {
       Database db = await database;
       var res = await db.rawQuery("SELECT * FROM $tableRegistro");

@@ -1,6 +1,7 @@
 library nutripuntos.globals;
 
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'src/ColorCirclesWidget.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -22,6 +23,8 @@ String recovery_token;
 String nombre_user;
 String apellidos_user;
 String num_citas = "0";
+
+String dispositivo_utilizado = "";
 
 ///
 /// MENU
