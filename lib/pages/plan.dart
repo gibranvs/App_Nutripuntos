@@ -36,10 +36,10 @@ class _PlanPageState extends State<PlanPage> {
           ),
         ),
       ),
-      body: MaterialApp(
+      body: MaterialApp(        
         home: FutureBuilder(
           future: getPestanas(global.token),
-          builder: (context, snapshot) {
+          builder: (_context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: CircularProgressIndicator(
@@ -49,14 +49,14 @@ class _PlanPageState extends State<PlanPage> {
                 ),
               );
             } else if (snapshot.hasData) {
-              int items = snapshot.data.length;   
-              List<Tab> tabs = new List<Tab>();  
+              int items = snapshot.data.length;
+              List<Tab> tabs = new List<Tab>();
               List<Container> pages = new List<Container>();
-              for(int i = 0; i < items; i++)
-              {   
-                print(snapshot.data[i].nombre);             
-                tabs.add(Tab(text: snapshot.data[i].nombre,));
-
+              for (int i = 0; i < items; i++) {
+                print(snapshot.data[i].nombre);
+                tabs.add(Tab(
+                  text: snapshot.data[i].nombre,
+                ));
                 pages.add(new Container(
                   decoration: new BoxDecoration(
                     color: const Color(0x00FFCC00),
@@ -75,23 +75,18 @@ class _PlanPageState extends State<PlanPage> {
                       list_sugerencias(context, snapshot.data[i].index),
                     ],
                   ),
-                )
-                );
+                ));
               }
 
-
-              
-
-
-              return DefaultTabController(
-                length: snapshot.data.length,                
+              return DefaultTabController(                
+                length: snapshot.data.length,
                 child: Scaffold(
                   appBar: AppBar(
                     title: TabBar(
                       indicatorSize: TabBarIndicatorSize.tab,
                       isScrollable: true,
-                      indicatorColor: Colors.white,                      
-                      tabs: tabs,
+                      indicatorColor: Colors.white,
+                      tabs: tabs,                      
                     ),
                     flexibleSpace: Container(
                       decoration: BoxDecoration(
@@ -689,11 +684,16 @@ Future<T> show_Dialog<T>({
 
 Future<List<Data_pestanas>> getPestanas(_token) async {
   List<Data_pestanas> list_pestanas = new List<Data_pestanas>();
-  list_pestanas.add(Data_pestanas(0, "Desayunos", "Desayuno en puntos", "Sugerencias de desayuno", "desayuno"));
-  list_pestanas.add(Data_pestanas(1, "CM", "Colación matutina en puntos","Sugerencias de colación matutina", "colación matutina"));
-  list_pestanas.add(Data_pestanas(2, "Comidas", "Almuerzo en puntos", "Sugerencias de almuerzo", "almuerzo"));
-  list_pestanas.add(Data_pestanas(3, "CV", "Colación vespertina en puntos", "Sugerencias de colación vespertina", "colación vespertina"));
-  list_pestanas.add(Data_pestanas(4, "Cenas", "Cena en puntos", "Sugerencias de cena", "cena"));
+  list_pestanas.add(Data_pestanas(0, "Desayunos", "Desayuno en puntos",
+      "Sugerencias de desayuno", "desayuno"));
+  list_pestanas.add(Data_pestanas(1, "CM", "Colación matutina en puntos",
+      "Sugerencias de colación matutina", "colación matutina"));
+  list_pestanas.add(Data_pestanas(2, "Comidas", "Almuerzo en puntos",
+      "Sugerencias de almuerzo", "almuerzo"));
+  list_pestanas.add(Data_pestanas(3, "CV", "Colación vespertina en puntos",
+      "Sugerencias de colación vespertina", "colación vespertina"));
+  list_pestanas.add(Data_pestanas(
+      4, "Cenas", "Cena en puntos", "Sugerencias de cena", "cena"));
   List<Data_pestanas> list = new List<Data_pestanas>();
 
   //List<String> nombres = ["Desayunos", "CM", "Comidas", "CV", "Cenas"];
@@ -724,7 +724,8 @@ class Data_pestanas {
   String titulo1;
   String titulo2;
   String boton;
-  Data_pestanas(this.index, this.nombre, this.titulo1, this.titulo2, this.boton);
+  Data_pestanas(
+      this.index, this.nombre, this.titulo1, this.titulo2, this.boton);
 }
 
 Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {

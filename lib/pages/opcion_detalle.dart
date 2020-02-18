@@ -30,15 +30,15 @@ class OpcionDetallePage extends StatelessWidget {
               height: 100,
               decoration: BoxDecoration(
                 gradient: new LinearGradient(
-                    colors: [
-                      hexToColor("#35b9c5"),
-                      hexToColor("#34b6a4"),
-                      hexToColor("#348cb4")
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: [0.1, 0.5, 1.0],
-                    tileMode: TileMode.clamp),
+                  colors: [
+                    Color(0xFF35B9C5),
+                    Color(0xFF348CB4)
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  stops: [0.1, 1.0],
+                  tileMode: TileMode.clamp,
+                ),
               ),
               child: Stack(
                 children: <Widget>[
@@ -46,7 +46,7 @@ class OpcionDetallePage extends StatelessWidget {
                   /// BACK
                   ///
                   GestureDetector(
-                    onTap: () {                      
+                    onTap: () {
                       global.widget = null;
                       Navigator.pop(context,
                           MaterialPageRoute(builder: (context) => PlanPage()));
@@ -63,7 +63,7 @@ class OpcionDetallePage extends StatelessWidget {
                   ///
                   Container(
                     alignment: Alignment.topCenter,
-                    margin: new EdgeInsets.only(top: 40.0),                    
+                    margin: new EdgeInsets.only(top: 40.0),
                     child: Text(
                       "Plan de alimentación",
                       textAlign: TextAlign.center,
@@ -142,7 +142,7 @@ class circle_widget extends StatelessWidget {
   circle_widget(this.index_comida, this.opcion);
   @override
   Widget build(BuildContext context) {
-     return new Container(
+    return new Container(
       margin: EdgeInsets.only(
           top: 30, left: MediaQuery.of(context).size.width * 0.52),
       child: FutureBuilder<Valores_Puntos>(
@@ -161,7 +161,7 @@ class circle_widget extends StatelessWidget {
               if (snapshot.data != null) {
                 return ColorCirclesWidget(
                     snapshot.data.azul,
-                    "L",//snapshot.data.verde,
+                    "L", //snapshot.data.verde,
                     snapshot.data.naranja,
                     snapshot.data.amarillo);
               } else {
@@ -174,7 +174,7 @@ class circle_widget extends StatelessWidget {
               );
             }
           }),
-    );    
+    );
   }
 }
 
@@ -202,7 +202,7 @@ class list_recetas extends StatelessWidget {
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
                         semanticsLabel: "Loading",
-                        backgroundColor: hexToColor("#cdcdcd"),                                         
+                        backgroundColor: hexToColor("#cdcdcd"),
                       ),
                     );
                   } else if (snapshot.hasData) {
@@ -309,7 +309,7 @@ class list_recetas extends StatelessWidget {
 Future<Valores_Puntos> getColorCirclesWidgetValues(
     _token, _index_comida, _dia) async {
   try {
-    Valores_Puntos valores_puntos;    
+    Valores_Puntos valores_puntos;
     String azul = "0";
     String verde = "0";
     String naranja = "0";
@@ -419,41 +419,43 @@ Future<Valores_Puntos> getColorCirclesWidgetValues(
 Future<List<Detalle_Opcion>> getDetallesOpcion(
     _token, _index_comida, _dia) async {
   try {
-  List<Detalle_Opcion> list = new List<Detalle_Opcion>();
-  String preparacion;
+    List<Detalle_Opcion> list = new List<Detalle_Opcion>();
+    String preparacion;
 
-  var response = await http.post(global.server + "/aplicacion/api",
-      body: {"tipo": "dieta", "token": _token});
-  var datos = json.decode(utf8.decode(response.bodyBytes));
-  //print(datos);
-  if (datos["status"] == 1) {
-    for (int receta = 0;
-        receta < datos["response"]["d$_dia"][_index_comida].length;
-        receta++) {
-      if (datos["response"]["d$_dia"][_index_comida][receta]["receta"] !=
-          null) {
-        preparacion = datos["response"]["d$_dia"][_index_comida][receta]
-                ["receta"]
-            .toString();
-      } else {
-        preparacion = "";
+    var response = await http.post(global.server + "/aplicacion/api",
+        body: {"tipo": "dieta", "token": _token});
+    var datos = json.decode(utf8.decode(response.bodyBytes));
+    //print(datos);
+    if (datos["status"] == 1) {
+      for (int receta = 0;
+          receta < datos["response"]["d$_dia"][_index_comida].length;
+          receta++) {
+        if (datos["response"]["d$_dia"][_index_comida][receta]["receta"] !=
+            null) {
+          preparacion = datos["response"]["d$_dia"][_index_comida][receta]
+                  ["receta"]
+              .toString();
+        } else {
+          preparacion = "";
+        }
+
+        list.add(Detalle_Opcion(
+          id: datos["response"]["d$_dia"][_index_comida][receta]["id"]
+              .toString(),
+          index: datos["response"]["d$_dia"][_index_comida][receta]["index"]
+              .toString(),
+          cantidad: datos["response"]["d$_dia"][_index_comida][receta]
+                  ["porcion"]
+              .toString(),
+          unidad: datos["response"]["d$_dia"][_index_comida][receta]["medida"]
+              .toString(),
+          nombre: datos["response"]["d$_dia"][_index_comida][receta]["nombre"]
+              .toString(),
+          preparacion: preparacion,
+        ));
       }
-
-      list.add(Detalle_Opcion(
-        id: datos["response"]["d$_dia"][_index_comida][receta]["id"].toString(),
-        index: datos["response"]["d$_dia"][_index_comida][receta]["index"]
-            .toString(),
-        cantidad: datos["response"]["d$_dia"][_index_comida][receta]["porcion"]
-            .toString(),
-        unidad: datos["response"]["d$_dia"][_index_comida][receta]["medida"]
-            .toString(),
-        nombre: datos["response"]["d$_dia"][_index_comida][receta]["nombre"]
-            .toString(),
-        preparacion: preparacion,
-      ));
     }
-  }
-  return list;
+    return list;
   } catch (e) {
     print("Error getDetallesOpcion " + e.toString());
     return null;
