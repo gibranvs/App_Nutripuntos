@@ -36,75 +36,85 @@ class _PlanPageState extends State<PlanPage> {
           ),
         ),
       ),
-      body: MaterialApp(        
-        home: FutureBuilder(
-          future: getPestanas(global.token),
-          builder: (_context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  semanticsLabel: "Loading",
-                  backgroundColor: hexToColor("#cdcdcd"),
-                ),
-              );
-            } else if (snapshot.hasData) {
-              int items = snapshot.data.length;
-              List<Tab> tabs = new List<Tab>();
-              List<Container> pages = new List<Container>();
-              for (int i = 0; i < items; i++) {                
-                tabs.add(Tab(
-                  text: snapshot.data[i].nombre,
-                ));
-                pages.add(new Container(
-                  decoration: new BoxDecoration(
-                    color: const Color(0x00FFCC00),
-                    image: new DecorationImage(
-                      image: new AssetImage("assets/images/fondo.jpg"),
-                      colorFilter: new ColorFilter.mode(
-                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                      fit: BoxFit.cover,
+      body: MaterialApp(
+        home: Container(
+          decoration: new BoxDecoration(
+            color: const Color(0x00FFCC00),
+            image: new DecorationImage(
+              image: new AssetImage("assets/images/fondo.jpg"),
+              colorFilter: new ColorFilter.mode(
+                  Colors.black.withOpacity(0.2), BlendMode.dstATop),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: FutureBuilder(
+            future: getPestanas(global.token),
+            builder: (_context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    semanticsLabel: "Loading",
+                    backgroundColor: hexToColor("#cdcdcd"),
+                  ),
+                );
+              } else if (snapshot.hasData) {
+                int items = snapshot.data.length;
+                List<Tab> tabs = new List<Tab>();
+                List<Container> pages = new List<Container>();
+                for (int i = 0; i < items; i++) {
+                  tabs.add(Tab(
+                    text: snapshot.data[i].nombre,
+                  ));
+                  pages.add(new Container(
+                    decoration: new BoxDecoration(                                            
+                      image: new DecorationImage(
+                        image: new AssetImage("assets/images/fondo.jpg"),
+                        colorFilter: new ColorFilter.mode(
+                            Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      titulo1(snapshot.data[i].titulo1),
-                      botones_puntos(snapshot.data[i].boton),
-                      titulo2(snapshot.data[i].titulo2),
-                      list_sugerencias(context, snapshot.data[i].index),
-                    ],
-                  ),
-                ));
-              }
+                    child: Stack(
+                      children: <Widget>[
+                        titulo1(snapshot.data[i].titulo1),
+                        botones_puntos(snapshot.data[i].boton),
+                        titulo2(snapshot.data[i].titulo2),
+                        list_sugerencias(context, snapshot.data[i].index),
+                      ],
+                    ),
+                  ));
+                }
 
-              return DefaultTabController(                
-                length: snapshot.data.length,
-                child: Scaffold(
-                  appBar: AppBar(
-                    title: TabBar(
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      isScrollable: true,
-                      indicatorColor: Colors.white,
-                      tabs: tabs,                      
-                    ),
-                    flexibleSpace: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color(0xFF35B9C5),
-                            Color(0xFF348CB4),
-                          ],
+                return DefaultTabController(
+                  length: snapshot.data.length,
+                  child: Scaffold(
+                    appBar: AppBar(
+                      title: TabBar(
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        isScrollable: true,
+                        indicatorColor: Colors.white,
+                        tabs: tabs,
+                      ),
+                      flexibleSpace: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color(0xFF35B9C5),
+                              Color(0xFF348CB4),
+                            ],
+                          ),
                         ),
                       ),
                     ),
+                    body: TabBarView(                                                                  
+                      children: pages,
+                    ),
                   ),
-                  body: TabBarView(
-                    children: pages,
-                  ),
-                ),
-              );
-            }
-          },
+                );
+              }
+            },
+          ),
         ),
 
         /*
@@ -702,8 +712,8 @@ Future<List<Data_pestanas>> getPestanas(_token) async {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "dieta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    if (datos["status"] == 1) {      
-      for (int i = 0; i < datos["response"]["d" + weekday].length; i++) {        
+    if (datos["status"] == 1) {
+      for (int i = 0; i < datos["response"]["d" + weekday].length; i++) {
         list.add(list_pestanas[i]);
       }
       return list;
@@ -724,8 +734,10 @@ Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "dieta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    if (datos["status"] == 1) {      
-      for (int dias = 0; dias < datos["response"]["d" + weekday].length; dias++) {
+    if (datos["status"] == 1) {
+      for (int dias = 0;
+          dias < datos["response"]["d" + weekday].length;
+          dias++) {
         list.add(Opciones_Dieta(
           id: (dias + 1).toString(),
           nombre: "Opción " + (dias + 1).toString(),

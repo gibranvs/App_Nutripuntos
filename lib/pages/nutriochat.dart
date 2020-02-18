@@ -59,9 +59,14 @@ class _NutriochatPageState extends State<NutriochatPage> {
       ),
       body: Stack(
         children: <Widget>[
-          Container(
+          Positioned(
+            left: 0,
+            top: 0,
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Container(
             margin: EdgeInsets.only(top: 0),
-            decoration: new BoxDecoration(
+            decoration: new BoxDecoration(              
               color: const Color(0x00FFCC00),
               image: new DecorationImage(
                 image: new AssetImage("assets/images/fondo.jpg"),
@@ -70,7 +75,7 @@ class _NutriochatPageState extends State<NutriochatPage> {
                 fit: BoxFit.cover,
               ),
             ),
-          ),
+          ),),          
           list_messages(),
           message_area(),
         ],
@@ -197,7 +202,7 @@ class message_area extends StatelessWidget {
             height: 50,
             color: Colors.white,
             child: TextField(
-              controller: myTextEdit,
+              controller: myTextEdit,              
               decoration: InputDecoration(
                 labelText: "Escribe aquí tus dudas",
                 suffixIcon: GestureDetector(
@@ -322,9 +327,9 @@ guardarMensajes(BuildContext _context, String _token, String _mensaje) async {
     myListView.animateTo(
       myListView.position.maxScrollExtent,
       curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 300),       
+      duration: const Duration(milliseconds: 300),
     );
-     FocusScope.of(_context).requestFocus(new FocusNode());
+    FocusScope.of(_context).requestFocus(new FocusNode());
     myTextEdit.text = "";
   } catch (e) {
     print("Error guardarMensajes " + e.toString());
