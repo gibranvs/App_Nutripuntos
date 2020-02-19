@@ -188,8 +188,7 @@ class _NutriochatPageState extends State<NutriochatPage> {
                   },
                   child: Icon(
                     Icons.send,
-                    color:
-                        colorIcon, //myTextEdit.text != "" ?  hexToColor("#059696") : hexToColor("#9a9a9a"),
+                    color: colorIcon,
                   ),
                 ),
                 border: InputBorder.none,
