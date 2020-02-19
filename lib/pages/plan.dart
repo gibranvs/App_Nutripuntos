@@ -692,7 +692,7 @@ Future<T> show_Dialog<T>({
                       width: 270,
                       height: 300,
                       margin: EdgeInsets.only(top: 10),
-                      padding: EdgeInsets.only(top: 0, bottom: 30),
+                      padding: EdgeInsets.only(top: 0, bottom: 20),
                       child: FutureBuilder<List<String>>(
                           future: getAlimentosColor(global.token, grupo),
                           builder: (context, snapshot) {
