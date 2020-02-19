@@ -617,29 +617,26 @@ Future<T> show_Dialog<T>({
             ),
 
             /// BOTÓN CERRAR
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(
-                          top: 70,
-                          left: MediaQuery.of(context).size.width * 0.8),
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    ),
-                  ),
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                margin: EdgeInsets.only(
+                    top: 70, left: MediaQuery.of(context).size.width * 0.8),
+                child: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+            ),
 
             Container(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  
-
                   /// IMAGEN GRUPO ALIMENTICIO
                   Container(
                     height: 90,
