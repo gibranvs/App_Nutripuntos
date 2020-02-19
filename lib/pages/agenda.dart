@@ -13,129 +13,19 @@ import 'package:http/http.dart' as http;
 
 List<DateTime> _markedDates = new List<DateTime>();
 
-void main() {
-  runApp(AgendaPage());
+class AgendaPage extends StatefulWidget
+{
+  @override 
+_AgendaPageState createState() => new _AgendaPageState();
 }
 
-class AgendaPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    //getAllCitas(global.token);
-    global.list_citas = null;
-    return Scaffold(
-      drawer: new newmenu.menu(3),
-      appBar: AppBar(
-        elevation: 0,
-        title: Text("Agenda"),
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF35B9C5),
-                Color(0xFF348CB4),
-              ],
-            ),
-          ),
-        ),
-      ),
-      body: MaterialApp(
-        home: DefaultTabController(
-          length: 2,
-          child: Scaffold(
-            appBar: AppBar(
-              title: TabBar(
-                tabs: [
-                  Tab(
-                    text: "Calendario",
-                  ),
-                  Tab(
-                    text: "Citas",
-                  ),
-                ],
-              ),
-              flexibleSpace: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF35B9C5),
-                      Color(0xFF348CB4),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            body: TabBarView(
-              children: [
-                ///
-                /// TAB CALENDARIO
-                ///
-                Stack(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(top: 0),
-                      decoration: new BoxDecoration(
-                        color: const Color(0x00FFCC00),
-                        image: new DecorationImage(
-                          image: new AssetImage("assets/images/fondo.jpg"),
-                          colorFilter: new ColorFilter.mode(
-                              Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      height: 65,
-                      color: hexToColor("#efefef"),
-                    ),
-                    Container(
-                      height: 210,
-                      color: hexToColor("#ffffff"),
-                      margin: EdgeInsets.only(top: 65),
-                    ),
-                    Calendario(),
-                    Card_Proxima(),
-                  ],
-                ),
-
-                ///
-                /// TAB CITAS
-                ///
-                Stack(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(top: 0),
-                      decoration: new BoxDecoration(
-                        color: const Color(0x00FFCC00),
-                        image: new DecorationImage(
-                          image: new AssetImage("assets/images/fondo.jpg"),
-                          colorFilter: new ColorFilter.mode(
-                              Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    ListView(
-                      children: <Widget>[
-                        Card_Anteriores(),
-                        Card_Proximas(),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class Calendario extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return calendar.CalendarCarousel(
+class _AgendaPageState extends State<AgendaPage> {
+///
+/// Calendario
+///
+calendar.CalendarCarousel calendarCarousel()
+{
+  return calendar.CalendarCarousel(
       leftButtonIcon:
           Icon(Icons.arrow_back, color: hexToColor("#059696"), size: 20),
       rightButtonIcon:
@@ -175,13 +65,13 @@ class Calendario extends StatelessWidget {
       nextDaysTextStyle: TextStyle(fontSize: 14, color: Colors.transparent),
       prevDaysTextStyle: TextStyle(fontSize: 14, color: Colors.transparent),
     );
-  }
 }
-
-class Card_Proxima extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
+///
+/// Card Próxima
+///
+Container cardProximaCita()
+{
+  return Container(
       height: 120,
       alignment: Alignment.topCenter,
       margin: const EdgeInsets.only(top: 290),
@@ -279,13 +169,13 @@ class Card_Proxima extends StatelessWidget {
         },
       ),
     );
-  }
 }
-
-class Card_Anteriores extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ExpandableNotifier(
+///
+/// Expandible citas anteriores
+///
+ExpandableNotifier citasAnteriores()
+{
+  return ExpandableNotifier(
       child: ScrollOnExpand(
         scrollOnExpand: false,
         scrollOnCollapse: true,
@@ -467,13 +357,11 @@ class Card_Anteriores extends StatelessWidget {
         ),
       ),
     );
-  }
 }
 
-class Card_Proximas extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ExpandableNotifier(
+ExpandableNotifier citasProximas()
+{
+  return ExpandableNotifier(
       child: ScrollOnExpand(
         scrollOnExpand: false,
         scrollOnCollapse: true,
@@ -668,6 +556,119 @@ class Card_Proximas extends StatelessWidget {
                       );
                     },
                   ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+}
+
+  @override
+  Widget build(BuildContext context) {
+    //getAllCitas(global.token);
+    global.list_citas = null;    
+    return Scaffold(
+      drawer: new newmenu.menu(3),
+      appBar: AppBar(
+        elevation: 0,
+        title: Text("Agenda"),
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF35B9C5),
+                Color(0xFF348CB4),
+              ],
+            ),
+          ),
+        ),
+      ),
+      body: MaterialApp(
+        home: DefaultTabController(
+          length: 2,
+          child: Scaffold(
+            appBar: AppBar(
+              title: TabBar(
+                tabs: [
+                  Tab(
+                    text: "Calendario",
+                  ),
+                  Tab(
+                    text: "Citas",
+                  ),
+                ],
+              ),
+              flexibleSpace: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF35B9C5),
+                      Color(0xFF348CB4),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            body: TabBarView(
+              children: [
+                ///
+                /// TAB CALENDARIO
+                ///
+                Stack(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(top: 0),
+                      decoration: new BoxDecoration(
+                        color: const Color(0x00FFCC00),
+                        image: new DecorationImage(
+                          image: new AssetImage("assets/images/fondo.jpg"),
+                          colorFilter: new ColorFilter.mode(
+                              Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 65,
+                      color: hexToColor("#efefef"),
+                    ),
+                    Container(
+                      height: 210,
+                      color: hexToColor("#ffffff"),
+                      margin: EdgeInsets.only(top: 65),
+                    ),
+                    calendarCarousel(),
+                    cardProximaCita(),
+                  ],
+                ),
+
+                ///
+                /// TAB CITAS
+                ///
+                Stack(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(top: 0),
+                      decoration: new BoxDecoration(
+                        color: const Color(0x00FFCC00),
+                        image: new DecorationImage(
+                          image: new AssetImage("assets/images/fondo.jpg"),
+                          colorFilter: new ColorFilter.mode(
+                              Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    ListView(
+                      children: <Widget>[
+                        citasAnteriores(),
+                        citasProximas(),
+                      ],
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -8,9 +8,11 @@ import 'package:http/http.dart' as http;
 import '../src/DBManager.dart' as db;
 import 'newmenu.dart' as newmenu;
 import '../src/bubble.dart';
+import '../src/MessageAlert.dart' as alert;
 
 final myTextEdit = TextEditingController();
 final myListView = ScrollController();
+Color colorIcon = hexToColor("#9a9a9a");
 
 class NutriochatPage extends StatefulWidget {
   @override
@@ -18,76 +20,38 @@ class NutriochatPage extends StatefulWidget {
 }
 
 class _NutriochatPageState extends State<NutriochatPage> {
-  @override
-  Widget build(BuildContext context) {
-    /*
-    show_Dialog(
-        context: context,
-        titulo: '¿Tienes dudas?',
-        mensaje:
-            'Escribe a un nutriólogo a través de nutrio chat, un espacio creado para contactar a tu doctor, fácilmente');
-            */
-    if (global.list_mensajes != null) if (global.list_mensajes.length > 0)
-      global.list_mensajes
-          .sort((a, b) => a.fecha.toString().compareTo(b.fecha.toString()));
-/*
-    Future.delayed(const Duration(milliseconds: 1000), () {      
-      myListView.animateTo(
-        myListView.position.maxScrollExtent,
-        curve: Curves.easeOut,
-        duration: const Duration(milliseconds: 300),
-      );
-    });
-    */
-
-    return new Scaffold(
-      drawer: new newmenu.menu(6),
-      appBar: AppBar(
-        elevation: 4,
-        title: Text("Nutrichat"),
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF35B9C5),
-                Color(0xFF348CB4),
-              ],
-            ),
+  ///
+  /// Fondo
+  ///
+  Positioned fondo() {
+    return Positioned(
+      left: 0,
+      top: 0,
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Container(
+        margin: EdgeInsets.only(top: 0),
+        decoration: new BoxDecoration(
+          color: const Color(0x00FFCC00),
+          image: new DecorationImage(
+            image: new AssetImage("assets/images/fondo.jpg"),
+            colorFilter: new ColorFilter.mode(
+                Colors.black.withOpacity(0.2), BlendMode.dstATop),
+            fit: BoxFit.cover,
           ),
         ),
       ),
-      body: Stack(
-        children: <Widget>[
-          Positioned(
-            left: 0,
-            top: 0,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Container(
-            margin: EdgeInsets.only(top: 0),
-            decoration: new BoxDecoration(              
-              color: const Color(0x00FFCC00),
-              image: new DecorationImage(
-                image: new AssetImage("assets/images/fondo.jpg"),
-                colorFilter: new ColorFilter.mode(
-                    Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),),          
-          list_messages(),
-          message_area(),
-        ],
-      ),
     );
   }
-}
 
-class list_messages extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  ///
+  /// List Mensajes
+  ///
+  Container listMessages() {
     if (global.list_mensajes != null && global.list_mensajes.length > 0) {
+      global.list_mensajes
+          .sort((a, b) => a.fecha.toString().compareTo(b.fecha.toString()));
+      //myListView.animateTo(global.list_mensajes.length.toDouble() * 1000, duration: const Duration(milliseconds: 200), curve: Curves.linear);
       return Container(
         height: MediaQuery.of(context).size.height - 130,
         margin: EdgeInsets.only(bottom: 10),
@@ -183,14 +147,16 @@ class list_messages extends StatelessWidget {
         ),
       );
     } else {
+      alert.showMessageDialog(context, "Hola",
+          "Escribe a un nutriólogo a través de nutrio chat, un espacio creado para contactar a tu doctor, fácilmente");
       return Container();
     }
   }
-}
 
-class message_area extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  ///
+  /// Text mensaje
+  ///
+  Container messageArea() {
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -202,17 +168,28 @@ class message_area extends StatelessWidget {
             height: 50,
             color: Colors.white,
             child: TextField(
-              controller: myTextEdit,              
+              controller: myTextEdit,
+              onChanged: (_) {
+                setState(() {
+                  if (myTextEdit.text.length > 0)
+                    colorIcon = hexToColor("#059696");
+                  else
+                    colorIcon = hexToColor("#9a9a9a");
+                });
+              },
               decoration: InputDecoration(
                 labelText: "Escribe aquí tus dudas",
                 suffixIcon: GestureDetector(
                   onTap: () {
-                    print("Send message: " + myTextEdit.text);
-                    guardarMensajes(context, global.token, myTextEdit.text);
+                    if (myTextEdit.text.length > 0) {
+                      print("Send message: " + myTextEdit.text);
+                      guardarMensajes(context, global.token, myTextEdit.text);
+                    }
                   },
                   child: Icon(
                     Icons.send,
-                    color: hexToColor("#059696"),
+                    color:
+                        colorIcon, //myTextEdit.text != "" ?  hexToColor("#059696") : hexToColor("#9a9a9a"),
                   ),
                 ),
                 border: InputBorder.none,
@@ -220,6 +197,35 @@ class message_area extends StatelessWidget {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      drawer: new newmenu.menu(6),
+      appBar: AppBar(
+        elevation: 4,
+        title: Text("Nutrichat"),
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF35B9C5),
+                Color(0xFF348CB4),
+              ],
+            ),
+          ),
+        ),
+      ),
+      body: Stack(
+        children: <Widget>[
+          fondo(),
+          listMessages(),
+          messageArea(),
         ],
       ),
     );
@@ -297,7 +303,7 @@ Future<T> show_Dialog<T>({
   );
 }
 
-getMensajesServer(String _token) async {
+void getMensajesServer(String _token) async {
   try {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "get_mensajes", "token": _token});
@@ -315,7 +321,8 @@ getMensajesServer(String _token) async {
   }
 }
 
-guardarMensajes(BuildContext _context, String _token, String _mensaje) async {
+void guardarMensajes(
+    BuildContext _context, String _token, String _mensaje) async {
   try {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "guarda_mensaje", "token": _token, "mensaje": _mensaje});
@@ -324,13 +331,10 @@ guardarMensajes(BuildContext _context, String _token, String _mensaje) async {
     db.DBManager.instance.insertMensaje(global.id_user, _token, _mensaje);
     global.list_mensajes.add(
         Mensaje(origen: "usuario", mensaje: _mensaje, fecha: DateTime.now()));
-    myListView.animateTo(
-      myListView.position.maxScrollExtent,
-      curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 300),
-    );
     FocusScope.of(_context).requestFocus(new FocusNode());
     myTextEdit.text = "";
+    myListView.animateTo(global.list_mensajes.length.toDouble() * 10000000,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
   } catch (e) {
     print("Error guardarMensajes " + e.toString());
   }

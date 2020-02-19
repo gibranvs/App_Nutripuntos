@@ -13,6 +13,104 @@ class RestaurantesPage extends StatefulWidget {
 }
 
 class _RestaurantesPageState extends State<RestaurantesPage> {
+  ///
+  /// List restaurantes
+  ///
+  Center restaurantes() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.only(top: 0),
+        child: FutureBuilder<List<Restaurante>>(
+            future: fetchRestaurantes(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return new ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        color: hexToColor("#f2f2f2"),
+                        elevation: 0,
+                        margin: new EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 6),
+                        child: new InkWell(
+                          onTap: () {
+                            global.foto_restaurante = NetworkImage(
+                                global.server +
+                                    "/aplicacion/media/restaurantes/logo/" +
+                                    snapshot.data[index].logo);
+                            global.nombre_restaurante =
+                                snapshot.data[index].nombre;
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        restaurante.RestauranteDetallePage(
+                                            snapshot.data[index].id)));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 25),
+                            child: Row(
+                              children: <Widget>[
+                                Column(
+                                  children: <Widget>[
+                                    Container(
+                                      height: 70,
+                                      width: 70,
+                                      margin: EdgeInsets.only(right: 15),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.white),
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          fit: BoxFit.contain,
+                                          image: NetworkImage(global.server +
+                                              "/aplicacion/media/restaurantes/logo/" +
+                                              snapshot.data[index].logo),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    snapshot.data[index].nombre,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      height: 1.6,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    child: Icon(
+                                      Icons.keyboard_arrow_right,
+                                      size: 40,
+                                      color: Color(0xFF059696),
+                                    ),
+                                    alignment: Alignment(1, 0),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    });
+              } else if (snapshot.hasError) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                  child: Text(
+                      "En este momento no se pudo obtener la lista de restaurantes disponibles."),
+                );
+              }
+              return new CircularProgressIndicator();
+            }),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -42,111 +140,10 @@ class _RestaurantesPageState extends State<RestaurantesPage> {
             fit: BoxFit.cover,
           ),
         ),
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.only(top: 0),            
-            child: FutureBuilder<List<Restaurante>>(
-                future: fetchRestaurantes(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return new ListView.builder(
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          return Card(
-                            color: hexToColor("#f2f2f2"), 
-                            elevation: 0,
-                            margin: new EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 6),
-                            child: new InkWell(
-                              onTap: () {
-                                global.foto_restaurante = NetworkImage(
-                                    global.server +
-                                        "/aplicacion/media/restaurantes/logo/" +
-                                        snapshot.data[index].logo);
-                                global.nombre_restaurante =
-                                    snapshot.data[index].nombre;
-                                restaurante_press(
-                                    context, snapshot.data[index].id);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 6, horizontal: 25),
-                                child: Row(
-                                  children: <Widget>[
-                                    Column(
-                                      children: <Widget>[
-                                        Container(
-                                          height: 70,
-                                          width: 70,
-                                          margin: EdgeInsets.only(right: 15),
-                                          decoration: BoxDecoration(
-                                            border:
-                                                Border.all(color: Colors.white),
-                                            shape: BoxShape.circle,
-                                            image: DecorationImage(
-                                              fit: BoxFit.contain,
-                                              image: NetworkImage(global
-                                                      .server +
-                                                  "/aplicacion/media/restaurantes/logo/" +
-                                                  snapshot.data[index].logo),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Text(
-                                        snapshot.data[index].nombre,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          height: 1.6,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: Container(
-                                        child: Icon(
-                                          Icons.keyboard_arrow_right,
-                                          size: 40,
-                                          color: Color(0xFF059696),
-                                        ),
-                                        alignment: Alignment(1, 0),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
-                        });
-                  } else if (snapshot.hasError) {
-                    return Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                      child: Text(
-                          "En este momento no se pudo obtener la lista de restaurantes disponibles."),
-                    );
-                  }
-
-                  // By default, show a loading spinner
-                  return new CircularProgressIndicator();
-                }),
-          ),
-        ),
+        child: restaurantes(),
       ),
     );
   }
-}
-
-void restaurante_press(context, _idRestaurante) {
-  //print(_idRestaurante);
-  Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) =>
-              restaurante.RestauranteDetallePage(_idRestaurante)));
 }
 
 Future<List<Restaurante>> fetchRestaurantes() async {

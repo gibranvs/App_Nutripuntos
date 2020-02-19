@@ -14,119 +14,69 @@ class OpcionDetallePage extends StatelessWidget {
   final String token;
   final int index_comida;
   final String opcion;
-
   OpcionDetallePage(this.token, this.index_comida, this.opcion);
 
-  @override
-  Widget build(BuildContext context) {
-    //getDetallesOpcion(token, index_comida, opcion);
-    return MaterialApp(
-      home: new Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(50.0),
-          child: AppBar(
-            elevation: 4,
-            flexibleSpace: Container(
-              height: 100,
-              decoration: BoxDecoration(
-                gradient: new LinearGradient(
-                  colors: [
-                    Color(0xFF35B9C5),
-                    Color(0xFF348CB4)
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  stops: [0.1, 1.0],
-                  tileMode: TileMode.clamp,
-                ),
-              ),
-              child: Stack(
-                children: <Widget>[
-                  ///
-                  /// BACK
-                  ///
-                  GestureDetector(
-                    onTap: () {
-                      global.widget = null;
-                      Navigator.pop(context,
-                          MaterialPageRoute(builder: (context) => PlanPage()));
-                    },
-                    child: Container(
-                      alignment: Alignment.topLeft,
-                      margin: EdgeInsets.only(top: 40, left: 10),
-                      child: Icon(Icons.arrow_back, color: Colors.white),
-                    ),
-                  ),
+  ///
+  /// Botón regresar
+  ///
+  GestureDetector botonBack(_context) {
+    return GestureDetector(
+      onTap: () {
+        global.widget = null;
+        Navigator.pop(
+            _context, MaterialPageRoute(builder: (context) => PlanPage()));
+      },
+      child: Container(
+        alignment: Alignment.topLeft,
+        margin: EdgeInsets.only(top: 40, left: 10),
+        child: Icon(Icons.arrow_back, color: Colors.white),
+      ),
+    );
+  }
 
-                  ///
-                  /// LABEL NOMBRE
-                  ///
-                  Container(
-                    alignment: Alignment.topCenter,
-                    margin: new EdgeInsets.only(top: 40.0),
-                    child: Text(
-                      "Plan de alimentación",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        body: Stack(
-          children: <Widget>[
-            ///
-            /// FONDO
-            ///
-            Container(
-              margin: EdgeInsets.only(top: 0),
-              decoration: new BoxDecoration(
-                color: const Color(0x00FFCC00),
-                image: new DecorationImage(
-                  image: new AssetImage("assets/images/fondo.jpg"),
-                  colorFilter: new ColorFilter.mode(
-                      Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+  ///
+  /// Label título AppBar
+  ///
+  Container tituloAppBar() {
+    return Container(
+      alignment: Alignment.topCenter,
+      margin: new EdgeInsets.only(top: 40.0),
+      child: Text(
+        "Plan de alimentación",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+    );
+  }
 
-            ///
-            /// LABEL TÍTULO
-            ///
-            label_titulo("Opción $opcion"),
-
-            ///
-            /// CIRCLE WIDGET
-            ///
-            circle_widget(index_comida, opcion),
-
-            ///
-            /// LIST RECETAS
-            ///
-            list_recetas(index_comida, opcion),
-          ],
+  ///
+  /// Fondo
+  ///
+  Container fondo() {
+    return Container(
+      margin: EdgeInsets.only(top: 0),
+      decoration: new BoxDecoration(
+        color: const Color(0x00FFCC00),
+        image: new DecorationImage(
+          image: new AssetImage("assets/images/fondo.jpg"),
+          colorFilter: new ColorFilter.mode(
+              Colors.black.withOpacity(0.2), BlendMode.dstATop),
+          fit: BoxFit.cover,
         ),
       ),
     );
   }
-}
 
-class label_titulo extends StatelessWidget {
-  final String titulo;
-  label_titulo(this.titulo);
-  @override
-  Widget build(BuildContext context) {
+  ///
+  /// Label título 1
+  ///
+  Container titulo1(_titulo) {
     return Container(
       alignment: Alignment.topLeft,
       margin: EdgeInsets.only(left: 20, top: 30),
       child: Text(
-        titulo,
+        _titulo,
         style: TextStyle(
             fontSize: 20,
             color: hexToColor("#059696"),
@@ -134,20 +84,17 @@ class label_titulo extends StatelessWidget {
       ),
     );
   }
-}
 
-class circle_widget extends StatelessWidget {
-  final int index_comida;
-  final String opcion;
-  circle_widget(this.index_comida, this.opcion);
-  @override
-  Widget build(BuildContext context) {
-    return new Container(
+  ///
+  /// Widget puntos
+  ///
+  Container puntos(_context, _index_comida, _opcion) {
+    return Container(
       margin: EdgeInsets.only(
-          top: 30, left: MediaQuery.of(context).size.width * 0.52),
+          top: 30, left: MediaQuery.of(_context).size.width * 0.52),
       child: FutureBuilder<Valores_Puntos>(
           future:
-              getColorCirclesWidgetValues(global.token, index_comida, opcion),
+              getColorCirclesWidgetValues(global.token, _index_comida, _opcion),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -176,15 +123,11 @@ class circle_widget extends StatelessWidget {
           }),
     );
   }
-}
 
-class list_recetas extends StatelessWidget {
-  final int index_comida;
-  final String opcion;
-  list_recetas(this.index_comida, this.opcion);
-
-  @override
-  Widget build(BuildContext context) {
+  ///
+  /// List recetas
+  ///
+  Container recetas(_context, _index_comida, _opcion) {
     return Container(
       margin: EdgeInsets.only(top: 90),
       alignment: Alignment.topCenter,
@@ -193,9 +136,9 @@ class list_recetas extends StatelessWidget {
         child: Align(
           alignment: Alignment.center,
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.8,
+            width: MediaQuery.of(_context).size.width * 0.8,
             child: FutureBuilder<List<Detalle_Opcion>>(
-                future: getDetallesOpcion(global.token, index_comida, opcion),
+                future: getDetallesOpcion(global.token, _index_comida, _opcion),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -300,6 +243,47 @@ class list_recetas extends StatelessWidget {
                   }
                 }),
           ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    //getDetallesOpcion(token, index_comida, opcion);
+    return MaterialApp(
+      home: new Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50.0),
+          child: AppBar(
+            elevation: 4,
+            flexibleSpace: Container(
+              height: 100,
+              decoration: BoxDecoration(
+                gradient: new LinearGradient(
+                  colors: [Color(0xFF35B9C5), Color(0xFF348CB4)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  stops: [0.1, 1.0],
+                  tileMode: TileMode.clamp,
+                ),
+              ),
+              child: Stack(
+                children: <Widget>[
+                  botonBack(context),
+                  tituloAppBar(),
+                ],
+              ),
+            ),
+          ),
+        ),
+        body: Stack(
+          children: <Widget>[
+            fondo(),
+            titulo1("Opción $opcion"),
+            puntos(context, index_comida, opcion),
+            recetas(context, index_comida, opcion),
+          ],
         ),
       ),
     );

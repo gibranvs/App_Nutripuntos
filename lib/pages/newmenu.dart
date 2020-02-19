@@ -16,46 +16,18 @@ import 'login.dart';
 class menu extends StatelessWidget {
   final int selected_index;
   menu(this.selected_index);
-  @override
-  Widget build(BuildContext context) {
-    return Drawer(
-      child: Container(
-        color: hexToColor("#505050"),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            datos(),
-            item_menu(selected_index, 1, "Plan de alimentación",
-                "assets/icons/recurso_11.png", 30),
-            item_menu(selected_index, 2, "Progreso",
-                "assets/icons/recurso_13.png", 28),
-            item_menu(
-                selected_index, 3, "Agenda", "assets/icons/recurso_12.png", 27),
-            item_menu(selected_index, 4, "Recetas",
-                "assets/icons/recurso_14.png", 38),
-            item_menu(selected_index, 5, "Restaurantes",
-                "assets/icons/recurso_9.png", 35),
-            item_menu(selected_index, 6, "Nutrichat",
-                "assets/icons/recurso_10.png", 35),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
-class datos extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  ///
+  /// Stack datos
+  ///
+  Stack datos(_context) {
     return Stack(
       children: <Widget>[
         Row(
           children: <Widget>[
             Column(
-              children: <Widget>[
-                ///
+              children: <Widget>[                
                 /// LABEL NOMBRE
-                ///
                 Container(
                   padding: EdgeInsets.only(top: 70, left: 20),
                   child: Text(
@@ -68,9 +40,7 @@ class datos extends StatelessWidget {
                   ),
                 ),
 
-                ///
                 /// LABEL CERRAR SESIÓN
-                ///
                 Container(
                   padding: EdgeInsets.only(top: 5, left: 20),
                   child: GestureDetector(
@@ -79,7 +49,7 @@ class datos extends StatelessWidget {
                       print("Cerrar sesión");
                       global.token = "";
                       global.recovery_token = "";
-                      Navigator.push(context,
+                      Navigator.push(_context,
                           MaterialPageRoute(builder: (context) => LoginPage()));
                     },
                     child: Text(
@@ -100,10 +70,10 @@ class datos extends StatelessWidget {
               onTap: () {
                 //print("Back");
                 if (global.selected_index == 0)
-                  Navigator.pop(context);
+                  Navigator.pop(_context);
                 else {
                   global.selected_index = 0;
-                  Navigator.push(context,
+                  Navigator.push(_context,
                       MaterialPageRoute(builder: (context) => HomePage()));
                 }
               },
@@ -120,13 +90,6 @@ class datos extends StatelessWidget {
                         ? DecorationImage(
                             image: AssetImage("assets/images/photo.jpg"))
                         : global.image_foto,
-                    //global.returnFileSelected(global.imageFile, global.imageFile.path),
-                    /*
-                  DecorationImage(
-                fit: BoxFit.contain,
-                image: AssetImage("assets/images/photo.jpg"),
-              ),
-              */
                   ),
                 ),
               ),
@@ -136,15 +99,42 @@ class datos extends StatelessWidget {
       ],
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Container(
+        color: hexToColor("#505050"),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            datos(context),
+            ItemMenu(selected_index, 1, "Plan de alimentación",
+                "assets/icons/recurso_11.png", 30),
+            ItemMenu(selected_index, 2, "Progreso",
+                "assets/icons/recurso_13.png", 28),
+            ItemMenu(
+                selected_index, 3, "Agenda", "assets/icons/recurso_12.png", 27),
+            ItemMenu(selected_index, 4, "Recetas",
+                "assets/icons/recurso_14.png", 38),
+            ItemMenu(selected_index, 5, "Restaurantes",
+                "assets/icons/recurso_9.png", 35),
+            ItemMenu(selected_index, 6, "Nutrichat",
+                "assets/icons/recurso_10.png", 35),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
-class item_menu extends StatelessWidget {
+class ItemMenu extends StatelessWidget {
   final int selected_index;
   final int index_item;
   final String titulo;
   final String path_imagen;
   final double size_imagen;
-  item_menu(this.selected_index, this.index_item, this.titulo, this.path_imagen,
+  ItemMenu(this.selected_index, this.index_item, this.titulo, this.path_imagen,
       this.size_imagen);
   @override
   Widget build(BuildContext context) {

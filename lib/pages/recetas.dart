@@ -16,6 +16,163 @@ class RecetasPage extends StatefulWidget {
 }
 
 class _RecetasPageState extends State<RecetasPage> {
+  ///
+  /// Text buscar
+  ///
+  Container buscar() {
+    return
+
+        ///
+        /// BUSQUEDA
+        ///
+        Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            Color(0xFF35B9C5),
+            Color(0xFF348CB4),
+          ],
+        ),
+      ),
+      width: MediaQuery.of(context).size.width,
+      height: 50,
+      margin: EdgeInsets.only(top: 0),
+      child: Container(
+        height: 35,
+        width: MediaQuery.of(context).size.width * 0.9,
+        alignment: Alignment.topLeft,
+        child: Stack(
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: Colors.white,
+              ),
+              child: TextField(
+                controller: myTextEdit,
+                onChanged: (_) {
+                  print(myTextEdit.text);
+                },
+                decoration: InputDecoration(
+                  labelText: "Filtrar recetas...",
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      print("Send message: " + myTextEdit.text);
+                    },
+                    child: Icon(
+                      Icons.search,
+                      color: hexToColor("#059696"),
+                    ),
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(left: 20),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ///
+  /// List recetas
+  ///
+  Container recetas() {
+    return Container(
+      padding: EdgeInsets.only(top: 50),
+      child: Scrollbar(
+        child: FutureBuilder<List<Receta>>(
+            future: getRecetas(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    semanticsLabel: "Loading",
+                    backgroundColor: hexToColor("#cdcdcd"),
+                  ),
+                );
+              } else if (snapshot.hasData) {
+                if (snapshot.data.length > 0) {
+                  return new ListView.builder(
+                      padding: EdgeInsets.only(top: 5),
+                      shrinkWrap: true,
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          color: hexToColor("#f2f2f2"),
+                          elevation: 0,
+                          margin: new EdgeInsets.symmetric(
+                              vertical: 5, horizontal: 15),
+                          child: ListTile(
+                            leading: Container(
+                              margin: EdgeInsets.only(left: 10),
+                              height: 80,
+                              child: new Image.asset(
+                                  "assets/icons/Recurso_26.png"),
+                            ),
+                            title: new Text(
+                              snapshot.data[index].nombre,
+                              style: new TextStyle(
+                                  fontSize: 13.0,
+                                  fontFamily: "PT Sans",
+                                  fontWeight: FontWeight.bold,
+                                  color: hexToColor("#666666")),
+                            ),
+                            subtitle: new Container(
+                              alignment: Alignment.topLeft,
+                              margin: new EdgeInsets.only(top: 8.0, left: 0.0),
+                              child: new Column(
+                                children: <Widget>[
+                                  new Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: new ColorCirclesWidget(
+                                        snapshot.data[index].azul,
+                                        snapshot.data[index].verde,
+                                        snapshot.data[index].naranja,
+                                        snapshot.data[index].amarillo),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            contentPadding: new EdgeInsets.symmetric(
+                                horizontal: 0.0, vertical: 0.0),
+                            selected: true,
+                            trailing: new Icon(
+                              Icons.keyboard_arrow_right,
+                              color: hexToColor("#3f95ac"),
+                              size: 40,
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => detalle.RecetaPage(
+                                          context,
+                                          snapshot.data[index].id,
+                                          snapshot.data[index].nombre)));
+                            },
+                          ),
+                        );
+                      });
+                } else {
+                  return new Text("No hay sugerencias de comida.",
+                      style: TextStyle(color: hexToColor("#606060")));
+                }
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text("Error al obtener sugerencias de comida."),
+                );
+              }
+            }),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -50,154 +207,8 @@ class _RecetasPageState extends State<RecetasPage> {
         margin: new EdgeInsets.only(top: 0.0, left: 0.0),
         child: Stack(
           children: <Widget>[
-            ///
-            /// BUSQUEDA
-            ///
-            Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF35B9C5),
-                    Color(0xFF348CB4),
-                  ],
-                ),
-              ),
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              margin: EdgeInsets.only(top: 0),
-              child: Container(
-                height: 35,
-                width: MediaQuery.of(context).size.width * 0.9,
-                alignment: Alignment.topLeft,
-                child: Stack(
-                  children: <Widget>[
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Colors.white,
-                      ),
-                      child: TextField(
-                        controller: myTextEdit,
-                        onChanged: (_) {
-                          print(myTextEdit.text);
-                        },
-                        decoration: InputDecoration(
-                          labelText: "Filtrar recetas...",
-                          suffixIcon: GestureDetector(
-                            onTap: () {
-                              print("Send message: " + myTextEdit.text);
-                            },
-                            child: Icon(
-                              Icons.search,
-                              color: hexToColor("#059696"),
-                            ),
-                          ),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(left: 20),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            Container(
-              padding: EdgeInsets.only(top: 50),
-              child: Scrollbar(
-                child: FutureBuilder<List<Receta>>(
-                    future: getRecetas(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            semanticsLabel: "Loading",
-                            backgroundColor: hexToColor("#cdcdcd"),
-                          ),
-                        );
-                      } else if (snapshot.hasData) {
-                        if (snapshot.data.length > 0) {
-                          return new ListView.builder(
-                              padding: EdgeInsets.only(top: 5),
-                              shrinkWrap: true,
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (context, index) {
-                                return Card(
-                                  color: hexToColor("#f2f2f2"),
-                                  elevation: 0,
-                                  margin: new EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 15),
-                                  child: ListTile(
-                                    leading: Container(
-                                      margin: EdgeInsets.only(left: 10),
-                                      height: 80,
-                                      child: new Image.asset(
-                                          "assets/icons/Recurso_26.png"),
-                                    ),
-                                    title: new Text(
-                                      snapshot.data[index].nombre,
-                                      style: new TextStyle(
-                                          fontSize: 13.0,
-                                          fontFamily: "PT Sans",
-                                          fontWeight: FontWeight.bold,
-                                          color: hexToColor("#666666")),
-                                    ),
-                                    subtitle: new Container(
-                                      alignment: Alignment.topLeft,
-                                      margin: new EdgeInsets.only(
-                                          top: 8.0, left: 0.0),
-                                      child: new Column(
-                                        children: <Widget>[
-                                          new Container(
-                                            alignment: Alignment.centerLeft,
-                                            child: new ColorCirclesWidget(
-                                                snapshot.data[index].azul,
-                                                snapshot.data[index].verde,
-                                                snapshot.data[index].naranja,
-                                                snapshot.data[index].amarillo),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    contentPadding: new EdgeInsets.symmetric(
-                                        horizontal: 0.0, vertical: 0.0),
-                                    selected: true,
-                                    trailing: new Icon(
-                                      Icons.keyboard_arrow_right,
-                                      color: hexToColor("#3f95ac"),
-                                      size: 40,
-                                    ),
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  detalle.RecetaPage(
-                                                      context,
-                                                      snapshot.data[index].id,
-                                                      snapshot.data[index]
-                                                          .nombre)));
-                                    },
-                                  ),
-                                );
-                              });
-                        } else {
-                          return new Text("No hay sugerencias de comida.",
-                              style: TextStyle(color: hexToColor("#606060")));
-                        }
-                      } else if (snapshot.hasError) {
-                        return Center(
-                          child:
-                              Text("Error al obtener sugerencias de comida."),
-                        );
-                      }
-                    }),
-              ),
-            ),
+            buscar(),
+            recetas(),
           ],
         ),
       ),

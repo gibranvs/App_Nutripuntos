@@ -18,142 +18,126 @@ class RestauranteDetallePage extends StatefulWidget {
 class _RestauranteDetallePage extends State<RestauranteDetallePage> {
   final String idRestaurante;
   _RestauranteDetallePage(this.idRestaurante);
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      body: Container(
-        decoration: new BoxDecoration(
-          color: const Color(0x00FFCC00),
-          image: new DecorationImage(
-            image: new AssetImage("assets/images/fondo.jpg"),
-            colorFilter: new ColorFilter.mode(
-                Colors.black.withOpacity(0.2), BlendMode.dstATop),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Stack(
-          children: <Widget>[
-            ///
-            /// FONDO VERDE
-            ///
-            Container(
-              height: 250,
-              margin: new EdgeInsets.only(top: 0.0, left: 0.0),
-              decoration: BoxDecoration(
-                color: Color(0xFF059696),
-                borderRadius: new BorderRadius.vertical(
-                  bottom: new Radius.elliptical(
-                      MediaQuery.of(context).size.width * 1.5, 80.0),
-                ),
-              ),
-            ),
 
-            ///
-            /// BACK
-            ///
-            GestureDetector(
-              onTap: () {
-                global.widget = null;
-                global.list_platillos_restaurante = null;
-                Navigator.pop(context,
-                    MaterialPageRoute(builder: (_) => RestaurantesPage()));
-              },
-              child: Container(
-                alignment: Alignment.topLeft,
-                margin: EdgeInsets.only(top: 30, left: 10),
-                child: Icon(Icons.arrow_back, color: Colors.white),
-              ),
-            ),
-
-            ///
-            /// FONDO FOTO
-            ///
-            Container(
-              alignment: Alignment.topCenter,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                height: 120,
-                alignment: Alignment.topCenter,
-                margin: EdgeInsets.only(left:25, top: 50),
-                decoration: BoxDecoration(
-                  image: new DecorationImage(
-                    image: new AssetImage("assets/icons/recurso_4.png"),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            ),
-
-            ///
-            /// IMAGEN FOTO
-            ///
-            Container(
-              alignment: Alignment.topCenter,
-              width: MediaQuery.of(context).size.width,
-              child: Container(
-                height: 100,
-                width: 100,
-                margin: EdgeInsets.only(top: 63.5),
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0, color: Colors.white),
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: global
-                        .foto_restaurante, //global.returnFileSelected(global.imageFile),
-                  ),
-                ),
-              ),
-            ),
-
-            ///
-            /// LABEL NOMBRE
-            ///
-            Container(
-              alignment: Alignment.topCenter,
-              padding: EdgeInsets.only(top: 0),
-              margin: EdgeInsets.only(left: 0, top: 180),
-              child: Text(
-                global.nombre_restaurante,
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-            ),
-
-            ///
-            /// LABEL PLATILLOS RECOMENDADOS
-            ///
-            Container(
-              alignment: Alignment.topCenter,
-              margin: const EdgeInsets.only(
-                top: 255,
-              ),
-              child: Text(
-                "Platillos recomendados",
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF059696)),
-              ),
-            ),
-
-            ///
-            /// LISTA PLATILLOS
-            ///
-            list_platillos(idRestaurante),
-          ],
+  ///
+  /// Header
+  ///
+  Container header() {
+    return Container(
+      height: 250,
+      margin: new EdgeInsets.only(top: 0.0, left: 0.0),
+      decoration: BoxDecoration(
+        color: Color(0xFF059696),
+        borderRadius: new BorderRadius.vertical(
+          bottom: new Radius.elliptical(
+              MediaQuery.of(context).size.width * 1.5, 80.0),
         ),
       ),
     );
   }
-}
 
-class list_platillos extends StatelessWidget {
-  final String idRestaurante;
-  list_platillos(this.idRestaurante);
-  @override
-  Widget build(BuildContext context) {
+  ///
+  /// Botón regresar
+  ///
+  GestureDetector back() {
+    return GestureDetector(
+      onTap: () {
+        global.widget = null;
+        global.list_platillos_restaurante = null;
+        Navigator.pop(
+            context, MaterialPageRoute(builder: (_) => RestaurantesPage()));
+      },
+      child: Container(
+        alignment: Alignment.topLeft,
+        margin: EdgeInsets.only(top: 30, left: 10),
+        child: Icon(Icons.arrow_back, color: Colors.white),
+      ),
+    );
+  }
+
+  ///
+  /// Fondo foto
+  ///
+  Container fondoFoto() {
+    return Container(
+      alignment: Alignment.topCenter,
+      width: MediaQuery.of(context).size.width,
+      child: Container(
+        height: 120,
+        alignment: Alignment.topCenter,
+        margin: EdgeInsets.only(left: 25, top: 50),
+        decoration: BoxDecoration(
+          image: new DecorationImage(
+            image: new AssetImage("assets/icons/recurso_4.png"),
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),
+    );
+  }
+
+  ///
+  /// Foto
+  ///
+  Container foto() {
+    return Container(
+      alignment: Alignment.topCenter,
+      width: MediaQuery.of(context).size.width,
+      child: Container(
+        height: 100,
+        width: 100,
+        margin: EdgeInsets.only(top: 63.5),
+        decoration: BoxDecoration(
+          border: Border.all(width: 0, color: Colors.white),
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            image: global
+                .foto_restaurante, //global.returnFileSelected(global.imageFile),
+          ),
+        ),
+      ),
+    );
+  }
+
+  ///
+  /// Label nombre
+  ///
+  Container nombre() {
+    return Container(
+      alignment: Alignment.topCenter,
+      padding: EdgeInsets.only(top: 0),
+      margin: EdgeInsets.only(left: 0, top: 180),
+      child: Text(
+        global.nombre_restaurante,
+        style: TextStyle(
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+    );
+  }
+
+  ///
+  /// Label subtítulo
+  ///
+  Container subtitulo() {
+    return Container(
+      alignment: Alignment.topCenter,
+      margin: const EdgeInsets.only(
+        top: 255,
+      ),
+      child: Text(
+        "Platillos recomendados",
+        style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF059696)),
+      ),
+    );
+  }
+
+  ///
+  /// List platillos
+  ///
+  Container platillos() {
     return Container(
       margin: EdgeInsets.only(left: 0, top: 280),
       padding: EdgeInsets.only(top: 0),
@@ -255,6 +239,34 @@ class list_platillos extends StatelessWidget {
                   }
                 }),
           ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      body: Container(
+        decoration: new BoxDecoration(
+          color: const Color(0x00FFCC00),
+          image: new DecorationImage(
+            image: new AssetImage("assets/images/fondo.jpg"),
+            colorFilter: new ColorFilter.mode(
+                Colors.black.withOpacity(0.2), BlendMode.dstATop),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Stack(
+          children: <Widget>[
+            header(),
+            back(),
+            fondoFoto(),
+            foto(),
+            nombre(),
+            subtitulo(),
+            platillos(),
+          ],
         ),
       ),
     );

@@ -7,106 +7,26 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
 
-void main() {
-  runApp(RecetaPage(null, 0, ""));
+class RecetaPage extends StatefulWidget {
+  final BuildContext context;
+  final int idReceta;
+  final String nombreReceta;
+  RecetaPage(this.context, this.idReceta, this.nombreReceta);
+  @override
+  _RecetaPageState createState() =>
+      new _RecetaPageState(context, idReceta, nombreReceta);
 }
 
-class RecetaPage extends StatelessWidget {
+class _RecetaPageState extends State<RecetaPage> {
   final BuildContext _context;
   final int idReceta;
   final String nombreReceta;
-  RecetaPage(this._context, this.idReceta, this.nombreReceta);
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(330.0),
-            child: AppBar(
-              flexibleSpace: Container(
-                height: 350,
-                color: Color(0xFF059696),
-                child: Stack(
-                  children: <Widget>[
-                    ///
-                    /// BACK
-                    ///
-                    boton_back(_context),
+  _RecetaPageState(this._context, this.idReceta, this.nombreReceta);
 
-                    ///
-                    /// IMAGE
-                    ///
-                    imagen_cabecera(),
-
-                    ///
-                    /// LABEL NOMBRE
-                    ///
-                    label_nombre(nombreReceta),
-
-                    ///
-                    /// WIDGET
-                    ///
-                    widget_puntos(idReceta),
-                  ],
-                ),
-              ),
-              bottom: PreferredSize(
-                preferredSize: Size.fromHeight(0),
-                child: Container(
-                  margin: new EdgeInsets.only(top: 250.0),
-                  decoration: BoxDecoration(
-                    gradient: new LinearGradient(
-                        colors: [
-                          hexToColor("#35b9c5"),
-                          hexToColor("#34b6a4"),
-                          hexToColor("#348cb4")
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        stops: [0.1, 0.5, 1.0],
-                        tileMode: TileMode.clamp),
-                  ),
-                  child: TabBar(
-                    tabs: [
-                      Tab(
-                        text: "Ingredientes",
-                      ),
-                      Tab(
-                        text: "Preparación",
-                      ),
-                    ],
-                    indicatorColor: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          body: TabBarView(
-            children: [
-              ///
-              /// INGREDIENTES
-              ///
-              card_ingredientes(idReceta),
-
-              ///
-              /// PREPARACIÓN
-              ///
-              card_preparacion(idReceta),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class boton_back extends StatelessWidget {
-  BuildContext _context;
-  boton_back(this._context);
-  @override
-  Widget build(BuildContext context) {
+  ///
+  /// Botón regresar
+  ///
+  GestureDetector back() {
     return GestureDetector(
       onTap: () {
         //print("back");
@@ -121,11 +41,11 @@ class boton_back extends StatelessWidget {
       ),
     );
   }
-}
 
-class imagen_cabecera extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  ///
+  /// Imagen cabecera
+  ///
+  Container icono() {
     return Container(
       height: 120,
       margin: new EdgeInsets.only(top: 50.0),
@@ -137,13 +57,11 @@ class imagen_cabecera extends StatelessWidget {
       ),
     );
   }
-}
 
-class label_nombre extends StatelessWidget {
-  final String nombreReceta;
-  label_nombre(this.nombreReceta);
-  @override
-  Widget build(BuildContext context) {
+  ///
+  /// Label nombre receta
+  ///
+  Container nombre() {
     return Container(
       alignment: Alignment.topCenter,
       margin: new EdgeInsets.only(top: 175.0),
@@ -161,14 +79,12 @@ class label_nombre extends StatelessWidget {
       ),
     );
   }
-}
 
-class widget_puntos extends StatelessWidget {
-  final int idReceta;
-  widget_puntos(this.idReceta);
-  @override
-  Widget build(BuildContext context) {
-    return new Container(
+  ///
+  /// Widget puntos
+  ///
+  Container puntos() {
+    return Container(
       alignment: Alignment.center,
       margin: EdgeInsets.only(top: 170),
       child: FutureBuilder<Valores_Puntos>(
@@ -201,13 +117,11 @@ class widget_puntos extends StatelessWidget {
           }),
     );
   }
-}
 
-class card_ingredientes extends StatelessWidget {
-  final int idReceta;
-  card_ingredientes(this.idReceta);
-  @override
-  Widget build(BuildContext context) {
+  ///
+  /// Card ingredientes
+  ///
+  Stack ingredientes() {
     return Stack(
       children: <Widget>[
         Container(
@@ -306,13 +220,11 @@ class card_ingredientes extends StatelessWidget {
       ],
     );
   }
-}
 
-class card_preparacion extends StatelessWidget {
-  final int idReceta;
-  card_preparacion(this.idReceta);
-  @override
-  Widget build(BuildContext context) {
+  ///
+  /// Card preparación
+  ///
+  Stack preparacion() {
     return Stack(
       children: <Widget>[
         Container(
@@ -375,6 +287,69 @@ class card_preparacion extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(330.0),
+            child: AppBar(
+              flexibleSpace: Container(
+                height: 350,
+                color: Color(0xFF059696),
+                child: Stack(
+                  children: <Widget>[
+                    back(),
+                    icono(),
+                    nombre(),
+                    puntos(),
+                  ],
+                ),
+              ),
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(0),
+                child: Container(
+                  margin: new EdgeInsets.only(top: 250.0),
+                  decoration: BoxDecoration(
+                    gradient: new LinearGradient(
+                        colors: [
+                          hexToColor("#35b9c5"),
+                          hexToColor("#34b6a4"),
+                          hexToColor("#348cb4")
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        stops: [0.1, 0.5, 1.0],
+                        tileMode: TileMode.clamp),
+                  ),
+                  child: TabBar(
+                    tabs: [
+                      Tab(
+                        text: "Ingredientes",
+                      ),
+                      Tab(
+                        text: "Preparación",
+                      ),
+                    ],
+                    indicatorColor: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              ingredientes(),
+              preparacion(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
