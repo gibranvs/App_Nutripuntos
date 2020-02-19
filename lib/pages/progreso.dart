@@ -224,168 +224,169 @@ class _ProgresoPageState extends State<ProgresoPage>
       ),
       child: Card(
         color: Colors.transparent,
-        elevation:  0,
+        elevation: 0,
         child: Stack(
-      children: <Widget>[
-        /// BACK GRÁFICA
-        Center(          
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.75,
-            height: MediaQuery.of(context).size.width * 0.75,            
-            decoration: BoxDecoration(
-              color: hexToColor("#78c826"),
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-            ),
-            child: Stack(
-              children: <Widget>[
-                /// LABEL AXIS Y
-                RotatedBox(
-                  quarterTurns: -1,
-                  child: Container(
-                    alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: 10, left: 0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      width: 115,
-                      height: 20,
-                      margin: EdgeInsets.only(top: 0, left: 5),
-                      child: Text(_leyenda_y,
-                          style: TextStyle(
-                              color: hexToColor("#059696"),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13)),
-                    ),
-                  ),
+          children: <Widget>[
+            /// BACK GRÁFICA
+            Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.75,
+                height: MediaQuery.of(context).size.width * 0.75,
+                decoration: BoxDecoration(
+                  color: hexToColor("#78c826"),
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
                 ),
-
-                /// LABEL AXIS X
-                Container(
-                  alignment: Alignment.bottomCenter,
-                  margin: EdgeInsets.only(bottom: 10),
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    width: 115,
-                    height: 20,
-                    margin: EdgeInsets.only(top: 0, left: 5),
-                    child: Text("Fecha de cita",
-                        style: TextStyle(
-                            color: hexToColor("#059696"),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        /// CHART
-        Container(          
-          margin: EdgeInsets.only(left: 38, bottom: 35),          
-          child: FutureBuilder<List<Progreso>>(
-              future: getProgreso(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      semanticsLabel: "Loading",
-                      backgroundColor: hexToColor("#cdcdcd"),
-                    ),
-                  );
-                } else if (snapshot.hasData) {
-                  if (snapshot.data != null) {
-                    var data = [
-                      new TimeSeriesDatos(
-                          new DateTime(
-                              int.tryParse(
-                                  snapshot.data[0].fecha.split('-')[2]),
-                              int.tryParse(
-                                  snapshot.data[0].fecha.split('-')[1]),
-                              int.tryParse(
-                                  snapshot.data[0].fecha.split('-')[0])),
-                          double.parse(snapshot.data[0].peso)),
-                      new TimeSeriesDatos(
-                          new DateTime(
-                              int.tryParse(
-                                  snapshot.data[1].fecha.split('-')[2]),
-                              int.tryParse(
-                                  snapshot.data[1].fecha.split('-')[1]),
-                              int.tryParse(
-                                  snapshot.data[1].fecha.split('-')[0])),
-                          double.parse(snapshot.data[1].peso)),
-                      new TimeSeriesDatos(
-                          new DateTime(
-                              int.tryParse(
-                                  snapshot.data[2].fecha.split('-')[2]),
-                              int.tryParse(
-                                  snapshot.data[2].fecha.split('-')[1]),
-                              int.tryParse(
-                                  snapshot.data[2].fecha.split('-')[0])),
-                          double.parse(snapshot.data[2].peso)),
-                      new TimeSeriesDatos(
-                          new DateTime(
-                              int.tryParse(
-                                  snapshot.data[3].fecha.split('-')[2]),
-                              int.tryParse(
-                                  snapshot.data[3].fecha.split('-')[1]),
-                              int.tryParse(
-                                  snapshot.data[3].fecha.split('-')[0])),
-                          double.parse(snapshot.data[3].peso)),
-                    ];
-                    List<charts.Series<TimeSeriesDatos, DateTime>> seriesList =
-                        new List<charts.Series<TimeSeriesDatos, DateTime>>();
-                    seriesList.add(
-                      new charts.Series<TimeSeriesDatos, DateTime>(
-                        id: "Peso",
-                        colorFn: (_, __) =>
-                            charts.MaterialPalette.blue.shadeDefault,
-                        domainFn: (TimeSeriesDatos sales, _) => sales.time,
-                        measureFn: (TimeSeriesDatos sales, _) => sales.dato,
-                        data: data,
-                      ),
-                    );
-                    return charts.TimeSeriesChart(
-                      seriesList,
-                      animate: true,
-                      primaryMeasureAxis: charts.AxisSpec(
-                        showAxisLine: true,
-                      ),
-                      defaultRenderer: charts.LineRendererConfig(
-                        includePoints: true,
-                        radiusPx: 5,
-                      ),
-                      customSeriesRenderers: [
-                        new charts.PointRendererConfig(
-                          customRendererId: 'customPoint',
+                child: Stack(
+                  children: <Widget>[
+                    /// LABEL AXIS Y
+                    RotatedBox(
+                      quarterTurns: -1,
+                      child: Container(
+                        alignment: Alignment.topCenter,
+                        margin: EdgeInsets.only(top: 10, left: 0),
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                          width: 115,
+                          height: 20,
+                          margin: EdgeInsets.only(top: 0, left: 5),
+                          child: Text(_leyenda_y,
+                              style: TextStyle(
+                                  color: hexToColor("#059696"),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13)),
                         ),
-                      ],
-                      dateTimeFactory: const charts.LocalDateTimeFactory(),
-                    );
-                  } else {
-                    return new Center(
-                        child: Text("No hay datos.",
-                            style: TextStyle(color: hexToColor("#606060"))));
-                  }
-                } else if (snapshot.hasError) {
-                  return new Center(
-                      child: Text("Error al obtener datos.",
-                          style: TextStyle(color: hexToColor("#606060"))));
-                }
-              }),
+                      ),
+                    ),
+
+                    /// LABEL AXIS X
+                    Container(
+                      alignment: Alignment.bottomCenter,
+                      margin: EdgeInsets.only(bottom: 10),
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        width: 115,
+                        height: 20,
+                        margin: EdgeInsets.only(top: 0, left: 5),
+                        child: Text("Fecha de cita",
+                            style: TextStyle(
+                                color: hexToColor("#059696"),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            /// CHART
+            Container(
+              margin: EdgeInsets.only(left: 38, bottom: 35),
+              child: FutureBuilder<List<Progreso>>(
+                  future: getProgreso(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          semanticsLabel: "Loading",
+                          backgroundColor: hexToColor("#cdcdcd"),
+                        ),
+                      );
+                    } else if (snapshot.hasData) {
+                      if (snapshot.data != null) {
+                        var data = [
+                          new TimeSeriesDatos(
+                              new DateTime(
+                                  int.tryParse(
+                                      snapshot.data[0].fecha.split('-')[2]),
+                                  int.tryParse(
+                                      snapshot.data[0].fecha.split('-')[1]),
+                                  int.tryParse(
+                                      snapshot.data[0].fecha.split('-')[0])),
+                              double.parse(snapshot.data[0].peso)),
+                          new TimeSeriesDatos(
+                              new DateTime(
+                                  int.tryParse(
+                                      snapshot.data[1].fecha.split('-')[2]),
+                                  int.tryParse(
+                                      snapshot.data[1].fecha.split('-')[1]),
+                                  int.tryParse(
+                                      snapshot.data[1].fecha.split('-')[0])),
+                              double.parse(snapshot.data[1].peso)),
+                          new TimeSeriesDatos(
+                              new DateTime(
+                                  int.tryParse(
+                                      snapshot.data[2].fecha.split('-')[2]),
+                                  int.tryParse(
+                                      snapshot.data[2].fecha.split('-')[1]),
+                                  int.tryParse(
+                                      snapshot.data[2].fecha.split('-')[0])),
+                              double.parse(snapshot.data[2].peso)),
+                          new TimeSeriesDatos(
+                              new DateTime(
+                                  int.tryParse(
+                                      snapshot.data[3].fecha.split('-')[2]),
+                                  int.tryParse(
+                                      snapshot.data[3].fecha.split('-')[1]),
+                                  int.tryParse(
+                                      snapshot.data[3].fecha.split('-')[0])),
+                              double.parse(snapshot.data[3].peso)),
+                        ];
+                        List<charts.Series<TimeSeriesDatos, DateTime>>
+                            seriesList = new List<
+                                charts.Series<TimeSeriesDatos, DateTime>>();
+                        seriesList.add(
+                          new charts.Series<TimeSeriesDatos, DateTime>(
+                            id: "Peso",
+                            colorFn: (_, __) =>
+                                charts.MaterialPalette.blue.shadeDefault,
+                            domainFn: (TimeSeriesDatos sales, _) => sales.time,
+                            measureFn: (TimeSeriesDatos sales, _) => sales.dato,
+                            data: data,
+                          ),
+                        );
+                        return charts.TimeSeriesChart(
+                          seriesList,
+                          animate: true,
+                          primaryMeasureAxis: charts.AxisSpec(
+                            showAxisLine: true,
+                          ),
+                          defaultRenderer: charts.LineRendererConfig(
+                            includePoints: true,
+                            radiusPx: 5,
+                          ),
+                          customSeriesRenderers: [
+                            new charts.PointRendererConfig(
+                              customRendererId: 'customPoint',
+                            ),
+                          ],
+                          dateTimeFactory: const charts.LocalDateTimeFactory(),
+                        );
+                      } else {
+                        return new Center(
+                            child: Text("No hay datos.",
+                                style:
+                                    TextStyle(color: hexToColor("#606060"))));
+                      }
+                    } else if (snapshot.hasError) {
+                      return new Center(
+                          child: Text("Error al obtener datos.",
+                              style: TextStyle(color: hexToColor("#606060"))));
+                    }
+                  }),
+            ),
+          ],
         ),
-      ],
-    ),
       ),
     );
-    
-    
   }
 
   ///
@@ -409,7 +410,7 @@ class _ProgresoPageState extends State<ProgresoPage>
             Center(
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.75,
-                height: MediaQuery.of(context).size.width * 0.75,                
+                height: MediaQuery.of(context).size.width * 0.75,
                 decoration: BoxDecoration(
                   color: hexToColor("#78c826"),
                   borderRadius: BorderRadius.all(Radius.circular(15)),
