@@ -22,7 +22,8 @@ class ProgresoPage extends StatefulWidget {
   _ProgresoPageState createState() => new _ProgresoPageState(index_tab);
 }
 
-class _ProgresoPageState extends State<ProgresoPage> with TickerProviderStateMixin {
+class _ProgresoPageState extends State<ProgresoPage>
+    with TickerProviderStateMixin {
   final int index_tab;
   _ProgresoPageState(this.index_tab);
   TabController _tabController;
@@ -212,15 +213,25 @@ class _ProgresoPageState extends State<ProgresoPage> with TickerProviderStateMix
   ///
   /// Gráfica Peso
   ///
-  Stack historialPeso(_leyenda_y) {
-    return Stack(
+  Container historialPeso(_leyenda_y) {
+    return Container(
+      alignment: Alignment.center,
+      width: MediaQuery.of(context).size.width * 0.75,
+      height: MediaQuery.of(context).size.width * 0.75,
+      margin: EdgeInsets.only(
+        left: MediaQuery.of(context).size.width * 0.125,
+        top: 180,
+      ),
+      child: Card(
+        color: Colors.transparent,
+        elevation:  0,
+        child: Stack(
       children: <Widget>[
-        Container(
-          alignment: Alignment.center,
+        /// BACK GRÁFICA
+        Center(          
           child: Container(
             width: MediaQuery.of(context).size.width * 0.75,
-            height: MediaQuery.of(context).size.width * 0.75,
-            margin: EdgeInsets.only(top: 140),
+            height: MediaQuery.of(context).size.width * 0.75,            
             decoration: BoxDecoration(
               color: hexToColor("#78c826"),
               borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -274,13 +285,9 @@ class _ProgresoPageState extends State<ProgresoPage> with TickerProviderStateMix
           ),
         ),
 
-        /// Gráfica
-        Container(
-          alignment: Alignment.bottomCenter,
-          width: MediaQuery.of(context).size.width * 0.65,
-          height: MediaQuery.of(context).size.width * 0.65,
-          margin: EdgeInsets.only(
-              top: 150, left: MediaQuery.of(context).size.width * 0.23),
+        /// CHART
+        Container(          
+          margin: EdgeInsets.only(left: 38, bottom: 35),          
           child: FutureBuilder<List<Progreso>>(
               future: getProgreso(),
               builder: (context, snapshot) {
@@ -374,174 +381,189 @@ class _ProgresoPageState extends State<ProgresoPage> with TickerProviderStateMix
               }),
         ),
       ],
+    ),
+      ),
     );
+    
+    
   }
 
   ///
   /// Gráfica Grasa
   ///
-  Stack historialGrasa(_leyenda_y) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          alignment: Alignment.center,
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.75,
-            height: MediaQuery.of(context).size.width * 0.75,
-            margin: EdgeInsets.only(top: 140),
-            decoration: BoxDecoration(
-              color: hexToColor("#78c826"),
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-            ),
-            child: Stack(
-              children: <Widget>[
-                /// LABEL AXIS Y
-                RotatedBox(
-                  quarterTurns: -1,
-                  child: Container(
-                    alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: 10, left: 0),
-                    child: Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.all(Radius.circular(5))),
-                      width: 115,
-                      height: 20,
-                      margin: EdgeInsets.only(top: 0, left: 5),
-                      child: Text(_leyenda_y,
-                          style: TextStyle(
-                              color: hexToColor("#059696"),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13)),
-                    ),
-                  ),
+  Container historialGrasa(_leyenda_y) {
+    return Container(
+      alignment: Alignment.center,
+      width: MediaQuery.of(context).size.width * 0.75,
+      height: MediaQuery.of(context).size.width * 0.75,
+      margin: EdgeInsets.only(
+        left: MediaQuery.of(context).size.width * 0.125,
+        top: 180,
+      ),
+      child: Card(
+        elevation: 0,
+        color: Colors.transparent,
+        child: Stack(
+          children: <Widget>[
+            /// BACK GRÁFICA
+            Center(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.75,
+                height: MediaQuery.of(context).size.width * 0.75,                
+                decoration: BoxDecoration(
+                  color: hexToColor("#78c826"),
+                  borderRadius: BorderRadius.all(Radius.circular(15)),
                 ),
-
-                /// LABEL AXIS X
-                Container(
-                  alignment: Alignment.bottomCenter,
-                  margin: EdgeInsets.only(bottom: 10),
-                  child: Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    width: 115,
-                    height: 20,
-                    margin: EdgeInsets.only(top: 0, left: 5),
-                    child: Text("Fecha de cita",
-                        style: TextStyle(
-                            color: hexToColor("#059696"),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        /// Gráfica
-        Container(
-          alignment: Alignment.bottomCenter,
-          width: MediaQuery.of(context).size.width * 0.65,
-          height: MediaQuery.of(context).size.width * 0.65,
-          margin: EdgeInsets.only(
-              top: 150, left: MediaQuery.of(context).size.width * 0.23),
-          child: FutureBuilder<List<Progreso>>(
-              future: getProgreso(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      semanticsLabel: "Loading",
-                      backgroundColor: hexToColor("#cdcdcd"),
-                    ),
-                  );
-                } else if (snapshot.hasData) {
-                  if (snapshot.data != null) {
-                    var data = [
-                      new TimeSeriesDatos(
-                          new DateTime(
-                              int.tryParse(
-                                  snapshot.data[0].fecha.split('-')[2]),
-                              int.tryParse(
-                                  snapshot.data[0].fecha.split('-')[1]),
-                              int.tryParse(
-                                  snapshot.data[0].fecha.split('-')[0])),
-                          double.parse(snapshot.data[0].grasa)),
-                      new TimeSeriesDatos(
-                          new DateTime(
-                              int.tryParse(
-                                  snapshot.data[1].fecha.split('-')[2]),
-                              int.tryParse(
-                                  snapshot.data[1].fecha.split('-')[1]),
-                              int.tryParse(
-                                  snapshot.data[1].fecha.split('-')[0])),
-                          double.parse(snapshot.data[1].grasa)),
-                      new TimeSeriesDatos(
-                          new DateTime(
-                              int.tryParse(
-                                  snapshot.data[2].fecha.split('-')[2]),
-                              int.tryParse(
-                                  snapshot.data[2].fecha.split('-')[1]),
-                              int.tryParse(
-                                  snapshot.data[2].fecha.split('-')[0])),
-                          double.parse(snapshot.data[2].grasa)),
-                      new TimeSeriesDatos(
-                          new DateTime(
-                              int.tryParse(
-                                  snapshot.data[3].fecha.split('-')[2]),
-                              int.tryParse(
-                                  snapshot.data[3].fecha.split('-')[1]),
-                              int.tryParse(
-                                  snapshot.data[3].fecha.split('-')[0])),
-                          double.parse(snapshot.data[3].grasa)),
-                    ];
-                    List<charts.Series<TimeSeriesDatos, DateTime>> seriesList =
-                        new List<charts.Series<TimeSeriesDatos, DateTime>>();
-                    seriesList.add(
-                      new charts.Series<TimeSeriesDatos, DateTime>(
-                        id: "Grasa",
-                        colorFn: (_, __) =>
-                            charts.MaterialPalette.blue.shadeDefault,
-                        domainFn: (TimeSeriesDatos sales, _) => sales.time,
-                        measureFn: (TimeSeriesDatos sales, _) => sales.dato,
-                        data: data,
-                      ),
-                    );
-                    return charts.TimeSeriesChart(
-                      seriesList,
-                      animate: true,
-                      primaryMeasureAxis: charts.AxisSpec(
-                        showAxisLine: true,
-                      ),
-                      defaultRenderer: charts.LineRendererConfig(
-                        includePoints: true,
-                        radiusPx: 5,
-                      ),
-                      customSeriesRenderers: [
-                        new charts.PointRendererConfig(
-                          customRendererId: 'customPoint',
+                child: Stack(
+                  children: <Widget>[
+                    /// LABEL AXIS Y
+                    RotatedBox(
+                      quarterTurns: -1,
+                      child: Container(
+                        alignment: Alignment.topCenter,
+                        margin: EdgeInsets.only(top: 10, left: 0),
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(5))),
+                          width: 115,
+                          height: 20,
+                          margin: EdgeInsets.only(top: 0, left: 5),
+                          child: Text(_leyenda_y,
+                              style: TextStyle(
+                                  color: hexToColor("#059696"),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13)),
                         ),
-                      ],
-                      dateTimeFactory: const charts.LocalDateTimeFactory(),
-                    );
-                  } else {
-                    return new Center(
-                        child: Text("No hay datos.",
-                            style: TextStyle(color: hexToColor("#606060"))));
-                  }
-                } else if (snapshot.hasError) {
-                  return new Center(
-                      child: Text("Error al obtener datos.",
-                          style: TextStyle(color: hexToColor("#606060"))));
-                }
-              }),
+                      ),
+                    ),
+
+                    /// LABEL AXIS X
+                    Container(
+                      alignment: Alignment.bottomCenter,
+                      margin: EdgeInsets.only(bottom: 10),
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(5))),
+                        width: 115,
+                        height: 20,
+                        margin: EdgeInsets.only(top: 0, left: 5),
+                        child: Text("Fecha de cita",
+                            style: TextStyle(
+                                color: hexToColor("#059696"),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            /// CHART
+            Container(
+              margin: EdgeInsets.only(left: 38, bottom: 35),
+              child: FutureBuilder<List<Progreso>>(
+                  future: getProgreso(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          semanticsLabel: "Loading",
+                          backgroundColor: hexToColor("#cdcdcd"),
+                        ),
+                      );
+                    } else if (snapshot.hasData) {
+                      if (snapshot.data != null) {
+                        var data = [
+                          new TimeSeriesDatos(
+                              new DateTime(
+                                  int.tryParse(
+                                      snapshot.data[0].fecha.split('-')[2]),
+                                  int.tryParse(
+                                      snapshot.data[0].fecha.split('-')[1]),
+                                  int.tryParse(
+                                      snapshot.data[0].fecha.split('-')[0])),
+                              double.parse(snapshot.data[0].grasa)),
+                          new TimeSeriesDatos(
+                              new DateTime(
+                                  int.tryParse(
+                                      snapshot.data[1].fecha.split('-')[2]),
+                                  int.tryParse(
+                                      snapshot.data[1].fecha.split('-')[1]),
+                                  int.tryParse(
+                                      snapshot.data[1].fecha.split('-')[0])),
+                              double.parse(snapshot.data[1].grasa)),
+                          new TimeSeriesDatos(
+                              new DateTime(
+                                  int.tryParse(
+                                      snapshot.data[2].fecha.split('-')[2]),
+                                  int.tryParse(
+                                      snapshot.data[2].fecha.split('-')[1]),
+                                  int.tryParse(
+                                      snapshot.data[2].fecha.split('-')[0])),
+                              double.parse(snapshot.data[2].grasa)),
+                          new TimeSeriesDatos(
+                              new DateTime(
+                                  int.tryParse(
+                                      snapshot.data[3].fecha.split('-')[2]),
+                                  int.tryParse(
+                                      snapshot.data[3].fecha.split('-')[1]),
+                                  int.tryParse(
+                                      snapshot.data[3].fecha.split('-')[0])),
+                              double.parse(snapshot.data[3].grasa)),
+                        ];
+                        List<charts.Series<TimeSeriesDatos, DateTime>>
+                            seriesList = new List<
+                                charts.Series<TimeSeriesDatos, DateTime>>();
+                        seriesList.add(
+                          new charts.Series<TimeSeriesDatos, DateTime>(
+                            id: "Grasa",
+                            colorFn: (_, __) =>
+                                charts.MaterialPalette.blue.shadeDefault,
+                            domainFn: (TimeSeriesDatos sales, _) => sales.time,
+                            measureFn: (TimeSeriesDatos sales, _) => sales.dato,
+                            data: data,
+                          ),
+                        );
+                        return charts.TimeSeriesChart(
+                          seriesList,
+                          animate: true,
+                          primaryMeasureAxis: charts.AxisSpec(
+                            showAxisLine: true,
+                          ),
+                          defaultRenderer: charts.LineRendererConfig(
+                            includePoints: true,
+                            radiusPx: 5,
+                          ),
+                          customSeriesRenderers: [
+                            new charts.PointRendererConfig(
+                              customRendererId: 'customPoint',
+                            ),
+                          ],
+                          dateTimeFactory: const charts.LocalDateTimeFactory(),
+                        );
+                      } else {
+                        return new Center(
+                            child: Text("No hay datos.",
+                                style:
+                                    TextStyle(color: hexToColor("#606060"))));
+                      }
+                    } else if (snapshot.hasError) {
+                      return new Center(
+                          child: Text("Error al obtener datos.",
+                              style: TextStyle(color: hexToColor("#606060"))));
+                    }
+                  }),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
