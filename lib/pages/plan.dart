@@ -607,13 +607,15 @@ Future<T> show_Dialog<T>({
             /// BACK POPUP
             Container(
               width: 400,
-              height: 600,
+              height: MediaQuery.of(context).size.height - 50, //600,
               alignment: Alignment.center,
               margin: EdgeInsets.only(left: 30, right: 30, top: 50, bottom: 50),
               decoration: new BoxDecoration(
-                  color: hexToColor("#505050"),
-                  borderRadius:
-                      new BorderRadius.all(const Radius.circular(20.0))),
+                color: hexToColor("#505050"),
+                borderRadius: new BorderRadius.all(
+                  const Radius.circular(20.0),
+                ),
+              ),
             ),
 
             /// BOTÓN CERRAR
@@ -633,6 +635,7 @@ Future<T> show_Dialog<T>({
             ),
 
             Container(
+              margin: EdgeInsets.only(top: 70),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -641,14 +644,14 @@ Future<T> show_Dialog<T>({
                   Container(
                     height: 90,
                     alignment: Alignment.center,
-                    margin: EdgeInsets.only(top: 30),
+                    margin: EdgeInsets.only(top: 0),
                     child: Image.asset(imagen),
                   ),
 
                   /// TEXT TÍTULO GRUPO
                   Container(
                     alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: 10),
+                    margin: EdgeInsets.only(top: 20),
                     child: Text(
                       titulo,
                       style: TextStyle(
@@ -686,10 +689,9 @@ Future<T> show_Dialog<T>({
                     alignment: Alignment.center,
                     child: Container(
                       alignment: Alignment.center,
-                      width: 270,
-                      height: 300,
-                      margin: EdgeInsets.only(top: 10),
-                      padding: EdgeInsets.only(top: 0, bottom: 20),
+                      height: MediaQuery.of(context).size.height - 350,
+                      margin: EdgeInsets.only(
+                          left: 30, right: 30, top: 10, bottom: 50),
                       child: FutureBuilder<List<String>>(
                           future: getAlimentosColor(global.token, grupo),
                           builder: (context, snapshot) {
