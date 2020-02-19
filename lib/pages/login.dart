@@ -183,6 +183,7 @@ void check_login(_context, _controller, _doctorSelected) async {
     var responseJson = json.decode(utf8.decode(response.bodyBytes));
     print(responseJson);
     if (responseJson["status"] == 1) {
+      global.id_user = 1;
       global.nombre_user = responseJson["response"][0]["nombre"];
       global.apellidos_user = responseJson["response"][0]["apellidos"];
       global.token = responseJson["response"][0]["token"];

@@ -57,6 +57,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo: "GRUPO 1 LIBRE",
                     imagen: "assets/icons/Recurso_24.png",
                     comida: _comida,
+                    grupo: "4",
                   );
                 },
                 child: Container(
@@ -76,6 +77,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo: "GRUPO 2 CARBOHIDRATOS",
                     imagen: "assets/icons/Recurso_23.png",
                     comida: _comida,
+                    grupo: "1",
                   );
                 },
                 child: Container(
@@ -96,6 +98,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo: "GRUPO 3 PROTEÍNAS",
                     imagen: "assets/icons/Recurso_22.png",
                     comida: _comida,
+                    grupo: "2",
                   );
                 },
                 child: Container(
@@ -116,6 +119,7 @@ class _PlanPageState extends State<PlanPage> {
                     titulo: "GRUPO 4 GRASAS",
                     imagen: "assets/icons/Recurso_21.png",
                     comida: _comida,
+                    grupo: "3",
                   );
                 },
                 child: Container(
@@ -522,7 +526,10 @@ void dialog(_context, _imagen, _titulo, _comida) async {
         return AlertDialog(
           elevation: 0,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            borderRadius: BorderRadius.all(
+              Radius.circular(20.0),
+            ),
+          ),
           backgroundColor: hexToColor("#505050"),
           content: Container(
             padding: EdgeInsets.only(top: 0),
@@ -588,87 +595,165 @@ Future<T> show_Dialog<T>({
   @required String imagen,
   @required String titulo,
   @required String comida,
+  @required String grupo,
 }) {
   return showGeneralDialog(
     context: context,
     pageBuilder: (BuildContext buildContext, Animation<double> animation,
         Animation<double> secondaryAnimation) {
-      return Container(
-        child: Builder(builder: (BuildContext context) {
-          return Container(
-            alignment: Alignment.topCenter,
-            color: Colors.transparent,
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  alignment: Alignment.center,
-                  width: 400,
-                  height: 600,
-                  margin: EdgeInsets.only(
-                      left: 30, right: 30, top: 175, bottom: 10),
-                  decoration: new BoxDecoration(
-                      color: hexToColor("#505050"),
-                      borderRadius:
-                          new BorderRadius.all(const Radius.circular(20.0))),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(
-                        top: 190,
-                        left: MediaQuery.of(context).size.width * 0.78),
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 30,
+      return Builder(builder: (BuildContext context) {
+        return Stack(
+          children: <Widget>[
+            /// BACK POPUP
+            Container(
+              width: 400,
+              height: 600,
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(left: 30, right: 30, top: 50, bottom: 50),
+              decoration: new BoxDecoration(
+                  color: hexToColor("#505050"),
+                  borderRadius:
+                      new BorderRadius.all(const Radius.circular(20.0))),
+            ),
+
+            /// BOTÓN CERRAR
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(
+                          top: 70,
+                          left: MediaQuery.of(context).size.width * 0.8),
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 30,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  height: 90,
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.only(top: 195),
-                  child: Image.asset(imagen),
-                ),
-                Container(
-                  alignment: Alignment.topCenter,
-                  margin: EdgeInsets.only(top: 300),
-                  child: Text(
-                    titulo,
-                    style: TextStyle(
-                        decoration: TextDecoration.none,
-                        fontFamily: "Arial",
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
+
+            Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  
+
+                  /// IMAGEN GRUPO ALIMENTICIO
+                  Container(
+                    height: 90,
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(top: 30),
+                    child: Image.asset(imagen),
                   ),
-                ),
-                Container(
-                  alignment: Alignment.topCenter,
-                  margin: EdgeInsets.only(top: 340),
-                  child: SizedBox(
-                    width: 270,
-                    child: AutoSizeText(
-                      "Elige un elemento de este grupo para equilibrar tu $comida dentro del plan nutrimental",
-                      maxLines: 3,
-                      textAlign: TextAlign.center,
-                      wrapWords: false,
+
+                  /// TEXT TÍTULO GRUPO
+                  Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 10),
+                    child: Text(
+                      titulo,
                       style: TextStyle(
                           decoration: TextDecoration.none,
                           fontFamily: "Arial",
-                          fontSize: 14,
                           color: Colors.white,
-                          fontWeight: FontWeight.normal),
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
-                ),
-              ],
+
+                  /// TEXT INTRUCCIÓN
+                  Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 10),
+                    child: SizedBox(
+                      width: 270,
+                      child: AutoSizeText(
+                        "Elige un elemento de este grupo para equilibrar tu $comida dentro del plan nutrimental",
+                        maxLines: 3,
+                        textAlign: TextAlign.center,
+                        wrapWords: false,
+                        style: TextStyle(
+                            decoration: TextDecoration.none,
+                            fontFamily: "Arial",
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal),
+                      ),
+                    ),
+                  ),
+
+                  /// LIST ALIMENTOS
+                  Container(
+                    alignment: Alignment.center,
+                    child: Container(
+                      alignment: Alignment.center,
+                      width: 270,
+                      height: 300,
+                      margin: EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.only(top: 0, bottom: 30),
+                      child: FutureBuilder<List<String>>(
+                          future: getAlimentosColor(global.token, grupo),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  semanticsLabel: "Loading",
+                                  backgroundColor: hexToColor("#cdcdcd"),
+                                ),
+                              );
+                            } else if (snapshot.hasData) {
+                              if (snapshot.data.length > 0) {
+                                return Scrollbar(
+                                  child: ListView.builder(
+                                      shrinkWrap: true,
+                                      padding: EdgeInsets.all(0),
+                                      itemCount: snapshot.data.length,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          color: Colors.transparent,
+                                          child: Container(
+                                            height: 50,
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              snapshot.data[index],
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                decoration: TextDecoration.none,
+                                                fontFamily: "Arial",
+                                                fontSize: 15,
+                                                color: Colors.lightGreen,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                );
+                              } else {
+                                return new Text(
+                                    "No hay sugerencias de alimentos para este grupo.",
+                                    style: TextStyle(
+                                        color: hexToColor("#606060")));
+                              }
+                            } else if (snapshot.hasError) {
+                              return new Text(
+                                  "Error al obtener sugerencias de alimentos del grupo.",
+                                  style:
+                                      TextStyle(color: hexToColor("#606060")));
+                            }
+                          }),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          );
-        }),
-      );
+          ],
+        );
+      });
     },
     barrierDismissible: true,
     barrierLabel: "",
@@ -733,6 +818,31 @@ Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {
     }
   } catch (e) {
     print("Error getOpcionesDieta " + e.toString());
+  }
+}
+
+Future<List<String>> getAlimentosColor(_token, _color) async {
+// 1 - carbohidratos
+// 2 - proteínas
+// 3 - grasas
+// 4 - libre
+  try {
+    List<String> list = new List<String>();
+    var response = await http.post(global.server + "/aplicacion/api", body: {
+      "tipo": "get_alimentos_color",
+      "token": _token,
+      "color": _color
+    });
+    var datos = json.decode(utf8.decode(response.bodyBytes));
+    //print(datos);
+    if (datos["status"] == 1) {
+      for (int i = 0; i < datos["response"].length; i++) {
+        list.add(datos["response"][i]["nombre"]);
+      }
+    }
+    return list;
+  } catch (e) {
+    print("Error getAlimentosGrupo " + e.toString());
   }
 }
 
