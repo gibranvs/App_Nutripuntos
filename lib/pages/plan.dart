@@ -51,30 +51,10 @@ class _PlanPageState extends State<PlanPage> {
             children: <Widget>[
               GestureDetector(
                 onTap: () {
-                  //dialog(context, "assets/icons/Recurso_24.png", "GRUPO 1 VERDURAS", comida);
-                  show_Dialog(
-                    context: context,
-                    titulo: "GRUPO 1 LIBRE",
-                    imagen: "assets/icons/Recurso_24.png",
-                    comida: _comida,
-                    grupo: "4",
-                  );
-                },
-                child: Container(
-                  height: 70,
-                  child: Image.asset("assets/icons/Recurso_24.png"),
-                ),
-              ),
-            ],
-          ),
-          Column(
-            children: <Widget>[
-              GestureDetector(
-                onTap: () {
                   //dialog(context, "assets/icons/Recurso_23.png", "GRUPO 2 HARINAS", comida);
                   show_Dialog(
                     context: context,
-                    titulo: "GRUPO 2 CARBOHIDRATOS",
+                    titulo: "GRUPO 1 CARBOHIDRATOS",
                     imagen: "assets/icons/Recurso_23.png",
                     comida: _comida,
                     grupo: "1",
@@ -82,7 +62,6 @@ class _PlanPageState extends State<PlanPage> {
                 },
                 child: Container(
                   height: 70,
-                  margin: EdgeInsets.only(left: 20),
                   child: Image.asset("assets/icons/Recurso_23.png"),
                 ),
               ),
@@ -95,7 +74,7 @@ class _PlanPageState extends State<PlanPage> {
                   //dialog(context, "assets/icons/Recurso_22.png", "GRUPO 3 CARNES", comida);
                   show_Dialog(
                     context: context,
-                    titulo: "GRUPO 3 PROTEÍNAS",
+                    titulo: "GRUPO 2 PROTEÍNAS",
                     imagen: "assets/icons/Recurso_22.png",
                     comida: _comida,
                     grupo: "2",
@@ -116,7 +95,7 @@ class _PlanPageState extends State<PlanPage> {
                   //dialog(context, "assets/icons/Recurso_21.png", "GRUPO 4 LÍQUIDOS", comida);
                   show_Dialog(
                     context: context,
-                    titulo: "GRUPO 4 GRASAS",
+                    titulo: "GRUPO 3 GRASAS",
                     imagen: "assets/icons/Recurso_21.png",
                     comida: _comida,
                     grupo: "3",
@@ -126,6 +105,27 @@ class _PlanPageState extends State<PlanPage> {
                   height: 70,
                   margin: EdgeInsets.only(left: 20),
                   child: Image.asset("assets/icons/Recurso_21.png"),
+                ),
+              ),
+            ],
+          ),
+          Column(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  //dialog(context, "assets/icons/Recurso_24.png", "GRUPO 1 VERDURAS", comida);
+                  show_Dialog(
+                    context: context,
+                    titulo: "GRUPO 4 LIBRE",
+                    imagen: "assets/icons/Recurso_24.png",
+                    comida: _comida,
+                    grupo: "4",
+                  );
+                },
+                child: Container(
+                  height: 70,
+                  margin: EdgeInsets.only(left: 20),
+                  child: Image.asset("assets/icons/Recurso_24.png"),
                 ),
               ),
             ],
@@ -667,7 +667,7 @@ Future<T> show_Dialog<T>({
                     child: SizedBox(
                       width: 270,
                       child: AutoSizeText(
-                        "Elige un elemento de este grupo para equilibrar tu $comida dentro del plan nutrimental",
+                        "Elige un elemento de este grupo para equilibar tu $comida dentro del plan nutrimental",
                         maxLines: 3,
                         textAlign: TextAlign.center,
                         wrapWords: false,
@@ -704,6 +704,12 @@ Future<T> show_Dialog<T>({
                               );
                             } else if (snapshot.hasData) {
                               if (snapshot.data.length > 0) {
+                                List<Color> coloresElementos = [
+                                  hexToColor("#f6871f"),
+                                  hexToColor("#22abd6"),
+                                  hexToColor("#fcdc28"),
+                                  hexToColor("#8acb4b"),
+                                ];
                                 return Scrollbar(
                                   child: ListView.builder(
                                       shrinkWrap: true,
@@ -713,7 +719,7 @@ Future<T> show_Dialog<T>({
                                         return Container(
                                           color: Colors.transparent,
                                           child: Container(
-                                            height: 50,
+                                            height: 40,
                                             alignment: Alignment.center,
                                             child: Text(
                                               snapshot.data[index],
@@ -722,7 +728,9 @@ Future<T> show_Dialog<T>({
                                                 decoration: TextDecoration.none,
                                                 fontFamily: "Arial",
                                                 fontSize: 15,
-                                                color: Colors.lightGreen,
+                                                color: coloresElementos[
+                                                    int.parse(grupo) -
+                                                        1], //Colors.lightGreen,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
