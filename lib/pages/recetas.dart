@@ -56,9 +56,7 @@ class _RecetasPageState extends State<RecetasPage> {
                 decoration: InputDecoration(
                   labelText: "Filtrar recetas...",
                   suffixIcon: GestureDetector(
-                    onTap: () {
-                      print(
-                          "Send message: " + global.text_busqueda_receta.text);
+                    onTap: () {                      
                       FocusScope.of(context).requestFocus(new FocusNode());
                     },
                     child: Icon(
@@ -176,7 +174,8 @@ class _RecetasPageState extends State<RecetasPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: false,
       drawer: new newmenu.menu(4),
       appBar: AppBar(
         elevation: 0,
