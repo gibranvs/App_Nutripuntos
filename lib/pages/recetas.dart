@@ -47,10 +47,11 @@ class _RecetasPageState extends State<RecetasPage> {
               ),
               child: TextField(
                 controller: global.text_busqueda_receta,
-                onChanged: (_) {
-                  global.list_recetas = null;
-                  global.list_recetas =
-                      getReceta(global.text_busqueda_receta.text);
+                onChanged: (value) {
+                  setState(() {
+                    global.list_recetas = null;
+                    global.list_recetas = getReceta(value);
+                  });
                 },
                 decoration: InputDecoration(
                   labelText: "Filtrar recetas...",
@@ -84,8 +85,8 @@ class _RecetasPageState extends State<RecetasPage> {
       padding: EdgeInsets.only(top: 50),
       child: Scrollbar(
         child: FutureBuilder<List<Receta>>(
-            future: global
-                .list_recetas, //getReceta(global.text_busqueda_receta.text),
+            future: global.list_recetas,
+            //getReceta(global.text_busqueda_receta.text),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -173,7 +174,7 @@ class _RecetasPageState extends State<RecetasPage> {
   }
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     return new Scaffold(
       resizeToAvoidBottomInset: true,
       drawer: new newmenu.menu(4),
