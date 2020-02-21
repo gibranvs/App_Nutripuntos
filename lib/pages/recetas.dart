@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../src/hexToColor.dart';
 import 'package:nutripuntos_app/globals.dart' as global;
@@ -7,8 +8,6 @@ import 'newmenu.dart' as newmenu;
 import 'receta_detalle.dart' as detalle;
 import 'package:http/http.dart' as http;
 import 'dart:math';
-
-final myTextEdit = TextEditingController();
 
 class RecetasPage extends StatefulWidget {
   @override
@@ -20,12 +19,7 @@ class _RecetasPageState extends State<RecetasPage> {
   /// Text buscar
   ///
   Container buscar() {
-    return
-
-        ///
-        /// BUSQUEDA
-        ///
-        Container(
+    return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -52,15 +46,19 @@ class _RecetasPageState extends State<RecetasPage> {
                 color: Colors.white,
               ),
               child: TextField(
-                controller: myTextEdit,
+                controller: global.text_busqueda_receta,
                 onChanged: (_) {
-                  print(myTextEdit.text);
+                  global.list_recetas = null;
+                  global.list_recetas =
+                      getReceta(global.text_busqueda_receta.text);
                 },
                 decoration: InputDecoration(
                   labelText: "Filtrar recetas...",
                   suffixIcon: GestureDetector(
                     onTap: () {
-                      print("Send message: " + myTextEdit.text);
+                      print(
+                          "Send message: " + global.text_busqueda_receta.text);
+                      FocusScope.of(context).requestFocus(new FocusNode());
                     },
                     child: Icon(
                       Icons.search,
@@ -86,7 +84,8 @@ class _RecetasPageState extends State<RecetasPage> {
       padding: EdgeInsets.only(top: 50),
       child: Scrollbar(
         child: FutureBuilder<List<Receta>>(
-            future: getRecetas(),
+            future: global
+                .list_recetas, //getReceta(global.text_busqueda_receta.text),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -174,8 +173,9 @@ class _RecetasPageState extends State<RecetasPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     return new Scaffold(
+      resizeToAvoidBottomInset: true,
       drawer: new newmenu.menu(4),
       appBar: AppBar(
         elevation: 0,
@@ -216,13 +216,75 @@ class _RecetasPageState extends State<RecetasPage> {
   }
 }
 
+Future<List<Receta>> getReceta(_receta) async {
+  try {
+    var response = await http.post(global.server + "/aplicacion/api",
+        body: {"tipo": "busqueda_recetas", "texto": _receta});
+    var datos = json.decode(utf8.decode(response.bodyBytes));
+    //print(datos["response"]);
+
+    List<Receta> list = new List<Receta>();
+    if (datos["status"] == 1) {
+      var azul;
+      var verde;
+      var naranja;
+      var amarillo;
+
+      for (int i = 0; i < datos["response"].length; i++) {
+        if (datos["response"][i]["azul"] != null) {
+          if (datos["response"][i]["azul"].split('.')[1] == "0")
+            azul = datos["response"][i]["azul"].split('.')[0];
+          else
+            azul = datos["response"][i]["azul"];
+        } else
+          azul = "0";
+
+        if (datos["response"][i]["verde"] != null) {
+          if (datos["response"][i]["verde"].split('.')[1] == "0")
+            verde = datos["response"][i]["verde"].split('.')[0];
+          else
+            verde = datos["response"][i]["verde"];
+        } else
+          verde = "0";
+
+        if (datos["response"][i]["naranja"] != null) {
+          if (datos["response"][i]["naranja"].split('.')[1] == "0")
+            naranja = datos["response"][i]["naranja"].split('.')[0];
+          else
+            naranja = datos["response"][i]["naranja"];
+        } else
+          naranja = "0";
+
+        if (datos["response"][i]["amarillo"] != null) {
+          if (datos["response"][i]["amarillo"].split('.')[1] == "0")
+            amarillo = datos["response"][i]["amarillo"].split('.')[0];
+          else
+            amarillo = datos["response"][i]["amarillo"];
+        } else
+          amarillo = "0";
+
+        list.add(Receta(
+          id: int.parse(datos["response"][i]["id"]),
+          nombre: datos["response"][i]["nombre"],
+          azul: azul,
+          verde: verde,
+          naranja: naranja,
+          amarillo: amarillo,
+        ));
+      }
+      return list;
+    }
+  } catch (e) {
+    print("Error getReceta: " + e.toString());
+  }
+}
+
 Future<List<Receta>> getRecetas() async {
   try {
     var response = await http
         .post(global.server + "/aplicacion/api", body: {"tipo": "get_recetas"});
     var datos = json.decode(utf8.decode(response.bodyBytes));
     //print(datos["response"].length);
-
     List<Receta> list = new List<Receta>();
     if (datos["status"] == 1) {
       var azul;

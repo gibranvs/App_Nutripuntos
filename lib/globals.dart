@@ -12,6 +12,7 @@ import 'pages/receta_detalle.dart';
 import 'pages/restaurante_detalle.dart';
 import 'pages/agenda.dart';
 import 'pages/nutriochat.dart';
+import 'pages/recetas.dart';
 import 'src/DBManager.dart' as db;
 
 String server = "http://c1370875.ferozo.com";
@@ -27,6 +28,16 @@ String num_citas = "0";
 String dispositivo_utilizado = "";
 
 ///
+/// LOGIN
+///
+TextEditingController text_email = TextEditingController();
+
+///
+/// NUTRIÓLOGOS
+///
+TextEditingController text_busqueda_doctor  = new TextEditingController();
+
+///
 /// MENU
 ///
 int selected_index = 0;
@@ -40,16 +51,18 @@ DecorationImage image_foto = null;
 /// RECETAS
 ///
 dynamic detalle_receta;
+TextEditingController text_busqueda_receta = TextEditingController();
 ColorCirclesWidget widget = new ColorCirclesWidget(detalle_receta.azul,
     detalle_receta.verde, detalle_receta.naranja, detalle_receta.amarillo);
 List<Ingrediente> list_ingredientes;
+Future<List<Receta>> list_recetas = getReceta("");
+List<Platillo> list_platillos_restaurante;
 
 ///
-/// RESTAURANTES
+/// RESTAURANTE
 ///
 var foto_restaurante;
 String nombre_restaurante;
-List<Platillo> list_platillos_restaurante;
 
 ///
 /// AGENDA
@@ -60,3 +73,4 @@ List<Citas> list_citas;
 /// MENSAJES
 ///
 List<Mensaje> list_mensajes;
+TextEditingController text_mensaje = TextEditingController();

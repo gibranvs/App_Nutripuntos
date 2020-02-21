@@ -6,7 +6,6 @@ import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart' as urlLauncher;
 
 String _img;
-final myTextEdit = TextEditingController();
 final myListView = ScrollController();
 
 class NutriologosPage extends StatefulWidget {
@@ -26,9 +25,9 @@ class _NutriologosPageState extends State<NutriologosPage> {
       ),
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
       child: TextField(
-        controller: myTextEdit,
+        controller: global.text_busqueda_doctor,
         onChanged: (_) {
-          fetchDoctores(myTextEdit);
+          fetchDoctores(global.text_busqueda_doctor.text);
         },
         decoration: InputDecoration(
           labelText: "Buscar",
@@ -62,7 +61,7 @@ class _NutriologosPageState extends State<NutriologosPage> {
   Flexible listDoctores() {
     return Flexible(
       child: FutureBuilder<List<Doctor>>(
-        future: fetchDoctores(myTextEdit),
+        future: fetchDoctores(global.text_busqueda_doctor.text),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return new ListView.builder(
@@ -175,22 +174,21 @@ void call_press(_telefono) {
   urlLauncher.launch("tel://" + _telefono);
 }
 
-Future<List<Doctor>> fetchDoctores(controller) async {
-  print(controller.text);
+Future<List<Doctor>> fetchDoctores(_doctor) async {
+  print(_doctor);
   List<Doctor> doctoresList;
-  if (controller.text == "") {
+  if (_doctor == "") {
     final response = await http.post(global.server + '/aplicacion/api/',
         body: {"tipo": "get_doctores"});
     List responseJson = json.decode(utf8.decode(response.bodyBytes));
     doctoresList = createDoctoresList(responseJson);
   } else {
     final response = await http.post(global.server + '/aplicacion/api',
-        body: {"tipo": "busqueda", "texto": controller.text.toString()});
+        body: {"tipo": "busqueda", "texto": _doctor});
     List responseJson = json.decode(utf8.decode(response.bodyBytes));
     //print(responseJson);
     doctoresList = createDoctoresList(responseJson);
   }
-
   return doctoresList;
 }
 

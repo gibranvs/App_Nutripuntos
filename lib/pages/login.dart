@@ -8,7 +8,6 @@ import 'nutriologos.dart';
 import '../src/MessageAlert.dart' as alert;
 import '../src/DBManager.dart' as db;
 
-var myControllerUser = TextEditingController();
 var listDoctores = [];
 
 class LoginPage extends StatefulWidget {
@@ -57,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
                       borderRadius: new BorderRadius.circular(12.0),
                     ),
                     child: TextField(
-                      controller: myControllerUser,
+                      controller: global.text_email,
                       style: TextStyle(
                         color: Colors.white,
                       ),
@@ -143,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0)),
                       onPressed: () {
-                        check_login(context, myControllerUser, doctorSelect);
+                        check_login(context, global.text_email.text, doctorSelect);
                       },
                     ),
                   ),
@@ -173,11 +172,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-void check_login(_context, _controller, _doctorSelected) async {
-  if (_controller.text != "") {
+void check_login(_context, _email, _doctorSelected) async {
+  if (_email != "") {
     final response = await http.post(global.server + '/aplicacion/api', body: {
       "tipo": "login",
-      "usr": _controller.text,
+      "usr": _email,
       "doc": _doctorSelected.id
     });
     var responseJson = json.decode(utf8.decode(response.bodyBytes));
@@ -194,7 +193,7 @@ void check_login(_context, _controller, _doctorSelected) async {
           responseJson["response"][0]["apellidos"].toString(),
           responseJson["response"][0]["token"].toString(),
           "");
-      _controller.text = "";
+      global.text_email.text = "";
       global.selected_index = 0;
       Navigator.push(
         _context,

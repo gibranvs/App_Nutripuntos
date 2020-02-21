@@ -10,7 +10,6 @@ import 'newmenu.dart' as newmenu;
 import '../src/bubble.dart';
 import '../src/MessageAlert.dart' as alert;
 
-final myTextEdit = TextEditingController();
 final myListView = ScrollController();
 Color colorIcon = hexToColor("#9a9a9a");
 
@@ -168,10 +167,10 @@ class _NutriochatPageState extends State<NutriochatPage> {
             height: 50,
             color: Colors.white,
             child: TextField(
-              controller: myTextEdit,
+              controller: global.text_mensaje,
               onChanged: (_) {
                 setState(() {
-                  if (myTextEdit.text.length > 0)
+                  if (global.text_mensaje.text.length > 0)
                     colorIcon = hexToColor("#059696");
                   else
                     colorIcon = hexToColor("#9a9a9a");
@@ -181,9 +180,9 @@ class _NutriochatPageState extends State<NutriochatPage> {
                 labelText: "Escribe aquí tus dudas",
                 suffixIcon: GestureDetector(
                   onTap: () {
-                    if (myTextEdit.text.length > 0) {
-                      print("Send message: " + myTextEdit.text);
-                      guardarMensajes(context, global.token, myTextEdit.text);
+                    if (global.text_mensaje.text.length > 0) {
+                      print("Send message: " + global.text_mensaje.text);
+                      guardarMensajes(context, global.token, global.text_mensaje.text);
                     }
                   },
                   child: Icon(
@@ -331,7 +330,7 @@ void guardarMensajes(
     global.list_mensajes.add(
         Mensaje(origen: "usuario", mensaje: _mensaje, fecha: DateTime.now()));
     FocusScope.of(_context).requestFocus(new FocusNode());
-    myTextEdit.text = "";
+    global.text_mensaje.text = "";
     myListView.animateTo(global.list_mensajes.length.toDouble() * 10000000,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
   } catch (e) {
