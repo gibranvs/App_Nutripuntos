@@ -55,7 +55,7 @@ TextEditingController text_busqueda_receta = TextEditingController();
 ColorCirclesWidget widget = new ColorCirclesWidget(detalle_receta.azul,
     detalle_receta.verde, detalle_receta.naranja, detalle_receta.amarillo);
 List<Ingrediente> list_ingredientes;
-Future<List<Receta>> list_recetas = getRecetas();
+Future<List<Receta>> list_recetas;
 List<Platillo> list_platillos_restaurante;
 
 ///

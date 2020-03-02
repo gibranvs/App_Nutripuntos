@@ -186,7 +186,7 @@ class ItemMenu extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => AgendaPage()));
               break;
             case 4:
-            global.list_recetas = getRecetas();
+            global.list_recetas = getReceta("");
             global.text_busqueda_receta.text = "";
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => RecetasPage()));

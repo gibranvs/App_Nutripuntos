@@ -6,7 +6,7 @@ import 'package:nutripuntos_app/src/HexToColor.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-//import 'package:flutter_charts/flutter_charts.dart' as chart;
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'newmenu.dart' as newmenu;
 import '../src/DBManager.dart' as db;
 import 'package:http/http.dart' as http;
@@ -288,7 +288,7 @@ class _ProgresoPageState extends State<ProgresoPage>
 
             /// CHART
             Container(
-              margin: EdgeInsets.only(left: 38, bottom: 35),
+              margin: EdgeInsets.only(left: 30, bottom: 30),
               child: FutureBuilder<List<Progreso>>(
                   future: getProgreso(),
                   builder: (context, snapshot) {
@@ -302,6 +302,104 @@ class _ProgresoPageState extends State<ProgresoPage>
                       );
                     } else if (snapshot.hasData) {
                       if (snapshot.data != null) {
+                        var data = [
+                          new TimeSeriesDatos(
+                            new DateTime(
+                              int.tryParse(
+                                  snapshot.data[0].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[0].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[0].fecha.split('-')[0]),
+                            ),
+                            double.parse(snapshot.data[0].peso),
+                          ),
+                          new TimeSeriesDatos(
+                            new DateTime(
+                              int.tryParse(
+                                  snapshot.data[1].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[1].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[1].fecha.split('-')[0]),
+                            ),
+                            double.parse(snapshot.data[1].peso),
+                          ),
+                          new TimeSeriesDatos(
+                            new DateTime(
+                              int.tryParse(
+                                  snapshot.data[2].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[2].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[2].fecha.split('-')[0]),
+                            ),
+                            double.parse(snapshot.data[2].peso),
+                          ),
+                          new TimeSeriesDatos(
+                            new DateTime(
+                              int.tryParse(
+                                  snapshot.data[3].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[3].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[3].fecha.split('-')[0]),
+                            ),
+                            double.parse(snapshot.data[3].peso),
+                          ),
+                        ];
+
+                        return SfCartesianChart(
+                          plotAreaBorderWidth: 1,
+                          tooltipBehavior: TooltipBehavior(
+                            enable: true,
+                            format: 'point.y kg',
+                            header: "Peso",
+                          ),
+                          primaryXAxis: CategoryAxis(
+                            labelRotation: 30,
+                            labelPosition: LabelPosition.outside,
+                            tickPosition: TickPosition.outside,
+                            edgeLabelPlacement: EdgeLabelPlacement.none,
+                            axisLine: AxisLine(
+                              color: Colors.black,
+                            ),
+                            minorTickLines: MinorTickLines(
+                              size: 6,
+                              width: 2,
+                              color: hexToColor("#059696"),
+                            ),
+                            majorTickLines: MajorTickLines(
+                              size: 6,
+                              width: 2,
+                              color: hexToColor("#b0b0b0"),
+                            ),
+                          ),
+                          primaryYAxis: NumericAxis(
+                            interval: 1,
+                            rangePadding: ChartRangePadding.auto,
+                            tickPosition: TickPosition.outside,
+                            axisLine: AxisLine(
+                              color: Colors.black,
+                            ),
+                          ),
+                          series: <ChartSeries>[
+                            LineSeries<TimeSeriesDatos, String>(
+                              dataSource: data,
+                              pointColorMapper: (TimeSeriesDatos, _) =>
+                                  hexToColor("#059696"),
+                              xValueMapper: (TimeSeriesDatos datos, _) =>
+                                  DateFormat("dd-MMM-yy").format(datos.time),
+                              yValueMapper: (TimeSeriesDatos datos, _) =>
+                                  datos.dato,
+                              markerSettings: MarkerSettings(
+                                isVisible: true,
+                              ),
+                            )
+                          ],
+                        );
+
+/*
                         var data = [
                           new TimeSeriesDatos(
                               new DateTime(
@@ -356,6 +454,17 @@ class _ProgresoPageState extends State<ProgresoPage>
                         return charts.TimeSeriesChart(
                           seriesList,
                           animate: true,
+                          domainAxis: new charts.DateTimeAxisSpec(
+                            tickFormatterSpec:
+                                new charts.AutoDateTimeTickFormatterSpec(
+                              day: new charts.TimeFormatterSpec(
+                                format: 'd',
+                                transitionFormat: 'dd/MMM/yyyy',
+                              ),
+                            ),
+                            showAxisLine: true,
+                          ),
+
                           primaryMeasureAxis: charts.AxisSpec(
                             showAxisLine: true,
                           ),
@@ -368,8 +477,9 @@ class _ProgresoPageState extends State<ProgresoPage>
                               customRendererId: 'customPoint',
                             ),
                           ],
-                          dateTimeFactory: const charts.LocalDateTimeFactory(),
+                          //dateTimeFactory: const charts.LocalDateTimeFactory(),
                         );
+                        */
                       } else {
                         return new Center(
                             child: Text("No hay datos.",
@@ -467,7 +577,7 @@ class _ProgresoPageState extends State<ProgresoPage>
 
             /// CHART
             Container(
-              margin: EdgeInsets.only(left: 38, bottom: 35),
+              margin: EdgeInsets.only(left: 30, bottom: 30),
               child: FutureBuilder<List<Progreso>>(
                   future: getProgreso(),
                   builder: (context, snapshot) {
@@ -481,6 +591,104 @@ class _ProgresoPageState extends State<ProgresoPage>
                       );
                     } else if (snapshot.hasData) {
                       if (snapshot.data != null) {
+                        var data = [
+                          new TimeSeriesDatos(
+                            new DateTime(
+                              int.tryParse(
+                                  snapshot.data[0].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[0].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[0].fecha.split('-')[0]),
+                            ),
+                            double.parse(snapshot.data[0].grasa),
+                          ),
+                          new TimeSeriesDatos(
+                            new DateTime(
+                              int.tryParse(
+                                  snapshot.data[1].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[1].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[1].fecha.split('-')[0]),
+                            ),
+                            double.parse(snapshot.data[1].grasa),
+                          ),
+                          new TimeSeriesDatos(
+                            new DateTime(
+                              int.tryParse(
+                                  snapshot.data[2].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[2].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[2].fecha.split('-')[0]),
+                            ),
+                            double.parse(snapshot.data[2].grasa),
+                          ),
+                          new TimeSeriesDatos(
+                            new DateTime(
+                              int.tryParse(
+                                  snapshot.data[3].fecha.split('-')[2]),
+                              int.tryParse(
+                                  snapshot.data[3].fecha.split('-')[1]),
+                              int.tryParse(
+                                  snapshot.data[3].fecha.split('-')[0]),
+                            ),
+                            double.parse(snapshot.data[3].grasa),
+                          ),
+                        ];
+
+                        return SfCartesianChart(
+                          plotAreaBorderWidth: 1,
+                          tooltipBehavior: TooltipBehavior(
+                            enable: true,
+                            format: 'point.y kg',
+                            header: "Grasa",
+                          ),
+                          primaryXAxis: CategoryAxis(
+                            labelRotation: 30,
+                            labelPosition: LabelPosition.outside,
+                            tickPosition: TickPosition.outside,
+                            edgeLabelPlacement: EdgeLabelPlacement.none,
+                            axisLine: AxisLine(
+                              color: Colors.black,
+                            ),
+                            minorTickLines: MinorTickLines(
+                              size: 6,
+                              width: 2,
+                              color: hexToColor("#059696"),
+                            ),
+                            majorTickLines: MajorTickLines(
+                              size: 6,
+                              width: 2,
+                              color: hexToColor("#b0b0b0"),
+                            ),
+                          ),
+                          primaryYAxis: NumericAxis(
+                            interval: 1,
+                            rangePadding: ChartRangePadding.auto,
+                            tickPosition: TickPosition.outside,
+                            axisLine: AxisLine(
+                              color: Colors.black,
+                            ),
+                          ),
+                          series: <ChartSeries>[
+                            LineSeries<TimeSeriesDatos, String>(
+                              dataSource: data,
+                              pointColorMapper: (TimeSeriesDatos, _) =>
+                                  hexToColor("#059696"),
+                              xValueMapper: (TimeSeriesDatos datos, _) =>
+                                  DateFormat("dd-MMM-yy").format(datos.time),
+                              yValueMapper: (TimeSeriesDatos datos, _) =>
+                                  datos.dato,
+                              markerSettings: MarkerSettings(
+                                isVisible: true,
+                              ),
+                            )
+                          ],
+                        );
+
+/*
                         var data = [
                           new TimeSeriesDatos(
                               new DateTime(
@@ -549,6 +757,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                           ],
                           dateTimeFactory: const charts.LocalDateTimeFactory(),
                         );
+                        */
                       } else {
                         return new Center(
                             child: Text("No hay datos.",

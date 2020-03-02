@@ -13,19 +13,17 @@ import 'package:http/http.dart' as http;
 
 List<DateTime> _markedDates = new List<DateTime>();
 
-class AgendaPage extends StatefulWidget
-{
-  @override 
-_AgendaPageState createState() => new _AgendaPageState();
+class AgendaPage extends StatefulWidget {
+  @override
+  _AgendaPageState createState() => new _AgendaPageState();
 }
 
 class _AgendaPageState extends State<AgendaPage> {
-///
-/// Calendario
-///
-calendar.CalendarCarousel calendarCarousel()
-{
-  return calendar.CalendarCarousel(
+  ///
+  /// Calendario
+  ///
+  calendar.CalendarCarousel calendarCarousel() {
+    return calendar.CalendarCarousel(
       leftButtonIcon:
           Icon(Icons.arrow_back, color: hexToColor("#059696"), size: 20),
       rightButtonIcon:
@@ -65,16 +63,16 @@ calendar.CalendarCarousel calendarCarousel()
       nextDaysTextStyle: TextStyle(fontSize: 14, color: Colors.transparent),
       prevDaysTextStyle: TextStyle(fontSize: 14, color: Colors.transparent),
     );
-}
-///
-/// Card Próxima
-///
-Container cardProximaCita()
-{
-  return Container(
+  }
+
+  ///
+  /// Card Próxima
+  ///
+  Container cardProximaCita() {
+    return Container(
       height: 120,
       alignment: Alignment.topCenter,
-      margin: const EdgeInsets.only(top: 290),
+      margin: const EdgeInsets.only(top: 10),
       padding: EdgeInsets.all(10),
       child: FutureBuilder<List<Citas>>(
         future: getCitasProximas(global.token),
@@ -169,13 +167,13 @@ Container cardProximaCita()
         },
       ),
     );
-}
-///
-/// Expandible citas anteriores
-///
-ExpandableNotifier citasAnteriores()
-{
-  return ExpandableNotifier(
+  }
+
+  ///
+  /// Expandible citas anteriores
+  ///
+  ExpandableNotifier citasAnteriores() {
+    return ExpandableNotifier(
       child: ScrollOnExpand(
         scrollOnExpand: false,
         scrollOnCollapse: true,
@@ -244,7 +242,7 @@ ExpandableNotifier citasAnteriores()
                                   itemCount: snapshot.data.length,
                                   itemBuilder: (context, index) {
                                     return Card(
-                                      color: hexToColor("#f2f2f2"), 
+                                      color: hexToColor("#f2f2f2"),
                                       elevation: 0,
                                       child: Row(
                                         children: <Widget>[
@@ -317,7 +315,7 @@ ExpandableNotifier citasAnteriores()
                             }
                           } else if (snapshot.hasError) {
                             return Card(
-                              color: hexToColor("#f2f2f2"), 
+                              color: hexToColor("#f2f2f2"),
                               elevation: 0,
                               child: Row(
                                 children: <Widget>[
@@ -357,11 +355,10 @@ ExpandableNotifier citasAnteriores()
         ),
       ),
     );
-}
+  }
 
-ExpandableNotifier citasProximas()
-{
-  return ExpandableNotifier(
+  ExpandableNotifier citasProximas() {
+    return ExpandableNotifier(
       child: ScrollOnExpand(
         scrollOnExpand: false,
         scrollOnCollapse: true,
@@ -430,7 +427,7 @@ ExpandableNotifier citasProximas()
                                   itemCount: snapshot.data.length,
                                   itemBuilder: (context, index) {
                                     return Card(
-                                      color: hexToColor("#f2f2f2"),                
+                                      color: hexToColor("#f2f2f2"),
                                       elevation: 0,
                                       child: Row(
                                         children: <Widget>[
@@ -523,7 +520,7 @@ ExpandableNotifier citasProximas()
                             }
                           } else if (snapshot.hasError) {
                             return Card(
-                              color: hexToColor("#f2f2f2"), 
+                              color: hexToColor("#f2f2f2"),
                               elevation: 0,
                               child: Row(
                                 children: <Widget>[
@@ -563,12 +560,12 @@ ExpandableNotifier citasProximas()
         ),
       ),
     );
-}
+  }
 
   @override
   Widget build(BuildContext context) {
     //getAllCitas(global.token);
-    global.list_citas = null;    
+    global.list_citas = null;
     return Scaffold(
       drawer: new newmenu.menu(3),
       appBar: AppBar(
@@ -631,17 +628,21 @@ ExpandableNotifier citasProximas()
                         ),
                       ),
                     ),
-                    Container(
-                      height: 65,
-                      color: hexToColor("#efefef"),
-                    ),
-                    Container(
-                      height: 210,
-                      color: hexToColor("#ffffff"),
-                      margin: EdgeInsets.only(top: 65),
+                    Column(
+                      children: <Widget>[
+                        Container(
+                          height: 70,
+                          color: hexToColor("#efefef"),
+                        ),
+                        Container(
+                          height: 220,
+                          color: hexToColor("#ffffff"),
+                        ),
+                        cardProximaCita(),
+                      ],
                     ),
                     calendarCarousel(),
-                    cardProximaCita(),
+                    
                   ],
                 ),
 

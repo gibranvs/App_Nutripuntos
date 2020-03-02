@@ -331,6 +331,7 @@ void guardarMensajes(
         Mensaje(origen: "usuario", mensaje: _mensaje, fecha: DateTime.now()));
     FocusScope.of(_context).requestFocus(new FocusNode());
     global.text_mensaje.text = "";
+    colorIcon = hexToColor("#9a9a9a");
     myListView.animateTo(global.list_mensajes.length.toDouble() * 10000000,
         duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
   } catch (e) {
