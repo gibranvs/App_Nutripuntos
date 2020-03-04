@@ -301,7 +301,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                         ),
                       );
                     } else if (snapshot.hasData) {
-                      if (snapshot.data != null) {
+                      if (snapshot.data != null) {                        
                         var data = [
                           new TimeSeriesDatos(
                             new DateTime(
