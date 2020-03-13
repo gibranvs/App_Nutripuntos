@@ -257,6 +257,7 @@ Container botones()
                     GestureDetector(
                       onTap: () {
                         global.selected_index = 4;
+                        global.list_recetas = getReceta("");
                         Navigator.push(
                             context,
                             MaterialPageRoute(

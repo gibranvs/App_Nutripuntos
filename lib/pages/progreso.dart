@@ -1033,6 +1033,7 @@ class _ProgresoPageState extends State<ProgresoPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       drawer: new newmenu.menu(2),
       appBar: AppBar(
         elevation: 0,
@@ -1137,6 +1138,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                 /// TAB METAS
                 Stack(
                   children: <Widget>[
+                    Positioned(child: 
                     Container(
                       decoration: new BoxDecoration(
                         color: const Color(0x00FFCC00),
@@ -1148,6 +1150,8 @@ class _ProgresoPageState extends State<ProgresoPage>
                         ),
                       ),
                     ),
+                    ),
+                    
                     titulo("Próxima meta"),
                     retoActual(context),
                     subtitulo("Retos anteriores"),
