@@ -213,44 +213,69 @@ class _ProgresoPageState extends State<ProgresoPage>
   ///
   /// Gráfica Peso
   ///
-  Column historialPeso(_leyenda_y) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Container(
-          alignment: Alignment.center,
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.width * 1.3,
-          child: Container(
+  Container historialPeso(_leyenda_y) {
+    return Container(
+      margin: EdgeInsets.only(top: 40),
+      width: MediaQuery.of(context).size.width,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
             alignment: Alignment.center,
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.width * 0.9,
-            margin: EdgeInsets.only(
-              top: 100,
-            ),
-            child: Card(
-              color: Colors.transparent,
-              elevation: 0,
-              child: Stack(
-                children: <Widget>[
-                  /// BACK GRÁFICA
-                  Center(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: MediaQuery.of(context).size.width * 0.9,
-                      decoration: BoxDecoration(
-                        color: hexToColor("#78c826"),
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                      ),
-                      child: Stack(
-                        children: <Widget>[
-                          /// LABEL AXIS Y
-                          RotatedBox(
-                            quarterTurns: -1,
-                            child: Container(
-                              alignment: Alignment.topCenter,
-                              margin: EdgeInsets.only(top: 10, left: 0),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.width * 1.3,
+            child: Container(
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.width * 0.9,
+              margin: EdgeInsets.only(
+                top: 100,
+              ),
+              child: Card(
+                color: Colors.transparent,
+                elevation: 0,
+                child: Stack(
+                  children: <Widget>[
+                    /// BACK GRÁFICA
+                    Center(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        height: MediaQuery.of(context).size.width * 0.9,
+                        decoration: BoxDecoration(
+                          color: hexToColor("#78c826"),
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                        ),
+                        child: Stack(
+                          children: <Widget>[
+                            /// LABEL AXIS Y
+                            RotatedBox(
+                              quarterTurns: -1,
+                              child: Container(
+                                alignment: Alignment.topCenter,
+                                margin: EdgeInsets.only(top: 10, left: 0),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5))),
+                                  width: 115,
+                                  height: 20,
+                                  margin: EdgeInsets.only(top: 0, left: 5),
+                                  child: Text(_leyenda_y,
+                                      style: TextStyle(
+                                          color: hexToColor("#059696"),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13)),
+                                ),
+                              ),
+                            ),
+
+                            /// LABEL AXIS X
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              margin: EdgeInsets.only(bottom: 10),
                               child: Container(
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
@@ -260,223 +285,229 @@ class _ProgresoPageState extends State<ProgresoPage>
                                 width: 115,
                                 height: 20,
                                 margin: EdgeInsets.only(top: 0, left: 5),
-                                child: Text(_leyenda_y,
+                                child: Text("Fecha de cita",
                                     style: TextStyle(
                                         color: hexToColor("#059696"),
                                         fontWeight: FontWeight.bold,
                                         fontSize: 13)),
                               ),
                             ),
-                          ),
-
-                          /// LABEL AXIS X
-                          Container(
-                            alignment: Alignment.bottomCenter,
-                            margin: EdgeInsets.only(bottom: 10),
-                            child: Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
-                              width: 115,
-                              height: 20,
-                              margin: EdgeInsets.only(top: 0, left: 5),
-                              child: Text("Fecha de cita",
-                                  style: TextStyle(
-                                      color: hexToColor("#059696"),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13)),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
 
-                  /// CHART
-                  Container(
-                    margin: EdgeInsets.only(left: 30, bottom: 30),
-                    child: FutureBuilder<List<Progreso>>(
-                        future: getProgreso(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                semanticsLabel: "Loading",
-                                backgroundColor: hexToColor("#cdcdcd"),
-                              ),
-                            );
-                          } else if (snapshot.hasData) {
-                            if (snapshot.data != null) {                              
-                              var data = [
-                                new TimeSeriesDatos(
-                                  new DateTime(
-                                    int.tryParse(
-                                        snapshot.data[0].fecha.split('-')[2]),
-                                    int.tryParse(
-                                        snapshot.data[0].fecha.split('-')[1]),
-                                    int.tryParse(
-                                        snapshot.data[0].fecha.split('-')[0]),
-                                  ),
-                                  double.parse(snapshot.data[0].peso),
+                    /// CHART
+                    Container(
+                      margin: EdgeInsets.only(left: 30, bottom: 30),
+                      child: FutureBuilder<List<Progreso>>(
+                          future: getProgreso(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  semanticsLabel: "Loading",
+                                  backgroundColor: hexToColor("#cdcdcd"),
                                 ),
-                                new TimeSeriesDatos(
-                                  new DateTime(
-                                    int.tryParse(
-                                        snapshot.data[1].fecha.split('-')[2]),
-                                    int.tryParse(
-                                        snapshot.data[1].fecha.split('-')[1]),
-                                    int.tryParse(
-                                        snapshot.data[1].fecha.split('-')[0]),
-                                  ),
-                                  double.parse(snapshot.data[1].peso),
-                                ),
-                                new TimeSeriesDatos(
-                                  new DateTime(
-                                    int.tryParse(
-                                        snapshot.data[2].fecha.split('-')[2]),
-                                    int.tryParse(
-                                        snapshot.data[2].fecha.split('-')[1]),
-                                    int.tryParse(
-                                        snapshot.data[2].fecha.split('-')[0]),
-                                  ),
-                                  double.parse(snapshot.data[2].peso),
-                                ),
-                                new TimeSeriesDatos(
-                                  new DateTime(
-                                    int.tryParse(
-                                        snapshot.data[3].fecha.split('-')[2]),
-                                    int.tryParse(
-                                        snapshot.data[3].fecha.split('-')[1]),
-                                    int.tryParse(
-                                        snapshot.data[3].fecha.split('-')[0]),
-                                  ),
-                                  double.parse(snapshot.data[3].peso),
-                                ),
-                              ];
-
-                              return SfCartesianChart(
-                                plotAreaBorderWidth: 1,                                
-                                tooltipBehavior: TooltipBehavior(
-                                  enable: true,
-                                  elevation: 3,
-                                  textAlignment: ChartAlignment.center,
-                                  format: 'point.y kg',
-                                  header: "Peso",
-                                ),
-                                primaryXAxis: CategoryAxis(
-                                  labelRotation: 90,
-                                  labelPosition: LabelPosition.outside,
-                                  tickPosition: TickPosition.outside,
-                                  edgeLabelPlacement: EdgeLabelPlacement.none,
-                                  axisLine: AxisLine(
-                                    color: Colors.black,
-                                  ),
-                                  minorTickLines: MinorTickLines(
-                                    size: 6,
-                                    width: 2,
-                                    color: hexToColor("#059696"),
-                                  ),
-                                  majorTickLines: MajorTickLines(
-                                    size: 6,
-                                    width: 2,
-                                    color: hexToColor("#b0b0b0"),
-                                  ),
-                                ),
-                                primaryYAxis: NumericAxis(
-                                  interval: 1,
-                                  rangePadding: ChartRangePadding.auto,
-                                  tickPosition: TickPosition.outside,
-                                  axisLine: AxisLine(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                series: <ChartSeries>[
-                                  LineSeries<TimeSeriesDatos, String>(
-                                    dataSource: data,
-                                    width: 4,
-                                    pointColorMapper: (TimeSeriesDatos, _) =>
-                                        hexToColor("#059696"),
-                                    xValueMapper: (TimeSeriesDatos datos, _) =>
-                                        DateFormat("dd/MM/yyyy")
-                                            .format(datos.time),
-                                    yValueMapper: (TimeSeriesDatos datos, _) =>
-                                        datos.dato,
-                                    markerSettings: MarkerSettings(
-                                      isVisible: true,
-                                      width: 12,
-                                      height: 12,
-                                    ),
-                                  )
-                                ],
                               );
-                            } else {
+                            } else if (snapshot.hasData) {
+                              if (snapshot.data != null) {
+                                var data = [
+                                  new TimeSeriesDatos(
+                                    new DateTime(
+                                      int.tryParse(
+                                          snapshot.data[0].fecha.split('-')[2]),
+                                      int.tryParse(
+                                          snapshot.data[0].fecha.split('-')[1]),
+                                      int.tryParse(
+                                          snapshot.data[0].fecha.split('-')[0]),
+                                    ),
+                                    double.parse(snapshot.data[0].peso),
+                                  ),
+                                  new TimeSeriesDatos(
+                                    new DateTime(
+                                      int.tryParse(
+                                          snapshot.data[1].fecha.split('-')[2]),
+                                      int.tryParse(
+                                          snapshot.data[1].fecha.split('-')[1]),
+                                      int.tryParse(
+                                          snapshot.data[1].fecha.split('-')[0]),
+                                    ),
+                                    double.parse(snapshot.data[1].peso),
+                                  ),
+                                  new TimeSeriesDatos(
+                                    new DateTime(
+                                      int.tryParse(
+                                          snapshot.data[2].fecha.split('-')[2]),
+                                      int.tryParse(
+                                          snapshot.data[2].fecha.split('-')[1]),
+                                      int.tryParse(
+                                          snapshot.data[2].fecha.split('-')[0]),
+                                    ),
+                                    double.parse(snapshot.data[2].peso),
+                                  ),
+                                  new TimeSeriesDatos(
+                                    new DateTime(
+                                      int.tryParse(
+                                          snapshot.data[3].fecha.split('-')[2]),
+                                      int.tryParse(
+                                          snapshot.data[3].fecha.split('-')[1]),
+                                      int.tryParse(
+                                          snapshot.data[3].fecha.split('-')[0]),
+                                    ),
+                                    double.parse(snapshot.data[3].peso),
+                                  ),
+                                ];
+
+                                return SfCartesianChart(
+                                  plotAreaBorderWidth: 1,
+                                  tooltipBehavior: TooltipBehavior(
+                                    enable: true,
+                                    elevation: 3,
+                                    textAlignment: ChartAlignment.center,
+                                    format: 'point.y kg',
+                                    header: "Peso",
+                                  ),
+                                  primaryXAxis: CategoryAxis(
+                                    labelRotation: 90,
+                                    labelPosition: LabelPosition.outside,
+                                    tickPosition: TickPosition.outside,
+                                    edgeLabelPlacement: EdgeLabelPlacement.none,
+                                    axisLine: AxisLine(
+                                      color: Colors.black,
+                                    ),
+                                    minorTickLines: MinorTickLines(
+                                      size: 6,
+                                      width: 2,
+                                      color: hexToColor("#059696"),
+                                    ),
+                                    majorTickLines: MajorTickLines(
+                                      size: 6,
+                                      width: 2,
+                                      color: hexToColor("#b0b0b0"),
+                                    ),
+                                  ),
+                                  primaryYAxis: NumericAxis(
+                                    interval: 1,
+                                    rangePadding: ChartRangePadding.auto,
+                                    tickPosition: TickPosition.outside,
+                                    axisLine: AxisLine(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  series: <ChartSeries>[
+                                    LineSeries<TimeSeriesDatos, String>(
+                                      dataSource: data,
+                                      width: 4,
+                                      pointColorMapper: (TimeSeriesDatos, _) =>
+                                          hexToColor("#059696"),
+                                      xValueMapper:
+                                          (TimeSeriesDatos datos, _) =>
+                                              DateFormat("dd/MM/yyyy")
+                                                  .format(datos.time),
+                                      yValueMapper:
+                                          (TimeSeriesDatos datos, _) =>
+                                              datos.dato,
+                                      markerSettings: MarkerSettings(
+                                        isVisible: true,
+                                        width: 12,
+                                        height: 12,
+                                      ),
+                                    )
+                                  ],
+                                );
+                              } else {
+                                return new Center(
+                                    child: Text("No hay datos.",
+                                        style: TextStyle(
+                                            color: hexToColor("#606060"))));
+                              }
+                            } else if (snapshot.hasError) {
                               return new Center(
-                                  child: Text("No hay datos.",
+                                  child: Text("Error al obtener datos.",
                                       style: TextStyle(
                                           color: hexToColor("#606060"))));
                             }
-                          } else if (snapshot.hasError) {
-                            return new Center(
-                                child: Text("Error al obtener datos.",
-                                    style: TextStyle(
-                                        color: hexToColor("#606060"))));
-                          }
-                        }),
-                  ),
-                ],
+                          }),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   ///
   /// Gráfica Grasa
   ///
-  Column historialGrasa(_leyenda_y) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Container(
-          alignment: Alignment.center,
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.width * 1.3,
-          child: Container(
+  Container historialGrasa(_leyenda_y) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(top: 40),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
             alignment: Alignment.center,
-            width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.width * 0.9,
-            margin: EdgeInsets.only(              
-              top: 100,
-            ),
-            child: Card(
-              elevation: 0,
-              color: Colors.transparent,
-              child: Stack(
-                children: <Widget>[
-                  /// BACK GRÁFICA
-                  Center(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: MediaQuery.of(context).size.width * 0.9,
-                      decoration: BoxDecoration(
-                        color: hexToColor("#78c826"),
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                      ),
-                      child: Stack(
-                        children: <Widget>[
-                          /// LABEL AXIS Y
-                          RotatedBox(
-                            quarterTurns: -1,
-                            child: Container(
-                              alignment: Alignment.topCenter,
-                              margin: EdgeInsets.only(top: 10, left: 0),
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.width * 1.3,
+            child: Container(
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: MediaQuery.of(context).size.width * 0.9,
+              margin: EdgeInsets.only(
+                top: 100,
+              ),
+              child: Card(
+                elevation: 0,
+                color: Colors.transparent,
+                child: Stack(
+                  children: <Widget>[
+                    /// BACK GRÁFICA
+                    Center(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        height: MediaQuery.of(context).size.width * 0.9,
+                        decoration: BoxDecoration(
+                          color: hexToColor("#78c826"),
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                        ),
+                        child: Stack(
+                          children: <Widget>[
+                            /// LABEL AXIS Y
+                            RotatedBox(
+                              quarterTurns: -1,
+                              child: Container(
+                                alignment: Alignment.topCenter,
+                                margin: EdgeInsets.only(top: 10, left: 0),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5))),
+                                  width: 115,
+                                  height: 20,
+                                  margin: EdgeInsets.only(top: 0, left: 5),
+                                  child: Text(_leyenda_y,
+                                      style: TextStyle(
+                                          color: hexToColor("#059696"),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13)),
+                                ),
+                              ),
+                            ),
+
+                            /// LABEL AXIS X
+                            Container(
+                              alignment: Alignment.bottomCenter,
+                              margin: EdgeInsets.only(bottom: 10),
                               child: Container(
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
@@ -486,177 +517,158 @@ class _ProgresoPageState extends State<ProgresoPage>
                                 width: 115,
                                 height: 20,
                                 margin: EdgeInsets.only(top: 0, left: 5),
-                                child: Text(_leyenda_y,
+                                child: Text("Fecha de cita",
                                     style: TextStyle(
                                         color: hexToColor("#059696"),
                                         fontWeight: FontWeight.bold,
                                         fontSize: 13)),
                               ),
                             ),
-                          ),
-
-                          /// LABEL AXIS X
-                          Container(
-                            alignment: Alignment.bottomCenter,
-                            margin: EdgeInsets.only(bottom: 10),
-                            child: Container(
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5))),
-                              width: 115,
-                              height: 20,
-                              margin: EdgeInsets.only(top: 0, left: 5),
-                              child: Text("Fecha de cita",
-                                  style: TextStyle(
-                                      color: hexToColor("#059696"),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13)),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
 
-                  /// CHART
-                  Container(
-                    margin: EdgeInsets.only(left: 30, bottom: 30),
-                    child: FutureBuilder<List<Progreso>>(
-                        future: getProgreso(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                semanticsLabel: "Loading",
-                                backgroundColor: hexToColor("#cdcdcd"),
-                              ),
-                            );
-                          } else if (snapshot.hasData) {
-                            if (snapshot.data != null) {
-                              var data = [
-                                new TimeSeriesDatos(
-                                  new DateTime(
-                                    int.tryParse(
-                                        snapshot.data[0].fecha.split('-')[2]),
-                                    int.tryParse(
-                                        snapshot.data[0].fecha.split('-')[1]),
-                                    int.tryParse(
-                                        snapshot.data[0].fecha.split('-')[0]),
-                                  ),
-                                  double.parse(snapshot.data[0].grasa),
+                    /// CHART
+                    Container(
+                      margin: EdgeInsets.only(left: 30, bottom: 30),
+                      child: FutureBuilder<List<Progreso>>(
+                          future: getProgreso(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  semanticsLabel: "Loading",
+                                  backgroundColor: hexToColor("#cdcdcd"),
                                 ),
-                                new TimeSeriesDatos(
-                                  new DateTime(
-                                    int.tryParse(
-                                        snapshot.data[1].fecha.split('-')[2]),
-                                    int.tryParse(
-                                        snapshot.data[1].fecha.split('-')[1]),
-                                    int.tryParse(
-                                        snapshot.data[1].fecha.split('-')[0]),
-                                  ),
-                                  double.parse(snapshot.data[1].grasa),
-                                ),
-                                new TimeSeriesDatos(
-                                  new DateTime(
-                                    int.tryParse(
-                                        snapshot.data[2].fecha.split('-')[2]),
-                                    int.tryParse(
-                                        snapshot.data[2].fecha.split('-')[1]),
-                                    int.tryParse(
-                                        snapshot.data[2].fecha.split('-')[0]),
-                                  ),
-                                  double.parse(snapshot.data[2].grasa),
-                                ),
-                                new TimeSeriesDatos(
-                                  new DateTime(
-                                    int.tryParse(
-                                        snapshot.data[3].fecha.split('-')[2]),
-                                    int.tryParse(
-                                        snapshot.data[3].fecha.split('-')[1]),
-                                    int.tryParse(
-                                        snapshot.data[3].fecha.split('-')[0]),
-                                  ),
-                                  double.parse(snapshot.data[3].grasa),
-                                ),
-                              ];
-
-                              return SfCartesianChart(
-                                plotAreaBorderWidth: 1,
-                                tooltipBehavior: TooltipBehavior(
-                                  enable: true,
-                                  format: 'point.y kg',
-                                  header: "Grasa",
-                                ),
-                                primaryXAxis: CategoryAxis(
-                                  labelRotation: 90,
-                                  labelPosition: LabelPosition.outside,
-                                  tickPosition: TickPosition.outside,
-                                  edgeLabelPlacement: EdgeLabelPlacement.none,
-                                  axisLine: AxisLine(
-                                    color: Colors.black,
-                                  ),
-                                  minorTickLines: MinorTickLines(
-                                    size: 6,
-                                    width: 2,
-                                    color: hexToColor("#059696"),
-                                  ),
-                                  majorTickLines: MajorTickLines(
-                                    size: 6,
-                                    width: 2,
-                                    color: hexToColor("#b0b0b0"),
-                                  ),
-                                ),
-                                primaryYAxis: NumericAxis(
-                                  interval: 1,
-                                  rangePadding: ChartRangePadding.auto,
-                                  tickPosition: TickPosition.outside,
-                                  axisLine: AxisLine(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                series: <ChartSeries>[
-                                  LineSeries<TimeSeriesDatos, String>(
-                                    dataSource: data,
-                                    width: 4,
-                                    pointColorMapper: (TimeSeriesDatos, _) =>
-                                        hexToColor("#059696"),
-                                    xValueMapper: (TimeSeriesDatos datos, _) =>
-                                        DateFormat("dd/MM/yyyy")
-                                            .format(datos.time),
-                                    yValueMapper: (TimeSeriesDatos datos, _) =>
-                                        datos.dato,
-                                    markerSettings: MarkerSettings(
-                                      isVisible: true,
-                                      width: 12,
-                                      height: 12,
-                                    ),
-                                  )
-                                ],
                               );
-                            } else {
+                            } else if (snapshot.hasData) {
+                              if (snapshot.data != null) {
+                                var data = [
+                                  new TimeSeriesDatos(
+                                    new DateTime(
+                                      int.tryParse(
+                                          snapshot.data[0].fecha.split('-')[2]),
+                                      int.tryParse(
+                                          snapshot.data[0].fecha.split('-')[1]),
+                                      int.tryParse(
+                                          snapshot.data[0].fecha.split('-')[0]),
+                                    ),
+                                    double.parse(snapshot.data[0].grasa),
+                                  ),
+                                  new TimeSeriesDatos(
+                                    new DateTime(
+                                      int.tryParse(
+                                          snapshot.data[1].fecha.split('-')[2]),
+                                      int.tryParse(
+                                          snapshot.data[1].fecha.split('-')[1]),
+                                      int.tryParse(
+                                          snapshot.data[1].fecha.split('-')[0]),
+                                    ),
+                                    double.parse(snapshot.data[1].grasa),
+                                  ),
+                                  new TimeSeriesDatos(
+                                    new DateTime(
+                                      int.tryParse(
+                                          snapshot.data[2].fecha.split('-')[2]),
+                                      int.tryParse(
+                                          snapshot.data[2].fecha.split('-')[1]),
+                                      int.tryParse(
+                                          snapshot.data[2].fecha.split('-')[0]),
+                                    ),
+                                    double.parse(snapshot.data[2].grasa),
+                                  ),
+                                  new TimeSeriesDatos(
+                                    new DateTime(
+                                      int.tryParse(
+                                          snapshot.data[3].fecha.split('-')[2]),
+                                      int.tryParse(
+                                          snapshot.data[3].fecha.split('-')[1]),
+                                      int.tryParse(
+                                          snapshot.data[3].fecha.split('-')[0]),
+                                    ),
+                                    double.parse(snapshot.data[3].grasa),
+                                  ),
+                                ];
+
+                                return SfCartesianChart(
+                                  plotAreaBorderWidth: 1,
+                                  tooltipBehavior: TooltipBehavior(
+                                    enable: true,
+                                    format: 'point.y kg',
+                                    header: "Grasa",
+                                  ),
+                                  primaryXAxis: CategoryAxis(
+                                    labelRotation: 90,
+                                    labelPosition: LabelPosition.outside,
+                                    tickPosition: TickPosition.outside,
+                                    edgeLabelPlacement: EdgeLabelPlacement.none,
+                                    axisLine: AxisLine(
+                                      color: Colors.black,
+                                    ),
+                                    minorTickLines: MinorTickLines(
+                                      size: 6,
+                                      width: 2,
+                                      color: hexToColor("#059696"),
+                                    ),
+                                    majorTickLines: MajorTickLines(
+                                      size: 6,
+                                      width: 2,
+                                      color: hexToColor("#b0b0b0"),
+                                    ),
+                                  ),
+                                  primaryYAxis: NumericAxis(
+                                    interval: 1,
+                                    rangePadding: ChartRangePadding.auto,
+                                    tickPosition: TickPosition.outside,
+                                    axisLine: AxisLine(
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  series: <ChartSeries>[
+                                    LineSeries<TimeSeriesDatos, String>(
+                                      dataSource: data,
+                                      width: 4,
+                                      pointColorMapper: (TimeSeriesDatos, _) =>
+                                          hexToColor("#059696"),
+                                      xValueMapper:
+                                          (TimeSeriesDatos datos, _) =>
+                                              DateFormat("dd/MM/yyyy")
+                                                  .format(datos.time),
+                                      yValueMapper:
+                                          (TimeSeriesDatos datos, _) =>
+                                              datos.dato,
+                                      markerSettings: MarkerSettings(
+                                        isVisible: true,
+                                        width: 12,
+                                        height: 12,
+                                      ),
+                                    )
+                                  ],
+                                );
+                              } else {
+                                return new Center(
+                                    child: Text("No hay datos.",
+                                        style: TextStyle(
+                                            color: hexToColor("#606060"))));
+                              }
+                            } else if (snapshot.hasError) {
                               return new Center(
-                                  child: Text("No hay datos.",
+                                  child: Text("Error al obtener datos.",
                                       style: TextStyle(
                                           color: hexToColor("#606060"))));
                             }
-                          } else if (snapshot.hasError) {
-                            return new Center(
-                                child: Text("Error al obtener datos.",
-                                    style: TextStyle(
-                                        color: hexToColor("#606060"))));
-                          }
-                        }),
-                  ),
-                ],
+                          }),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -1084,9 +1096,15 @@ class _ProgresoPageState extends State<ProgresoPage>
                         ),
                       ),
                     ),
-                    titulo("Gráfica de peso"),
-                    informacionPeso("Último peso medido"),
-                    historialPeso("Peso en kg"),
+                    SingleChildScrollView(
+                      child: Stack(
+                        children: <Widget>[
+                          titulo("Gráfica de peso"),
+                          informacionPeso("Último peso medido"),
+                          historialPeso("Peso en kg"),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
 
@@ -1104,9 +1122,15 @@ class _ProgresoPageState extends State<ProgresoPage>
                         ),
                       ),
                     ),
-                    titulo("Gráfica de grasa"),
-                    informacionGrasa("Última medida"),
-                    historialGrasa("Progreso en kg"),
+                    SingleChildScrollView(
+                      child: Stack(
+                        children: <Widget>[
+                          titulo("Gráfica de grasa"),
+                          informacionGrasa("Última medida"),
+                          historialGrasa("Progreso en kg"),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
 
