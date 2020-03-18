@@ -86,12 +86,14 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                      child:
-                          //FutureBuilder<List<Doctor>>(
-                          //future: fetchDoctores(),
-                          //builder: (context, snapshot) {
-                          //if (snapshot.hasData) {
-                          //if(listDoctores.length > 0) {
+                      child: 
+                      //FutureBuilder<List<Doctor>>(
+                      //future: fetchDoctores(),
+                      //builder: (context, snapshot) {
+                      //if (snapshot.hasData) {
+                      //if(listDoctores.length > 0) {
+
+
                           DropdownButton<Doctor>(
                         iconSize: 0,
                         hint: Text(
@@ -99,10 +101,12 @@ class _LoginPageState extends State<LoginPage> {
                           style: TextStyle(color: Colors.white, fontSize: 16),
                         ),
                         items: listDoctores
-                            .map((doctor) => DropdownMenuItem<Doctor>(
-                                  child: Text(doctor.nombre),
-                                  value: doctor,
-                                ))
+                            .map(
+                              (doctor) => DropdownMenuItem<Doctor>(
+                                child: Text(doctor.nombre),
+                                value: doctor,
+                              ),
+                            )
                             .toList(),
                         value: doctorSelect,
                         onChanged: (Doctor _doctor) {
@@ -114,6 +118,8 @@ class _LoginPageState extends State<LoginPage> {
                           });
                         },
                       ),
+
+
                       /*
                             } else if (snapshot.hasError) {
                               return Padding(
@@ -142,7 +148,8 @@ class _LoginPageState extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0)),
                       onPressed: () {
-                        check_login(context, global.text_email.text, doctorSelect);
+                        check_login(
+                            context, global.text_email.text, doctorSelect);
                       },
                     ),
                   ),
@@ -174,11 +181,8 @@ class _LoginPageState extends State<LoginPage> {
 
 void check_login(_context, _email, _doctorSelected) async {
   if (_email != "") {
-    final response = await http.post(global.server + '/aplicacion/api', body: {
-      "tipo": "login",
-      "usr": _email,
-      "doc": _doctorSelected.id
-    });
+    final response = await http.post(global.server + '/aplicacion/api',
+        body: {"tipo": "login", "usr": _email, "doc": _doctorSelected.id});
     var responseJson = json.decode(utf8.decode(response.bodyBytes));
     print(responseJson);
     if (responseJson["status"] == 1) {

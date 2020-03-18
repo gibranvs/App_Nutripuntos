@@ -163,10 +163,14 @@ class DBManager {
         print("No hay usuario");
         globals.user_exist = false;
         //Navigator.of(_context).pushReplacementNamed('/HomeScreen');
-        Navigator.push(
+        Future.delayed(const Duration(milliseconds: 5000), () {
+          Navigator.push(
           _context,
           MaterialPageRoute(builder: (context) => LoginPage()),
         );
+        });
+
+        
       } else {
         //print(res);
         globals.id_user = int.parse(res[res.length - 1]["ID"].toString());
