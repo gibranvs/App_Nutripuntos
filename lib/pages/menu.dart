@@ -41,7 +41,7 @@ class MenuState extends State<Menu> {
     switch (pos) {
       case 0:
         global.selected_index = 0;
-        return new PlanPage();
+        return new PlanPage(0);
       case 1:
         global.selected_index = 0;
         return new ProgresoPage(0);

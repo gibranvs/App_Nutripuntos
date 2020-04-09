@@ -26,7 +26,7 @@ class menu extends StatelessWidget {
         Row(
           children: <Widget>[
             Column(
-              children: <Widget>[                
+              children: <Widget>[
                 /// LABEL NOMBRE
                 Container(
                   padding: EdgeInsets.only(top: 70, left: 20),
@@ -175,30 +175,54 @@ class ItemMenu extends StatelessWidget {
           switch (index_item) {
             case 1:
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => PlanPage()));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PlanPage(0),
+                ),
+              );
               break;
             case 2:
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProgresoPage(0)));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProgresoPage(0),
+                ),
+              );
               break;
             case 3:
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AgendaPage()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AgendaPage(),
+                ),
+              );
               break;
             case 4:
-            global.list_recetas = getReceta("");
-            global.text_busqueda_receta.text = "";
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => RecetasPage()));
+              global.list_recetas = getReceta("");
+              global.text_busqueda_receta.text = "";
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecetasPage(),
+                ),
+              );
               break;
             case 5:
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => RestaurantesPage()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RestaurantesPage(),
+                ),
+              );
               break;
             case 6:
-            global.text_mensaje.text = "";
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => NutriochatPage()));
+              global.text_mensaje.text = "";
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NutriochatPage(),
+                ),
+              );
               break;
           }
         },

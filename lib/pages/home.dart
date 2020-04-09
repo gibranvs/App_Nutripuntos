@@ -101,12 +101,12 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
   ///
   /// Label Nombre
-  /// 
-Container nombre()
-{
-  return Container(
+  ///
+  Container nombre() {
+    return Container(
       alignment: Alignment.topCenter,
       padding: EdgeInsets.only(top: 0),
       margin: EdgeInsets.only(left: 0, top: 120),
@@ -116,13 +116,13 @@ Container nombre()
             fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
       ),
     );
-}
-///
-/// Label Status
-///
-Container estatus()
-{
-  return Container(
+  }
+
+  ///
+  /// Label Status
+  ///
+  Container estatus() {
+    return Container(
       alignment: Alignment.topCenter,
       padding: EdgeInsets.only(top: 0),
       margin: EdgeInsets.only(left: 0, top: 150),
@@ -131,13 +131,13 @@ Container estatus()
         style: TextStyle(fontSize: 14, color: Colors.white),
       ),
     );
-}
-///
-/// Card Próxima cita
-///
-Container proximaCita()
-{
-  return Container(
+  }
+
+  ///
+  /// Card Próxima cita
+  ///
+  Container proximaCita() {
+    return Container(
       alignment: Alignment.topCenter,
       margin: const EdgeInsets.only(top: 40),
       child: FutureBuilder<List<Citas>>(
@@ -230,13 +230,13 @@ Container proximaCita()
         },
       ),
     );
-}
-///
-/// Grid Botones
-///
-Container botones()
-{
-  return Container(
+  }
+
+  ///
+  /// Grid Botones
+  ///
+  Container botones() {
+    return Container(
       alignment: Alignment.centerLeft,
       width: MediaQuery.of(context).size.width,
       height: 300,
@@ -415,9 +415,11 @@ Container botones()
                     onTap: () {
                       global.selected_index = 1;
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => new PlanPage()));
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => new PlanPage(0),
+                        ),
+                      );
                     },
                     child: Container(
                       width: 150,
@@ -502,7 +504,7 @@ Container botones()
         ],
       ),
     );
-}
+  }
 
   void showAlertOption() {
     AlertDialog alert = AlertDialog(
@@ -685,13 +687,13 @@ Container botones()
                 Container(
                   margin: EdgeInsets.only(top: 170),
                   child: ListView(
-                    children: <Widget>[                      
+                    children: <Widget>[
                       proximaCita(),
                       botones(),
                     ],
                   ),
                 ),
-                
+
                 header(),
                 foto(),
                 nombre(),

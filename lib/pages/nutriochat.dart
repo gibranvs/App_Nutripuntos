@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -12,6 +14,7 @@ import '../src/MessageAlert.dart' as alert;
 
 final myListView = ScrollController();
 Color colorIcon = hexToColor("#9a9a9a");
+bool isOnChat = false;
 
 class NutriochatPage extends StatefulWidget {
   @override
@@ -47,7 +50,7 @@ class _NutriochatPageState extends State<NutriochatPage> {
   /// List Mensajes
   ///
   Container listMessages() {
-    if (global.list_mensajes != null && global.list_mensajes.length > 0) {
+    if (global.list_mensajes != null && global.list_mensajes.length > 0) {      
       global.list_mensajes
           .sort((a, b) => a.fecha.toString().compareTo(b.fecha.toString()));
       //myListView.animateTo(global.list_mensajes.length.toDouble() * 1000, duration: const Duration(milliseconds: 200), curve: Curves.linear);
@@ -146,8 +149,6 @@ class _NutriochatPageState extends State<NutriochatPage> {
         ),
       );
     } else {
-      alert.showMessageDialog(context, "Hola",
-          "Escribe a un nutriólogo a través de nutrio chat, un espacio creado para contactar a tu doctor, fácilmente");
       return Container();
     }
   }
@@ -182,7 +183,8 @@ class _NutriochatPageState extends State<NutriochatPage> {
                   onTap: () {
                     if (global.text_mensaje.text.length > 0) {
                       print("Send message: " + global.text_mensaje.text);
-                      guardarMensajes(context, global.token, global.text_mensaje.text);
+                      guardarMensajes(
+                          context, global.token, global.text_mensaje.text);
                     }
                   },
                   child: Icon(
@@ -198,6 +200,20 @@ class _NutriochatPageState extends State<NutriochatPage> {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    if (global.list_mensajes == null || global.list_mensajes.length == 0) {
+      Timer.periodic(Duration(seconds: 1), (timer) {        
+        alert.showMessageDialog(context, "Hola",
+            "Escribe a un nutriólogo a través de  Nutrichat, un espacio creado para contactar a tu doctor, fácilmente.");
+        if (timer.tick > 0) timer.cancel();
+      });
+    }
   }
 
   @override

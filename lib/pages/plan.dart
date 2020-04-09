@@ -12,11 +12,17 @@ import 'package:nutripuntos_app/src/MessageAlert.dart';
 import 'opcion_detalle.dart';
 
 class PlanPage extends StatefulWidget {
+  final int index_tab;
+  PlanPage(this.index_tab);
   @override
-  _PlanPageState createState() => new _PlanPageState();
+  _PlanPageState createState() => new _PlanPageState(index_tab);
 }
 
-class _PlanPageState extends State<PlanPage> {
+class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
+  final int index_tab;
+  _PlanPageState(this.index_tab);
+  TabController _tabController;
+
   ///
   /// Label Título 1
   ///
@@ -184,12 +190,16 @@ class _PlanPageState extends State<PlanPage> {
                             return GestureDetector(
                               onTap: () {
                                 Navigator.push(
-                                    _context,
-                                    MaterialPageRoute(
-                                        builder: (context) => OpcionDetallePage(
-                                            global.token,
-                                            _index_comida,
-                                            (index + 1).toString())));
+                                  _context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OpcionDetallePage(
+                                      global.token,
+                                      _index_comida,
+                                      (index + 1).toString(),
+                                      global.current_tab,
+                                    ),
+                                  ),
+                                );
                               },
                               child: Card(
                                 margin: EdgeInsets.only(bottom: 15),
@@ -256,6 +266,15 @@ class _PlanPageState extends State<PlanPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      global.current_tab = index_tab;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: new newmenu.menu(1),
@@ -297,6 +316,11 @@ class _PlanPageState extends State<PlanPage> {
                   ),
                 );
               } else if (snapshot.hasData) {
+                _tabController = new TabController(
+                    length: snapshot.data.length,
+                    vsync: this,
+                    initialIndex: global.current_tab);
+
                 int items = snapshot.data.length;
                 List<Tab> tabs = new List<Tab>();
                 List<Container> pages = new List<Container>();
@@ -329,10 +353,16 @@ class _PlanPageState extends State<PlanPage> {
                   child: Scaffold(
                     appBar: AppBar(
                       title: TabBar(
+                        controller: _tabController,
                         indicatorSize: TabBarIndicatorSize.tab,
                         isScrollable: true,
                         indicatorColor: Colors.white,
                         tabs: tabs,
+                        onTap: (index) {
+                          setState(() {
+                            global.current_tab = index;
+                          });
+                        },
                       ),
                       flexibleSpace: Container(
                         decoration: BoxDecoration(
@@ -346,6 +376,7 @@ class _PlanPageState extends State<PlanPage> {
                       ),
                     ),
                     body: TabBarView(
+                      controller: _tabController,
                       children: pages,
                     ),
                   ),
@@ -354,165 +385,6 @@ class _PlanPageState extends State<PlanPage> {
             },
           ),
         ),
-
-        /*
-        DefaultTabController(
-          length: 5,
-          child: Scaffold(
-            appBar: AppBar(
-              title:                      
-              TabBar(
-                indicatorSize: TabBarIndicatorSize.tab,
-                isScrollable: true,
-                indicatorColor: Colors.white,
-                tabs: [
-                  Tab(
-                    text: "Desayunos",
-                  ),
-                  Tab(
-                    text: "CM",
-                  ),
-                  Tab(
-                    text: "Comidas",
-                  ),
-                  Tab(
-                    text: "CV",
-                  ),
-                  Tab(
-                    text: "Cenas",
-                  ),
-                ],
-              ),              
-              flexibleSpace: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF35B9C5),
-                      Color(0xFF348CB4),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            body: TabBarView(
-              children: [
-                ///
-                /// TAB DESAYUNOS
-                ///
-                Container(
-                  decoration: new BoxDecoration(
-                    color: const Color(0x00FFCC00),
-                    image: new DecorationImage(
-                      image: new AssetImage("assets/images/fondo.jpg"),
-                      colorFilter: new ColorFilter.mode(
-                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      titulo1("Desayuno en puntos"),
-                      botones_puntos("desayuno"),
-                      titulo2("Sugerencias de desayuno"),
-                      list_sugerencias(context, 0),
-                    ],
-                  ),
-                ),
-
-                ///
-                /// TAB CM
-                ///
-                Container(
-                  decoration: new BoxDecoration(
-                    color: const Color(0x00FFCC00),
-                    image: new DecorationImage(
-                      image: new AssetImage("assets/images/fondo.jpg"),
-                      colorFilter: new ColorFilter.mode(
-                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      titulo1("Colación matutina en puntos"),
-                      botones_puntos("colación matutina"),
-                      titulo2("Sugerencias de colación matutina"),
-                      list_sugerencias(context, 1),
-                    ],
-                  ),
-                ),
-
-                ///
-                /// TAB ALMUERZOS
-                ///
-                Container(
-                  decoration: new BoxDecoration(
-                    color: const Color(0x00FFCC00),
-                    image: new DecorationImage(
-                      image: new AssetImage("assets/images/fondo.jpg"),
-                      colorFilter: new ColorFilter.mode(
-                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      titulo1("Almuerzo en puntos"),
-                      botones_puntos("almuerzo"),
-                      titulo2("Sugerencias de almuerzo"),
-                      list_sugerencias(context, 2),
-                    ],
-                  ),
-                ),
-
-                ///
-                /// TAB CV
-                ///
-                Container(
-                  decoration: new BoxDecoration(
-                    color: const Color(0x00FFCC00),
-                    image: new DecorationImage(
-                      image: new AssetImage("assets/images/fondo.jpg"),
-                      colorFilter: new ColorFilter.mode(
-                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      titulo1("Colación vespertina en puntos"),
-                      botones_puntos("colación vespertina"),
-                      titulo2("Sugerencias de colación vespertina"),
-                      list_sugerencias(context, 3),
-                    ],
-                  ),
-                ),
-
-                /// TAB CENAS
-                Container(
-                  decoration: new BoxDecoration(
-                    color: const Color(0x00FFCC00),
-                    image: new DecorationImage(
-                      image: new AssetImage("assets/images/fondo.jpg"),
-                      colorFilter: new ColorFilter.mode(
-                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Stack(
-                    children: <Widget>[
-                      titulo1("Cena en puntos"),
-                      botones_puntos("cena"),
-                      titulo2("Sugerencias de cena"),
-                      list_sugerencias(context, 4),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        */
       ),
     );
   }

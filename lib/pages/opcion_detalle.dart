@@ -7,14 +7,16 @@ import '../src/ColorCirclesWidget.dart';
 import 'dart:convert';
 
 void main() {
-  runApp(OpcionDetallePage("", 0, ""));
+  runApp(OpcionDetallePage("", 0, "", 0));
 }
 
 class OpcionDetallePage extends StatelessWidget {
+  
   final String token;
   final int index_comida;
   final String opcion;
-  OpcionDetallePage(this.token, this.index_comida, this.opcion);
+  final int current_tab;
+  OpcionDetallePage(this.token, this.index_comida, this.opcion, this.current_tab);
 
   ///
   /// Botón regresar
@@ -24,7 +26,11 @@ class OpcionDetallePage extends StatelessWidget {
       onTap: () {
         global.widget = null;
         Navigator.pop(
-            _context, MaterialPageRoute(builder: (context) => PlanPage()));
+          _context,
+          MaterialPageRoute(
+            builder: (context) => PlanPage(global.current_tab),
+          ),
+        );
       },
       child: Container(
         alignment: Alignment.topLeft,
