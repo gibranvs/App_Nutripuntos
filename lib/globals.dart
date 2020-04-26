@@ -48,6 +48,11 @@ int selected_index = 0;
 DecorationImage image_foto = null;
 
 ///
+/// PLAN
+///
+int current_tab = 0;
+
+///
 /// RECETAS
 ///
 dynamic detalle_receta;

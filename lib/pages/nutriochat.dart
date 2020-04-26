@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -146,8 +148,6 @@ class _NutriochatPageState extends State<NutriochatPage> {
         ),
       );
     } else {
-      alert.showMessageDialog(context, "Hola",
-          "Escribe a un nutriólogo a través de nutrio chat, un espacio creado para contactar a tu doctor, fácilmente");
       return Container();
     }
   }
@@ -168,13 +168,15 @@ class _NutriochatPageState extends State<NutriochatPage> {
             color: Colors.white,
             child: TextField(
               controller: global.text_mensaje,
-              onChanged: (_) {
-                setState(() {
-                  if (global.text_mensaje.text.length > 0)
+              onChanged: (value) {
+                if (value != "")
+                  setState(() {
                     colorIcon = hexToColor("#059696");
-                  else
+                  });
+                else
+                  setState(() {
                     colorIcon = hexToColor("#9a9a9a");
-                });
+                  });
               },
               decoration: InputDecoration(
                 labelText: "Escribe aquí tus dudas",
@@ -182,7 +184,8 @@ class _NutriochatPageState extends State<NutriochatPage> {
                   onTap: () {
                     if (global.text_mensaje.text.length > 0) {
                       print("Send message: " + global.text_mensaje.text);
-                      guardarMensajes(context, global.token, global.text_mensaje.text);
+                      guardarMensajes(
+                          context, global.token, global.text_mensaje.text);
                     }
                   },
                   child: Icon(
@@ -198,6 +201,20 @@ class _NutriochatPageState extends State<NutriochatPage> {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    if (global.list_mensajes == null || global.list_mensajes.length == 0) {
+      Timer.periodic(Duration(seconds: 1), (timer) {
+        alert.showMessageDialog(context, "Hola",
+            "Escribe a un nutriólogo a través de  Nutrichat, un espacio creado para contactar a tu doctor, fácilmente.");
+        if (timer.tick > 0) timer.cancel();
+      });
+    }
   }
 
   @override
@@ -227,6 +244,30 @@ class _NutriochatPageState extends State<NutriochatPage> {
         ],
       ),
     );
+  }
+
+  void guardarMensajes(
+      BuildContext _context, String _token, String _mensaje) async {
+    try {
+      FocusScope.of(_context).requestFocus(new FocusNode());
+      var response = await http.post(global.server + "/aplicacion/api", body: {
+        "tipo": "guarda_mensaje",
+        "token": _token,
+        "mensaje": _mensaje
+      });
+      var datos = json.decode(utf8.decode(response.bodyBytes));
+      //print(datos);
+      db.DBManager.instance.insertMensaje(global.id_user, _token, _mensaje);
+      setState(() {
+        global.list_mensajes.add(Mensaje(origen: "usuario", mensaje: _mensaje, fecha: DateTime.now()));
+        global.text_mensaje.text = "";
+        colorIcon = hexToColor("#9a9a9a");
+      });
+      myListView.animateTo(myListView.position.maxScrollExtent + 70,
+          duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+    } catch (e) {
+      print("Error guardarMensajes " + e.toString());
+    }
   }
 }
 
@@ -316,26 +357,6 @@ void getMensajesServer(String _token) async {
     //global.list_mensajes.sort((a, b) => a.toString().compareTo(b.toString()));
   } catch (e) {
     print("Error getMensajes " + e.toString());
-  }
-}
-
-void guardarMensajes(
-    BuildContext _context, String _token, String _mensaje) async {
-  try {
-    var response = await http.post(global.server + "/aplicacion/api",
-        body: {"tipo": "guarda_mensaje", "token": _token, "mensaje": _mensaje});
-    var datos = json.decode(utf8.decode(response.bodyBytes));
-    //print(datos);
-    db.DBManager.instance.insertMensaje(global.id_user, _token, _mensaje);
-    global.list_mensajes.add(
-        Mensaje(origen: "usuario", mensaje: _mensaje, fecha: DateTime.now()));
-    FocusScope.of(_context).requestFocus(new FocusNode());
-    global.text_mensaje.text = "";
-    colorIcon = hexToColor("#9a9a9a");
-    myListView.animateTo(global.list_mensajes.length.toDouble() * 10000000,
-        duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
-  } catch (e) {
-    print("Error guardarMensajes " + e.toString());
   }
 }
 

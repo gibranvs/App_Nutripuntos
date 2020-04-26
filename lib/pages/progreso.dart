@@ -1009,12 +1009,20 @@ class _ProgresoPageState extends State<ProgresoPage>
                             );
                           });
                     } else {
-                      return new Text("No hay retos anteriores.",
-                          style: TextStyle(color: hexToColor("#606060")));
+                      return new Text(
+                        "Aun no tienes retos.",
+                        style: TextStyle(
+                          color: hexToColor("#606060"),
+                        ),
+                      );
                     }
                   } else if (snapshot.hasError) {
-                    return new Text("Error al obtener retos anteriores.",
-                        style: TextStyle(color: hexToColor("#606060")));
+                    return new Text(
+                      "Error al obtener retos anteriores.",
+                      style: TextStyle(
+                        color: hexToColor("#606060"),
+                      ),
+                    );
                   }
                 }),
           ),
@@ -1138,20 +1146,20 @@ class _ProgresoPageState extends State<ProgresoPage>
                 /// TAB METAS
                 Stack(
                   children: <Widget>[
-                    Positioned(child: 
-                    Container(
-                      decoration: new BoxDecoration(
-                        color: const Color(0x00FFCC00),
-                        image: new DecorationImage(
-                          image: new AssetImage("assets/images/fondo.jpg"),
-                          colorFilter: new ColorFilter.mode(
-                              Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                          fit: BoxFit.cover,
+                    Positioned(
+                      child: Container(
+                        decoration: new BoxDecoration(
+                          color: const Color(0x00FFCC00),
+                          image: new DecorationImage(
+                            image: new AssetImage("assets/images/fondo.jpg"),
+                            colorFilter: new ColorFilter.mode(
+                                Colors.black.withOpacity(0.2),
+                                BlendMode.dstATop),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
-                    ),
-                    
                     titulo("Próxima meta"),
                     retoActual(context),
                     subtitulo("Retos anteriores"),

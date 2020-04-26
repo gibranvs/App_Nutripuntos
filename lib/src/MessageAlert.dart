@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-showMessageDialog(BuildContext context, _titulo, _texto) {
+showMessageDialog(BuildContext _context, _titulo, _texto) {
   // set up the buttons
   Widget continueButton = FlatButton(
     child: Text("OK"),
     onPressed: () {
-      continue_press(context);      
+      continue_press(_context);      
     },
   );
 
@@ -13,8 +13,8 @@ showMessageDialog(BuildContext context, _titulo, _texto) {
   AlertDialog alert = AlertDialog(
     title: Text(_titulo),
     content: new Container(
-      height: 40.0,
-      width: MediaQuery.of(context).size.width * 0.9,
+      height: 80.0,
+      width: MediaQuery.of(_context).size.width * 0.9,
       alignment: Alignment.centerLeft,
       margin: new EdgeInsets.only(top: 0.0, left: 0.0),
       child: new Column(        
@@ -30,7 +30,7 @@ showMessageDialog(BuildContext context, _titulo, _texto) {
 
   // show the dialog
   showDialog(
-    context: context,
+    context: _context,
     builder: (BuildContext context) {
       return alert;
     },
