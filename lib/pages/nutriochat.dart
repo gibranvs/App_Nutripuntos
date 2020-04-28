@@ -15,6 +15,8 @@ import '../src/MessageAlert.dart' as alert;
 
 final myListView = ScrollController();
 Color colorIcon = hexToColor("#9a9a9a");
+bool msgs_doctor_ready = false;
+bool msgs_user_ready = false;
 
 class NutriochatPage extends StatefulWidget {
   @override
@@ -185,8 +187,8 @@ class _NutriochatPageState extends State<NutriochatPage> {
                   onTap: () {
                     if (global.text_mensaje.text.length > 0) {
                       print("Send message: " + global.text_mensaje.text);
-                      guardarMensajes(
-                          context, global.usuario.token, global.text_mensaje.text);
+                      guardarMensajes(context, global.usuario.token,
+                          global.text_mensaje.text);
                     }
                   },
                   child: Icon(
@@ -208,14 +210,29 @@ class _NutriochatPageState extends State<NutriochatPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    if (global.list_mensajes == null || global.list_mensajes.length == 0) {
-      Timer.periodic(Duration(seconds: 1), (timer) {
-        alert.showMessageDialog(context, "Hola",
-            "Escribe a un nutriólogo a través de  Nutrichat, un espacio creado para contactar a tu doctor, fácilmente.");
-        if (timer.tick > 0) timer.cancel();
+    setState(() {
+      msgs_user_ready = false;
+      msgs_doctor_ready = false;
+    });
+    db.DBManager.instance.getMensajes(global.usuario.id).then((mensajes) {
+      setState(() {
+        msgs_user_ready = true;
+        global.list_mensajes = mensajes;
       });
-    }
+      getMensajesServer(global.usuario.token).then((_) {
+        setState(() {
+          msgs_doctor_ready = true;
+          if (global.list_mensajes == null ||
+              global.list_mensajes.length == 0) {
+            Timer.periodic(Duration(seconds: 1), (timer) {
+              alert.showMessageDialog(context, "Hola",
+                  "Escribe a un nutriólogo a través de  Nutrichat, un espacio creado para contactar a tu doctor, fácilmente.");
+              if (timer.tick > 0) timer.cancel();
+            });
+          }
+        });
+      });
+    });
   }
 
   @override
@@ -240,7 +257,15 @@ class _NutriochatPageState extends State<NutriochatPage> {
       body: Stack(
         children: <Widget>[
           fondo(),
-          listMessages(),
+          Center(
+            child: (msgs_user_ready == true && msgs_doctor_ready == true)
+                ? listMessages()
+                : CircularProgressIndicator(
+                    strokeWidth: 2,
+                    semanticsLabel: "Loading",
+                    backgroundColor: hexToColor("#cdcdcd"),
+                  ),
+          ),
           messageArea(),
         ],
       ),
@@ -260,7 +285,8 @@ class _NutriochatPageState extends State<NutriochatPage> {
       //print(datos);
       db.DBManager.instance.insertMensaje(global.usuario.id, _mensaje);
       setState(() {
-        global.list_mensajes.add(Mensaje(origen: "usuario", mensaje: _mensaje, fecha: DateTime.now()));
+        global.list_mensajes.add(Mensaje(
+            origen: "usuario", mensaje: _mensaje, fecha: DateTime.now()));
         global.text_mensaje.text = "";
         colorIcon = hexToColor("#9a9a9a");
       });
@@ -360,5 +386,3 @@ Future<void> getMensajesServer(String _token) async {
     print("Error getMensajes " + e.toString());
   }
 }
-
-

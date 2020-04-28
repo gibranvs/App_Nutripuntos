@@ -8,13 +8,9 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path_provider_macos/path_provider_macos.dart' as path_ios;
 import '../globals.dart' as globals;
 import 'package:intl/intl.dart';
-import '../pages/home.dart';
-import '../pages/login.dart';
-import 'package:device_info/device_info.dart';
-import '../pages/progreso.dart' as progreso;
-import '../pages/nutriochat.dart' as chat;
 
 ///
 /// TABLA REGISTRO
@@ -68,8 +64,9 @@ class DBManager {
 
   // open the database
   _initDatabase() async {
-    // The path_provider plugin gets the right directory for Android or iOS.
+    // The path_provider plugin gets the right directory for Android or iOS. 
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
+
     String path = join(documentsDirectory.path, _databaseName);
     // Open the database. Can also add an onUpdate callback parameter.
     return await openDatabase(path,

@@ -202,6 +202,7 @@ class ItemMenu extends StatelessWidget {
               );
               break;
             case 4:
+              /*
               getReceta("").then((recetas) {
                 global.list_recetas = recetas;
                 global.text_busqueda_receta.text = "";
@@ -212,6 +213,14 @@ class ItemMenu extends StatelessWidget {
                   ),
                 );
               });
+              */
+              global.text_busqueda_receta.text = "";
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecetasPage(),
+                ),
+              );
               break;
             case 5:
               Navigator.push(
@@ -222,10 +231,18 @@ class ItemMenu extends StatelessWidget {
               );
               break;
             case 6:
-              global.list_mensajes = new List<Mensaje>();
+              //global.list_mensajes = new List<Mensaje>();
+              global.text_mensaje.text = "";
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NutriochatPage(),
+                ),
+              );
+              /*
               db.DBManager.instance
                   .getMensajes(global.usuario.id)
-                  .then((mensajes) {
+                  .then((mensajes) {                    
                 global.list_mensajes = mensajes;
                 getMensajesServer(global.usuario.token).then((_) {
                   global.text_mensaje.text = "";
@@ -237,6 +254,7 @@ class ItemMenu extends StatelessWidget {
                   );
                 });
               });
+              */
               break;
           }
         },

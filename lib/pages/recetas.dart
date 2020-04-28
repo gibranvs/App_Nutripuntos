@@ -177,6 +177,15 @@ class _RecetasPageState extends State<RecetasPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    getReceta("").then((recetas) {
+      global.list_recetas = recetas;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return new Scaffold(
       resizeToAvoidBottomInset: false,
