@@ -187,6 +187,27 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                           shrinkWrap: true,
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
+                            String asset;
+                            switch (_index_comida) {
+                              case 0:
+                                asset = "assets/icons/tiempo_desayuno.png";
+                                break;
+                              case 1:
+                                asset = "assets/icons/tiempo_snack.png";
+                                break;
+                              case 2:
+                                asset = "assets/icons/tiempo_comida.png";
+                                break;
+                              case 3:
+                                asset = "assets/icons/tiempo_snack.png";
+                                break;
+                              case 4:
+                                asset = "assets/icons/tiempo_cena.png";
+                                break;
+                              case 5:
+                                asset = "assets/icons/tiempo_bebida.png";
+                                break;
+                            }
                             return GestureDetector(
                               onTap: () {
                                 Navigator.push(
@@ -217,8 +238,8 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                                           child: Container(
                                             margin: EdgeInsets.only(left: 5),
                                             height: 80,
-                                            child: new Image.asset(
-                                                "assets/icons/Recurso_26.png"),
+                                            padding: EdgeInsets.all(5),
+                                            child: new Image.asset(asset),
                                           ),
                                         ),
                                       ],
@@ -569,7 +590,8 @@ Future<T> show_Dialog<T>({
                       margin: EdgeInsets.only(
                           left: 30, right: 30, top: 10, bottom: 50),
                       child: FutureBuilder<List<String>>(
-                          future: getAlimentosColor(global.usuario.token, grupo),
+                          future:
+                              getAlimentosColor(global.usuario.token, grupo),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {

@@ -86,6 +86,11 @@ flutter:
     - assets/images/gr_metas.png
     - assets/images/gr_recetas.png
     - assets/images/gr_restaurantes.png    
+    - assets/icons/tiempo_desayuno.png
+    - assets/icons/tiempo_bebida.png
+    - assets/icons/tiempo_comida.png
+    - assets/icons/tiempo_snack.png
+    - assets/icons/tiempo_cena.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
