@@ -7,6 +7,7 @@ import 'package:nutripuntos_app/src/HexToColor.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:nutripuntos_app/globals.dart' as global;
 import 'package:http/http.dart' as http;
+import 'package:nutripuntos_app/src/mensaje.dart';
 import '../src/DBManager.dart' as db;
 import 'newmenu.dart' as newmenu;
 import '../src/bubble.dart';
@@ -185,7 +186,7 @@ class _NutriochatPageState extends State<NutriochatPage> {
                     if (global.text_mensaje.text.length > 0) {
                       print("Send message: " + global.text_mensaje.text);
                       guardarMensajes(
-                          context, global.token, global.text_mensaje.text);
+                          context, global.usuario.token, global.text_mensaje.text);
                     }
                   },
                   child: Icon(
@@ -257,7 +258,7 @@ class _NutriochatPageState extends State<NutriochatPage> {
       });
       var datos = json.decode(utf8.decode(response.bodyBytes));
       //print(datos);
-      db.DBManager.instance.insertMensaje(global.id_user, _token, _mensaje);
+      db.DBManager.instance.insertMensaje(global.usuario.id, _mensaje);
       setState(() {
         global.list_mensajes.add(Mensaje(origen: "usuario", mensaje: _mensaje, fecha: DateTime.now()));
         global.text_mensaje.text = "";
@@ -342,7 +343,7 @@ Future<T> show_Dialog<T>({
   );
 }
 
-void getMensajesServer(String _token) async {
+Future<void> getMensajesServer(String _token) async {
   try {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "get_mensajes", "token": _token});
@@ -360,10 +361,4 @@ void getMensajesServer(String _token) async {
   }
 }
 
-class Mensaje {
-  String origen;
-  String mensaje;
-  DateTime fecha;
 
-  Mensaje({this.origen, this.mensaje, this.fecha});
-}

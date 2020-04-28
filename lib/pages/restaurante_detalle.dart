@@ -150,13 +150,15 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
                 future: getPlatillos(idRestaurante),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        semanticsLabel: "Loading",
-                        backgroundColor: hexToColor("#cdcdcd"),
-                      ),
-                    );
+                    return Container(
+                        alignment: Alignment.center,                        
+                        height: 50,
+                        width: 40,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          backgroundColor: hexToColor("#cdcdcd"),
+                        ),
+                      );
                   } else if (snapshot.hasData) {
                     if (snapshot.data.length > 0) {
                       return new ListView.builder(
@@ -215,10 +217,12 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
                                         child: Container(
                                           width: 180,
                                           child: ColorCirclesWidget(
-                                              snapshot.data[index].azul,
-                                              snapshot.data[index].verde,
-                                              snapshot.data[index].naranja,
-                                              snapshot.data[index].amarillo),
+                                              azul: snapshot.data[index].azul,
+                                              verde: snapshot.data[index].verde,
+                                              naranja:
+                                                  snapshot.data[index].naranja,
+                                              amarillo: snapshot
+                                                  .data[index].amarillo),
                                         ),
                                       ),
                                     ],

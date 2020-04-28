@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:nutripuntos_app/pages/progreso.dart';
 import 'package:flutter/services.dart';
+import 'package:nutripuntos_app/src/meta.dart';
 import 'dart:async';
 import 'newmenu.dart' as newmenu;
 import 'package:nutripuntos_app/globals.dart' as global;
@@ -111,7 +112,7 @@ class _HomePageState extends State<HomePage> {
       padding: EdgeInsets.only(top: 0),
       margin: EdgeInsets.only(left: 0, top: 120),
       child: Text(
-        global.nombre_user + " " + global.apellidos_user,
+        global.usuario.nombre + " " + global.usuario.apellidos,
         style: TextStyle(
             fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
       ),
@@ -141,7 +142,7 @@ class _HomePageState extends State<HomePage> {
       alignment: Alignment.topCenter,
       margin: const EdgeInsets.only(top: 40),
       child: FutureBuilder<List<Citas>>(
-        future: getCitasProximas(global.token),
+        future: getCitasProximas(global.usuario.token),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -257,11 +258,15 @@ class _HomePageState extends State<HomePage> {
                     GestureDetector(
                       onTap: () {
                         global.selected_index = 4;
-                        global.list_recetas = getReceta("");
-                        Navigator.push(
+                        getReceta("").then((recetas) {
+                          global.list_recetas = recetas;
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => new RecetasPage()));
+                              builder: (context) => new RecetasPage(),
+                            ),
+                          );
+                        });
                       },
                       child: Container(
                         width: 150,
@@ -321,8 +326,8 @@ class _HomePageState extends State<HomePage> {
                             width: MediaQuery.of(context).size.width * 0.2,
                           ),
                           FutureBuilder<Meta>(
-                              future:
-                                  db.DBManager.instance.getReto(global.token),
+                              future: db.DBManager.instance
+                                  .getReto(global.usuario.id),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
@@ -561,17 +566,10 @@ class _HomePageState extends State<HomePage> {
             //buildCroppingImage();
             global.image_foto =
                 new DecorationImage(image: Image.file(img).image);
-            db.DBManager.instance.insertUsuario(
-                global.id_user,
-                global.nombre_user,
-                global.apellidos_user,
-                global.token,
-                img.path);
-
+            db.DBManager.instance.updateFoto(global.usuario.id, img.path);
             List<int> imageBytes = img.readAsBytesSync();
             writeFileContent(base64Encode(imageBytes));
             readFileContent();
-
             //Navigator.pop(context);
           }
         });
@@ -727,7 +725,7 @@ void writeFileContent(String _base64) async {
 }
 
 //Future<String> readFileContent() async {
-dynamic readFileContent() async {
+Future<String> readFileContent() async {
   try {
     final file = await localFile;
     String contents = await file.readAsString();

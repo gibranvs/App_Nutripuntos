@@ -101,10 +101,10 @@ class _RecetaPageState extends State<RecetaPage> {
             } else if (snapshot.hasData) {
               if (snapshot.data != null) {
                 return ColorCirclesWidget(
-                    snapshot.data.azul,
-                    snapshot.data.verde,
-                    snapshot.data.naranja,
-                    snapshot.data.amarillo);
+                    azul: snapshot.data.azul,
+                    verde: snapshot.data.verde,
+                    naranja: snapshot.data.naranja,
+                    amarillo: snapshot.data.amarillo);
               } else {
                 return new Text("No hay puntajes.",
                     style: TextStyle(color: hexToColor("#606060")));

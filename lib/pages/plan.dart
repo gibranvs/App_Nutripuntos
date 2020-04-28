@@ -60,7 +60,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                   //dialog(context, "assets/icons/Recurso_23.png", "GRUPO 2 HARINAS", comida);
                   show_Dialog(
                     context: context,
-                    titulo: "GRUPO 1 CARBOHIDRATOS",
+                    titulo: "CARBOHIDRATOS",
                     imagen: "assets/icons/Recurso_23.png",
                     comida: _comida,
                     grupo: "1",
@@ -80,7 +80,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                   //dialog(context, "assets/icons/Recurso_22.png", "GRUPO 3 CARNES", comida);
                   show_Dialog(
                     context: context,
-                    titulo: "GRUPO 2 PROTEÍNAS",
+                    titulo: "PROTEÍNAS",
                     imagen: "assets/icons/Recurso_22.png",
                     comida: _comida,
                     grupo: "2",
@@ -101,7 +101,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                   //dialog(context, "assets/icons/Recurso_21.png", "GRUPO 4 LÍQUIDOS", comida);
                   show_Dialog(
                     context: context,
-                    titulo: "GRUPO 3 GRASAS",
+                    titulo: "GRASAS",
                     imagen: "assets/icons/Recurso_21.png",
                     comida: _comida,
                     grupo: "3",
@@ -122,7 +122,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                   //dialog(context, "assets/icons/Recurso_24.png", "GRUPO 1 VERDURAS", comida);
                   show_Dialog(
                     context: context,
-                    titulo: "GRUPO 4 LIBRE",
+                    titulo: "LIBRE",
                     imagen: "assets/icons/Recurso_24.png",
                     comida: _comida,
                     grupo: "4",
@@ -170,7 +170,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
           child: Container(
             width: MediaQuery.of(context).size.width * 0.9,
             child: FutureBuilder<List<Opciones_Dieta>>(
-                future: getOpcionesDieta(global.token),
+                future: getOpcionesDieta(global.usuario.token),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -193,7 +193,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                                   _context,
                                   MaterialPageRoute(
                                     builder: (context) => OpcionDetallePage(
-                                      global.token,
+                                      global.usuario.token,
                                       _index_comida,
                                       (index + 1).toString(),
                                       global.current_tab,
@@ -305,7 +305,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
             ),
           ),
           child: FutureBuilder(
-            future: getPestanas(global.token),
+            future: getPestanas(global.usuario.token),
             builder: (_context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -537,6 +537,7 @@ Future<T> show_Dialog<T>({
                   ),
 
                   /// TEXT INTRUCCIÓN
+                  /*
                   Container(
                     alignment: Alignment.topCenter,
                     margin: EdgeInsets.only(top: 10),
@@ -557,6 +558,7 @@ Future<T> show_Dialog<T>({
                       ),
                     ),
                   ),
+                  */
 
                   /// LIST ALIMENTOS
                   Container(
@@ -567,7 +569,7 @@ Future<T> show_Dialog<T>({
                       margin: EdgeInsets.only(
                           left: 30, right: 30, top: 10, bottom: 50),
                       child: FutureBuilder<List<String>>(
-                          future: getAlimentosColor(global.token, grupo),
+                          future: getAlimentosColor(global.usuario.token, grupo),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {

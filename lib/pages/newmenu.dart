@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:nutripuntos_app/pages/menu.dart';
 import 'package:nutripuntos_app/src/HexToColor.dart';
+import 'package:nutripuntos_app/src/mensaje.dart';
 import '../globals.dart' as global;
 import '../src/DBManager.dart' as db;
 import 'home.dart';
@@ -31,7 +31,7 @@ class menu extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.only(top: 70, left: 20),
                   child: Text(
-                    global.nombre_user + " " + global.apellidos_user,
+                    global.usuario.nombre + " " + global.usuario.apellidos,
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -45,12 +45,16 @@ class menu extends StatelessWidget {
                   padding: EdgeInsets.only(top: 5, left: 20),
                   child: GestureDetector(
                     onTap: () {
-                      db.DBManager.instance.deleteAllRegistros();
-                      print("Cerrar sesión");
-                      global.token = "";
-                      global.recovery_token = "";
-                      Navigator.push(_context,
-                          MaterialPageRoute(builder: (context) => LoginPage()));
+                      db.DBManager.instance
+                          .updateLogueado(global.usuario.id, 0)
+                          .then((_) {
+                        print("Cerrar sesión");
+                        global.usuario.token = "";
+                        Navigator.push(
+                            _context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()));
+                      });
                     },
                     child: Text(
                       "Cerrar sesión",
@@ -198,14 +202,16 @@ class ItemMenu extends StatelessWidget {
               );
               break;
             case 4:
-              global.list_recetas = getReceta("");
-              global.text_busqueda_receta.text = "";
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RecetasPage(),
-                ),
-              );
+              getReceta("").then((recetas) {
+                global.list_recetas = recetas;
+                global.text_busqueda_receta.text = "";
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RecetasPage(),
+                  ),
+                );
+              });
               break;
             case 5:
               Navigator.push(
@@ -216,13 +222,21 @@ class ItemMenu extends StatelessWidget {
               );
               break;
             case 6:
-              global.text_mensaje.text = "";
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NutriochatPage(),
-                ),
-              );
+              global.list_mensajes = new List<Mensaje>();
+              db.DBManager.instance
+                  .getMensajes(global.usuario.id)
+                  .then((mensajes) {
+                global.list_mensajes = mensajes;
+                getMensajesServer(global.usuario.token).then((_) {
+                  global.text_mensaje.text = "";
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NutriochatPage(),
+                    ),
+                  );
+                });
+              });
               break;
           }
         },

@@ -6,6 +6,7 @@ import 'package:nutripuntos_app/src/HexToColor.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:nutripuntos_app/src/meta.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'newmenu.dart' as newmenu;
 import '../src/DBManager.dart' as db;
@@ -675,10 +676,10 @@ class _ProgresoPageState extends State<ProgresoPage>
   ///
   /// Widget Reto
   ///
-  GestureDetector retoActual(_context) {
+  GestureDetector retoActual() {
     return GestureDetector(
       onTap: () {
-        _showDialog(_context);
+        _showDialog();
       },
       child: Stack(
         children: <Widget>[
@@ -691,7 +692,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                     image: Image.asset("assets/icons/Recurso_27.png").image)),
             child: //new Image.asset("assets/icons/Recurso_27.png"),
                 FutureBuilder<Meta>(
-                    future: db.DBManager.instance.getReto(global.token),
+                    future: db.DBManager.instance.getReto(global.usuario.id),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(
@@ -769,7 +770,7 @@ class _ProgresoPageState extends State<ProgresoPage>
   ///
   /// List Metas
   ///
-  Container metas(_context) {
+  Container metas() {
     return Container(
       width: MediaQuery.of(context).size.width,
       //height: MediaQuery.of(context).size.height,
@@ -780,7 +781,8 @@ class _ProgresoPageState extends State<ProgresoPage>
           child: Container(
             width: MediaQuery.of(context).size.width * 0.9,
             child: FutureBuilder<List<Meta>>(
-                future: db.DBManager.instance.getAllRetosPasados(global.token),
+                future:
+                    db.DBManager.instance.getAllRetosPasados(global.usuario.id),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -801,8 +803,9 @@ class _ProgresoPageState extends State<ProgresoPage>
                             return GestureDetector(
                               onTap: () {
                                 myTextUpdate.text = snapshot.data[index].meta;
-                                _showUpdateDialog(
-                                    _context, snapshot.data[index].meta);
+                                _showUpdateDialog(                                    
+                                    snapshot.data[index].id,
+                                    snapshot.data[index].meta);
                               },
                               child: Slidable(
                                 key: Key('s'),
@@ -926,7 +929,8 @@ class _ProgresoPageState extends State<ProgresoPage>
                                                 onPressed: () {
                                                   db.DBManager.instance
                                                       .deleteReto(snapshot
-                                                          .data[index].meta);
+                                                          .data[index].id);
+                                                  setState(() {});
                                                   Navigator.of(context)
                                                       .pop(true);
                                                 }),
@@ -1161,9 +1165,9 @@ class _ProgresoPageState extends State<ProgresoPage>
                       ),
                     ),
                     titulo("Próxima meta"),
-                    retoActual(context),
+                    retoActual(),
                     subtitulo("Retos anteriores"),
-                    metas(context),
+                    metas(),
                   ],
                 ),
               ],
@@ -1173,95 +1177,99 @@ class _ProgresoPageState extends State<ProgresoPage>
       ),
     );
   }
-}
 
-void _showDialog(_context) async {
-  await showDialog<String>(
-    context: _context,
-    child: new AlertDialog(
-      elevation: 4,
-      contentPadding: const EdgeInsets.all(16.0),
-      content: new Row(
-        children: <Widget>[
-          new Expanded(
-            child: new TextField(
-              controller: myTextEdit,
-              autofocus: true,
-              cursorColor: hexToColor("#059696"),
-              decoration: new InputDecoration(
-                labelText: 'Reto',
-                hintText: 'ej. -3 KG en un mes',
+  void _showDialog() async {
+    await showDialog<String>(
+      context: context,
+      child: new AlertDialog(
+        elevation: 4,
+        contentPadding: const EdgeInsets.all(16.0),
+        content: new Row(
+          children: <Widget>[
+            new Expanded(
+              child: new TextField(
+                controller: myTextEdit,
+                autofocus: true,
+                cursorColor: hexToColor("#059696"),
+                decoration: new InputDecoration(
+                  labelText: 'Reto',
+                  hintText: 'ej. -3 KG en un mes',
+                ),
               ),
-            ),
-          )
-        ],
-      ),
-      actions: <Widget>[
-        new FlatButton(
-            child: Text('CANCELAR',
-                style: TextStyle(color: hexToColor("#059696"))),
-            onPressed: () {
-              myTextEdit.text = "";
-              Navigator.pop(_context);
-            }),
-        new FlatButton(
-            child:
-                Text('GUARDAR', style: TextStyle(color: hexToColor("#059696"))),
-            onPressed: () {
-              if (myTextEdit.text != "") {
-                db.DBManager.instance
-                    .insertReto(global.id_user, global.token, myTextEdit.text);
+            )
+          ],
+        ),
+        actions: <Widget>[
+          new FlatButton(
+              child: Text('CANCELAR',
+                  style: TextStyle(color: hexToColor("#059696"))),
+              onPressed: () {
                 myTextEdit.text = "";
-                Navigator.pop(_context);
-              }
-            })
-      ],
-    ),
-  );
-}
-
-void _showUpdateDialog(_context, _oldReto) async {
-  await showDialog<String>(
-    context: _context,
-    child: new AlertDialog(
-      elevation: 4,
-      contentPadding: const EdgeInsets.all(16.0),
-      content: new Row(
-        children: <Widget>[
-          new Expanded(
-            child: new TextField(
-              controller: myTextUpdate,
-              autofocus: true,
-              cursorColor: hexToColor("#059696"),
-              decoration: new InputDecoration(
-                labelText: 'Reto',
-                hintText: 'ej. -3 KG en un mes',
-              ),
-            ),
-          )
+                Navigator.pop(context);
+              }),
+          new FlatButton(
+              child: Text('GUARDAR',
+                  style: TextStyle(color: hexToColor("#059696"))),
+              onPressed: () {
+                if (myTextEdit.text != "") {
+                  db.DBManager.instance
+                      .insertReto(global.usuario.id, myTextEdit.text);
+                  setState(() {
+                    myTextEdit.text = "";
+                  });
+                  Navigator.pop(context);
+                }
+              })
         ],
       ),
-      actions: <Widget>[
-        new FlatButton(
-            child: Text('CANCELAR',
-                style: TextStyle(color: hexToColor("#059696"))),
-            onPressed: () {
-              myTextUpdate.text = "";
-              Navigator.pop(_context);
-            }),
-        new FlatButton(
-            child:
-                Text('EDITAR', style: TextStyle(color: hexToColor("#059696"))),
-            onPressed: () {
-              if (myTextUpdate.text != "") {
-                db.DBManager.instance.updateReto(_oldReto, myTextUpdate.text);
+    );
+  }
+
+  void _showUpdateDialog(_idReto, _oldReto) async {
+    await showDialog<String>(
+      context: context,
+      child: new AlertDialog(
+        elevation: 4,
+        contentPadding: const EdgeInsets.all(16.0),
+        content: new Row(
+          children: <Widget>[
+            new Expanded(
+              child: new TextField(
+                controller: myTextUpdate,
+                autofocus: true,
+                cursorColor: hexToColor("#059696"),
+                decoration: new InputDecoration(
+                  labelText: 'Reto',
+                  hintText: 'ej. -3 KG en un mes',
+                ),
+              ),
+            )
+          ],
+        ),
+        actions: <Widget>[
+          new FlatButton(
+              child: Text('CANCELAR',
+                  style: TextStyle(color: hexToColor("#059696"))),
+              onPressed: () {
                 myTextUpdate.text = "";
-                Navigator.pop(_context);
-              }
-            })
-      ],
-    ),
-  );
+                Navigator.pop(context);
+              }),
+          new FlatButton(
+              child: Text('EDITAR',
+                  style: TextStyle(color: hexToColor("#059696"))),
+              onPressed: () {
+                if (myTextUpdate.text != "") {
+                  db.DBManager.instance.updateReto(_idReto, myTextUpdate.text);
+                  setState(() {
+                    myTextUpdate.text = "";
+                  });
+                  Navigator.pop(context);
+                }
+              })
+        ],
+      ),
+    );
+  }
 }
 
 Future<String> getLastPeso() async {
@@ -1269,7 +1277,7 @@ Future<String> getLastPeso() async {
     String peso;
 
     var response = await http.post(global.server + "/aplicacion/api",
-        body: {"tipo": "record", "token": global.token});
+        body: {"tipo": "record", "token": global.usuario.token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
     //print(datos);
 
@@ -1298,7 +1306,7 @@ Future<String> getLastGrasa() async {
     String grasa;
 
     var response = await http.post(global.server + "/aplicacion/api",
-        body: {"tipo": "record", "token": global.token});
+        body: {"tipo": "record", "token": global.usuario.token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
     //print(datos);
 
@@ -1327,7 +1335,7 @@ Future<List<Progreso>> getProgreso() async {
     List<Progreso> list = new List<Progreso>();
 
     var response = await http.post(global.server + "/aplicacion/api",
-        body: {"tipo": "record", "token": global.token});
+        body: {"tipo": "record", "token": global.usuario.token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
     //print(datos);
 
@@ -1433,14 +1441,6 @@ class Progreso {
   int anio;
 
   Progreso({this.peso, this.grasa, this.fecha, this.dia, this.mes, this.anio});
-}
-
-class Meta {
-  String meta;
-  String status;
-  String fecha;
-
-  Meta({this.meta, this.status, this.fecha});
 }
 
 class TimeSeriesDatos {

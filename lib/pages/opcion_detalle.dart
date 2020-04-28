@@ -100,7 +100,7 @@ class OpcionDetallePage extends StatelessWidget {
           top: 30, left: MediaQuery.of(_context).size.width * 0.52),
       child: FutureBuilder<Valores_Puntos>(
           future:
-              getColorCirclesWidgetValues(global.token, _index_comida, _opcion),
+              getColorCirclesWidgetValues(global.usuario.token, _index_comida, _opcion),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -113,10 +113,10 @@ class OpcionDetallePage extends StatelessWidget {
             } else if (snapshot.hasData) {
               if (snapshot.data != null) {
                 return ColorCirclesWidget(
-                    snapshot.data.azul,
-                    "L", //snapshot.data.verde,
-                    snapshot.data.naranja,
-                    snapshot.data.amarillo);
+                    azul: snapshot.data.azul,
+                    verde: "L", //snapshot.data.verde,
+                    naranja: snapshot.data.naranja,
+                    amarillo: snapshot.data.amarillo);
               } else {
                 return new Text("No hay puntajes.",
                     style: TextStyle(color: hexToColor("#606060")));
@@ -144,7 +144,7 @@ class OpcionDetallePage extends StatelessWidget {
           child: Container(
             width: MediaQuery.of(_context).size.width * 0.8,
             child: FutureBuilder<List<Detalle_Opcion>>(
-                future: getDetallesOpcion(global.token, _index_comida, _opcion),
+                future: getDetallesOpcion(global.usuario.token, _index_comida, _opcion),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
