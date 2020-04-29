@@ -27,7 +27,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
   String valor_azul = "0";
   String valor_amarillo = "0";
   String valor_verde = "0";
-
+  Colores colores;
   Future<List<Opciones_Dieta>> opciones_dieta;
   Future<List<Data_pestanas>> pestanas;
 
@@ -92,11 +92,14 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                   borderRadius: BorderRadius.circular(50),
                   border: Border.all(color: hexToColor("#EF5D24"), width: 2),
                 ),
-                child: Text(
+                child: AutoSizeText(
                   valor_naranja,
+                  minFontSize: 2,
+                  maxFontSize: 12,
+                  wrapWords: false,
                   style: TextStyle(
                     color: hexToColor("#EF5D24"),
-                    fontSize: 13,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -139,11 +142,14 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                       border:
                           Border.all(color: hexToColor("#30AAD9"), width: 2),
                     ),
-                    child: Text(
+                    child: AutoSizeText(
                       valor_azul,
+                      minFontSize: 2,
+                      maxFontSize: 12,
+                      wrapWords: false,
                       style: TextStyle(
                         color: hexToColor("#30AAD9"),
-                        fontSize: 13,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -188,11 +194,14 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                       border:
                           Border.all(color: hexToColor("#F9B33A"), width: 2),
                     ),
-                    child: Text(
+                    child: AutoSizeText(
                       valor_amarillo,
+                      minFontSize: 2,
+                      maxFontSize: 12,
+                      wrapWords: false,
                       style: TextStyle(
                         color: hexToColor("#F9B33A"),
-                        fontSize: 13,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -239,11 +248,14 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                         width: 2,
                       ),
                     ),
-                    child: Text(
+                    child: AutoSizeText(
                       valor_verde,
+                      minFontSize: 2,
+                      maxFontSize: 12,
+                      wrapWords: false,
                       style: TextStyle(
                         color: hexToColor("#23A246"),
-                        fontSize: 13,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -416,21 +428,18 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
     // TODO: implement initState
     super.initState();
 
-    pestanas = getPestanas(global.usuario.token);
+    pestanas = getPestanas();
+
     opciones_dieta = getOpcionesDieta(global.usuario.token);
     setState(() {
       global.current_tab = index_tab;
-      valor_naranja = "0";
-      valor_azul = "0";
-      valor_amarillo = "0";
-      valor_verde = "L";
     });
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();    
+    super.dispose();
   }
 
   @override
@@ -520,9 +529,23 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                         isScrollable: true,
                         indicatorColor: Colors.white,
                         tabs: tabs,
-                        onTap: (index) {
-                          //setState(() {});
+                        onTap: (index) async {
                           global.current_tab = index;
+                          await getColoresComida(index).then((_colores) {
+                            if (_colores != null) {
+                              colores = _colores;
+                              valor_naranja = _colores.naranja;
+                              valor_azul = _colores.azul;
+                              valor_amarillo = _colores.amarillo;
+                              valor_verde = "L";
+                            } else {
+                              valor_naranja = "0";
+                              valor_azul = "0";
+                              valor_amarillo = "0";
+                              valor_verde = "L";
+                            }
+                          });
+                          setState(() {});
                         },
                       ),
                       flexibleSpace: Container(
@@ -548,6 +571,40 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
         ),
       ),
     );
+  }
+
+  Future<List<Data_pestanas>> getPestanas() async {
+    List<Data_pestanas> list_pestanas = new List<Data_pestanas>();
+    list_pestanas.add(Data_pestanas(0, "Desayunos", "Desayuno en puntos",
+        "Sugerencias de desayuno", "desayuno"));
+    list_pestanas.add(Data_pestanas(1, "CM", "Colación matutina en puntos",
+        "Sugerencias de colación matutina", "colación matutina"));
+    list_pestanas.add(Data_pestanas(2, "Comidas", "Almuerzo en puntos",
+        "Sugerencias de almuerzo", "almuerzo"));
+    list_pestanas.add(Data_pestanas(3, "CV", "Colación vespertina en puntos",
+        "Sugerencias de colación vespertina", "colación vespertina"));
+    list_pestanas.add(Data_pestanas(
+        4, "Cenas", "Cena en puntos", "Sugerencias de cena", "cena"));
+    List<Data_pestanas> list = new List<Data_pestanas>();
+
+    DateTime time = DateTime.now();
+    String weekday = time.weekday.toString();
+
+    try {
+      var response = await http.post(global.server + "/aplicacion/api",
+          body: {"tipo": "dieta", "token": global.usuario.token});
+      var datos = json.decode(utf8.decode(response.bodyBytes));
+      //print(datos);
+      if (datos["status"] == 1) {
+        for (int i = 0; i < datos["response"]["d" + weekday].length; i++) {
+          list.add(list_pestanas[i]);
+        }
+
+        return list;
+      }
+    } catch (e) {
+      print("Error getPestañas " + e.toString());
+    }
   }
 }
 
@@ -807,39 +864,6 @@ Future<T> show_Dialog<T>({
   );
 }
 
-Future<List<Data_pestanas>> getPestanas(_token) async {
-  List<Data_pestanas> list_pestanas = new List<Data_pestanas>();
-  list_pestanas.add(Data_pestanas(0, "Desayunos", "Desayuno en puntos",
-      "Sugerencias de desayuno", "desayuno"));
-  list_pestanas.add(Data_pestanas(1, "CM", "Colación matutina en puntos",
-      "Sugerencias de colación matutina", "colación matutina"));
-  list_pestanas.add(Data_pestanas(2, "Comidas", "Almuerzo en puntos",
-      "Sugerencias de almuerzo", "almuerzo"));
-  list_pestanas.add(Data_pestanas(3, "CV", "Colación vespertina en puntos",
-      "Sugerencias de colación vespertina", "colación vespertina"));
-  list_pestanas.add(Data_pestanas(
-      4, "Cenas", "Cena en puntos", "Sugerencias de cena", "cena"));
-  List<Data_pestanas> list = new List<Data_pestanas>();
-
-  DateTime time = DateTime.now();
-  String weekday = time.weekday.toString();
-
-  try {
-    var response = await http.post(global.server + "/aplicacion/api",
-        body: {"tipo": "dieta", "token": _token});
-    var datos = json.decode(utf8.decode(response.bodyBytes));
-    //print(datos);
-    if (datos["status"] == 1) {
-      for (int i = 0; i < datos["response"]["d" + weekday].length; i++) {
-        list.add(list_pestanas[i]);
-      }
-      return list;
-    }
-  } catch (e) {
-    print("Error getPestañas " + e.toString());
-  }
-}
-
 Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {
   //print (_token);
   try {
@@ -865,6 +889,121 @@ Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {
     }
   } catch (e) {
     print("Error getOpcionesDieta " + e.toString());
+  }
+}
+
+Future<Colores> getColoresComida(_index_comida) async {
+  try {
+    DateTime time = DateTime.now();
+    String weekday = time.weekday.toString();
+    Colores valores_puntos;
+    String azul = "0";
+    String verde = "0";
+    String naranja = "0";
+    String amarillo = "0";
+
+    var response = await http.post(global.server + "/aplicacion/api",
+        body: {"tipo": "dieta", "token": global.usuario.token});
+    var datos = json.decode(utf8.decode(response.bodyBytes));
+
+    if (datos["status"] == 1) {
+      int receta = datos["response"]["d$weekday"][_index_comida].length - 1;
+
+      if (datos["response"]["d$weekday"][_index_comida][receta]["azul"] !=
+          null) {
+        if (datos["response"]["d$weekday"][_index_comida][receta]["azul"]
+                .toString()
+                .contains('.') ==
+            true) {
+          if (datos["response"]["d$weekday"][_index_comida][receta]["azul"]
+                  .split('.')[1] ==
+              "0")
+            azul = datos["response"]["d$weekday"][_index_comida][receta]["azul"]
+                .split('.')[0];
+          else
+            azul = datos["response"]["d$weekday"][_index_comida][receta]["azul"]
+                .toString();
+        } else
+          azul = datos["response"]["d$weekday"][_index_comida][receta]["azul"]
+              .toString();
+      } else
+        azul = "0";
+
+      if (datos["response"]["d$weekday"][_index_comida][receta]["verde"] !=
+          null) {
+        if (datos["response"]["d$weekday"][_index_comida][receta]["verde"]
+                .toString()
+                .contains('.') ==
+            true) {
+          if (datos["response"]["d$weekday"][_index_comida][receta]["verde"]
+                  .split('.')[1] ==
+              "0")
+            verde = datos["response"]["d$weekday"][_index_comida][receta]
+                    ["verde"]
+                .split('.')[0];
+          else
+            verde = datos["response"]["d$weekday"][_index_comida][receta]
+                    ["verde"]
+                .toString();
+        } else
+          verde = datos["response"]["d$weekday"][_index_comida][receta]["verde"]
+              .toString();
+      } else
+        verde = "0";
+
+      if (datos["response"]["d$weekday"][_index_comida][receta]["naranja"] !=
+          null) {
+        if (datos["response"]["d$weekday"][_index_comida][receta]["naranja"]
+                .toString()
+                .contains('.') ==
+            true) {
+          if (datos["response"]["d$weekday"][_index_comida][receta]["naranja"]
+                  .split('.')[1] ==
+              "0")
+            naranja = datos["response"]["d$weekday"][_index_comida][receta]
+                    ["naranja"]
+                .split('.')[0];
+          else
+            naranja = datos["response"]["d$weekday"][_index_comida][receta]
+                    ["naranja"]
+                .toString();
+        } else
+          naranja = datos["response"]["d$weekday"][_index_comida][receta]
+                  ["naranja"]
+              .toString();
+      } else
+        naranja = "0";
+
+      if (datos["response"]["d$weekday"][_index_comida][receta]["amarillo"] !=
+          null) {
+        if (datos["response"]["d$weekday"][_index_comida][receta]["amarillo"]
+                .toString()
+                .contains('.') ==
+            true) {
+          if (datos["response"]["d$weekday"][_index_comida][receta]["amarillo"]
+                  .split('.')[1] ==
+              "0")
+            amarillo = datos["response"]["d$weekday"][_index_comida][receta]
+                    ["amarillo"]
+                .split('.')[0];
+          else
+            amarillo = datos["response"]["d$weekday"][_index_comida][receta]
+                    ["amarillo"]
+                .toString();
+        } else
+          amarillo = datos["response"]["d$weekday"][_index_comida][receta]
+                  ["amarillo"]
+              .toString();
+      } else
+        amarillo = "0";
+
+      valores_puntos = new Colores(
+          azul: azul, verde: verde, naranja: naranja, amarillo: amarillo);
+
+      return valores_puntos;
+    }
+  } catch (ex) {
+    print("Error getColorCirclesWidgetValues: $ex");
   }
 }
 
@@ -939,4 +1078,12 @@ class Data_pestanas {
   String boton;
   Data_pestanas(
       this.index, this.nombre, this.titulo1, this.titulo2, this.boton);
+}
+
+class Colores {
+  String azul;
+  String naranja;
+  String amarillo;
+  String verde;
+  Colores({this.azul, this.naranja, this.amarillo, this.verde});
 }
