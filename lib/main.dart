@@ -19,6 +19,7 @@ void main() {
   runApp(new MaterialApp(
     title: "Nutripuntos",
     home: new MyApp(),
+    debugShowCheckedModeBanner: false,    
     //routes: <String, WidgetBuilder>{'/HomeScreen': (BuildContext context) => new login.LoginPage()},
     theme: ThemeData(
       primaryColor: Color(0xFF059696),

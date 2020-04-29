@@ -23,12 +23,22 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
   _PlanPageState(this.index_tab);
   TabController _tabController;
 
+  String valor_naranja = "0";
+  String valor_azul = "0";
+  String valor_amarillo = "0";
+  String valor_verde = "0";
+
+  Future<List<Opciones_Dieta>> opciones_dieta;
+  Future<List<Data_pestanas>> pestanas;
+
   ///
   /// Label Título 1
   ///
   Container titulo1(_titulo) {
     return Container(
-      margin: EdgeInsets.only(top: 20, left: 20),
+      margin: EdgeInsets.only(
+        top: 20,
+      ),
       child: Text(
         _titulo,
         style: TextStyle(
@@ -45,15 +55,17 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
   ///
   Container botones(_comida) {
     return Container(
-      height: 70,
+      height: 90,
       width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.only(top: 50),
+      margin: EdgeInsets.only(top: 10),
       alignment: Alignment.center,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               GestureDetector(
                 onTap: () {
@@ -71,9 +83,29 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                   child: Image.asset("assets/icons/Recurso_23.png"),
                 ),
               ),
+              Container(
+                width: 20,
+                height: 20,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(50),
+                  border: Border.all(color: hexToColor("#EF5D24"), width: 2),
+                ),
+                child: Text(
+                  valor_naranja,
+                  style: TextStyle(
+                    color: hexToColor("#EF5D24"),
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
             ],
           ),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               GestureDetector(
                 onTap: () {
@@ -92,9 +124,37 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                   child: Image.asset("assets/icons/Recurso_22.png"),
                 ),
               ),
+              Row(
+                children: <Widget>[
+                  Container(
+                    width: 15,
+                  ),
+                  Container(
+                    width: 20,
+                    height: 20,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(50),
+                      border:
+                          Border.all(color: hexToColor("#30AAD9"), width: 2),
+                    ),
+                    child: Text(
+                      valor_azul,
+                      style: TextStyle(
+                        color: hexToColor("#30AAD9"),
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               GestureDetector(
                 onTap: () {
@@ -113,9 +173,37 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                   child: Image.asset("assets/icons/Recurso_21.png"),
                 ),
               ),
+              Row(
+                children: <Widget>[
+                  Container(
+                    width: 15,
+                  ),
+                  Container(
+                    width: 20,
+                    height: 20,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(50),
+                      border:
+                          Border.all(color: hexToColor("#F9B33A"), width: 2),
+                    ),
+                    child: Text(
+                      valor_amarillo,
+                      style: TextStyle(
+                        color: hexToColor("#F9B33A"),
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               GestureDetector(
                 onTap: () {
@@ -134,6 +222,34 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                   child: Image.asset("assets/icons/Recurso_24.png"),
                 ),
               ),
+              Row(
+                children: <Widget>[
+                  Container(
+                    width: 15,
+                  ),
+                  Container(
+                    width: 20,
+                    height: 20,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(
+                        color: hexToColor("#23A246"),
+                        width: 2,
+                      ),
+                    ),
+                    child: Text(
+                      valor_verde,
+                      style: TextStyle(
+                        color: hexToColor("#23A246"),
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ],
@@ -146,7 +262,10 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
   ///
   Container titulo2(_titulo) {
     return Container(
-      margin: EdgeInsets.only(top: 140, left: 20),
+      margin: EdgeInsets.only(
+        top: 20,
+        bottom: 10,
+      ),
       child: Text(
         _titulo,
         style: TextStyle(
@@ -161,126 +280,132 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
   ///
   /// List sugerencias
   ///
-  Container sugerencias(_context, _index_comida) {
+  Widget sugerencias(_context, _index_comida) {
     return Container(
-      padding: EdgeInsets.only(top: 170),
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height - 350,
       child: SingleChildScrollView(
-        child: Align(
-          alignment: Alignment.center,
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            child: FutureBuilder<List<Opciones_Dieta>>(
-                future: getOpcionesDieta(global.usuario.token),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        semanticsLabel: "Loading",
-                        backgroundColor: hexToColor("#cdcdcd"),
-                      ),
-                    );
-                  } else if (snapshot.hasData) {
-                    if (snapshot.data.length > 0) {
-                      return new ListView.builder(
-                          physics: const NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (context, index) {
-                            String asset;
-                            switch (_index_comida) {
-                              case 0:
-                                asset = "assets/icons/tiempo_desayuno.png";
-                                break;
-                              case 1:
-                                asset = "assets/icons/tiempo_snack.png";
-                                break;
-                              case 2:
-                                asset = "assets/icons/tiempo_comida.png";
-                                break;
-                              case 3:
-                                asset = "assets/icons/tiempo_snack.png";
-                                break;
-                              case 4:
-                                asset = "assets/icons/tiempo_cena.png";
-                                break;
-                              case 5:
-                                asset = "assets/icons/tiempo_bebida.png";
-                                break;
-                            }
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  _context,
-                                  MaterialPageRoute(
-                                    builder: (context) => OpcionDetallePage(
-                                      global.usuario.token,
-                                      _index_comida,
-                                      (index + 1).toString(),
-                                      global.current_tab,
+        child: Container(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+          ),
+          child: (opciones_dieta != null)
+              ? FutureBuilder<List<Opciones_Dieta>>(
+                  future:
+                      opciones_dieta, //getOpcionesDieta(global.usuario.token),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          semanticsLabel: "Loading",
+                          backgroundColor: hexToColor("#cdcdcd"),
+                        ),
+                      );
+                    } else if (snapshot.hasData) {
+                      if (snapshot.data.length > 0) {
+                        return new ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: snapshot.data.length,
+                            itemBuilder: (context, index) {
+                              String asset;
+                              switch (_index_comida) {
+                                case 0:
+                                  asset = "assets/icons/tiempo_desayuno.png";
+                                  break;
+                                case 1:
+                                  asset = "assets/icons/tiempo_snack.png";
+                                  break;
+                                case 2:
+                                  asset = "assets/icons/tiempo_comida.png";
+                                  break;
+                                case 3:
+                                  asset = "assets/icons/tiempo_snack.png";
+                                  break;
+                                case 4:
+                                  asset = "assets/icons/tiempo_cena.png";
+                                  break;
+                                case 5:
+                                  asset = "assets/icons/tiempo_bebida.png";
+                                  break;
+                              }
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    _context,
+                                    MaterialPageRoute(
+                                      builder: (context) => OpcionDetallePage(
+                                        global.usuario.token,
+                                        _index_comida,
+                                        (index + 1).toString(),
+                                        global.current_tab,
+                                      ),
                                     ),
-                                  ),
-                                );
-                              },
-                              child: Card(
-                                margin: EdgeInsets.only(bottom: 15),
-                                elevation: 0,
-                                color: hexToColor("#f2f2f2"),
-                                child: Row(
-                                  children: <Widget>[
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 5, left: 5, bottom: 3),
-                                          child: Container(
-                                            margin: EdgeInsets.only(left: 5),
-                                            height: 80,
-                                            padding: EdgeInsets.all(5),
-                                            child: new Image.asset(asset),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding:
-                                              EdgeInsets.only(top: 0, left: 20),
-                                          child: Container(
-                                            width: 180,
-                                            child: Text(
-                                              snapshot.data[index].nombre
-                                                  .toString()
-                                                  .toUpperCase(),
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: hexToColor("#505050"),
-                                                  fontWeight: FontWeight.bold),
+                                  );
+                                },
+                                child: Card(
+                                  margin: EdgeInsets.only(bottom: 15),
+                                  elevation: 0,
+                                  color: hexToColor("#f2f2f2"),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 5, left: 5, bottom: 3),
+                                            child: Container(
+                                              margin: EdgeInsets.only(left: 5),
+                                              height: 80,
+                                              padding: EdgeInsets.all(5),
+                                              child: new Image.asset(asset),
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                        ],
+                                      ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 0, left: 20),
+                                            child: Container(
+                                              width: 180,
+                                              child: Text(
+                                                snapshot.data[index].nombre
+                                                    .toString()
+                                                    .toUpperCase(),
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color:
+                                                        hexToColor("#505050"),
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            );
-                          });
-                    } else {
-                      return new Text("No hay sugerencias de comida.",
+                              );
+                            });
+                      } else {
+                        return new Text("No hay sugerencias de comida.",
+                            style: TextStyle(color: hexToColor("#606060")));
+                      }
+                    } else if (snapshot.hasError) {
+                      return new Text("Error al obtener sugerencias de comida.",
                           style: TextStyle(color: hexToColor("#606060")));
                     }
-                  } else if (snapshot.hasError) {
-                    return new Text("Error al obtener sugerencias de comida.",
-                        style: TextStyle(color: hexToColor("#606060")));
-                  }
-                }),
-          ),
+                  })
+              : CircularProgressIndicator(),
         ),
       ),
     );
@@ -290,9 +415,22 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    pestanas = getPestanas(global.usuario.token);
+    opciones_dieta = getOpcionesDieta(global.usuario.token);
     setState(() {
       global.current_tab = index_tab;
+      valor_naranja = "0";
+      valor_azul = "0";
+      valor_amarillo = "0";
+      valor_verde = "L";
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();    
   }
 
   @override
@@ -315,6 +453,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
         ),
       ),
       body: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Container(
           decoration: new BoxDecoration(
             color: const Color(0x00FFCC00),
@@ -326,7 +465,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
             ),
           ),
           child: FutureBuilder(
-            future: getPestanas(global.usuario.token),
+            future: pestanas, //getPestanas(global.usuario.token),
             builder: (_context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
@@ -358,13 +497,15 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    child: Stack(
-                      children: <Widget>[
-                        titulo1(snapshot.data[i].titulo1),
-                        botones(snapshot.data[i].boton),
-                        titulo2(snapshot.data[i].titulo2),
-                        sugerencias(context, snapshot.data[i].index),
-                      ],
+                    child: Container(
+                      child: Column(
+                        children: <Widget>[
+                          titulo1(snapshot.data[i].titulo1),
+                          botones(snapshot.data[i].boton),
+                          titulo2(snapshot.data[i].titulo2),
+                          sugerencias(context, snapshot.data[i].index),
+                        ],
+                      ),
                     ),
                   ));
                 }
@@ -380,9 +521,8 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                         indicatorColor: Colors.white,
                         tabs: tabs,
                         onTap: (index) {
-                          setState(() {
-                            global.current_tab = index;
-                          });
+                          //setState(() {});
+                          global.current_tab = index;
                         },
                       ),
                       flexibleSpace: Container(
@@ -688,6 +828,7 @@ Future<List<Data_pestanas>> getPestanas(_token) async {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "dieta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
+    //print(datos);
     if (datos["status"] == 1) {
       for (int i = 0; i < datos["response"]["d" + weekday].length; i++) {
         list.add(list_pestanas[i]);
@@ -710,6 +851,7 @@ Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "dieta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
+    //print(datos);
     if (datos["status"] == 1) {
       for (int dias = 0;
           dias < datos["response"]["d" + weekday].length;
@@ -740,9 +882,40 @@ Future<List<String>> getAlimentosColor(_token, _color) async {
     });
     var datos = json.decode(utf8.decode(response.bodyBytes));
     //print(datos);
+    double porcion;
+    String porcion_str;
+    String alimento;
     if (datos["status"] == 1) {
       for (int i = 0; i < datos["response"].length; i++) {
-        list.add(datos["response"][i]["nombre"]);
+        porcion = double.parse(datos["response"][i]["porcion"]);
+        if (porcion % 1 == 0)
+          porcion_str = porcion.toString().split(".")[0];
+        else
+          porcion_str = porcion.toString();
+
+        if (porcion <= 1) {
+          alimento = porcion_str +
+              " " +
+              datos["response"][i]["medida"].toString().toLowerCase() +
+              " de " +
+              datos["response"][i]["nombre"].toString().toLowerCase();
+        } else {
+          if (datos["response"][i]["medida"].toString()[
+                  datos["response"][i]["medida"].toString().length - 1] !=
+              "s")
+            alimento = porcion_str +
+                " " +
+                datos["response"][i]["medida"].toString().toLowerCase() +
+                "s de " +
+                datos["response"][i]["nombre"].toString().toLowerCase();
+          else
+            alimento = porcion_str +
+                " " +
+                datos["response"][i]["medida"].toString().toLowerCase() +
+                " de " +
+                datos["response"][i]["nombre"].toString().toLowerCase();
+        }
+        list.add(alimento);
       }
     }
     return list;

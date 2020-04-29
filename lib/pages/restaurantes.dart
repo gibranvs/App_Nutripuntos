@@ -7,6 +7,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'restaurante_detalle.dart' as restaurante;
 
+Future<List<Restaurante>> listRestaurantes;
+
 class RestaurantesPage extends StatefulWidget {
   @override
   _RestaurantesPageState createState() => new _RestaurantesPageState();
@@ -21,7 +23,7 @@ class _RestaurantesPageState extends State<RestaurantesPage> {
       child: Padding(
         padding: EdgeInsets.only(top: 0),
         child: FutureBuilder<List<Restaurante>>(
-            future: fetchRestaurantes(),
+            future: listRestaurantes, //fetchRestaurantes(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return new ListView.builder(
@@ -113,6 +115,19 @@ class _RestaurantesPageState extends State<RestaurantesPage> {
             }),
       ),
     );
+  }
+
+  @override 
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    listRestaurantes = fetchRestaurantes();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override

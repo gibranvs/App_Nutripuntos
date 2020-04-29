@@ -103,13 +103,11 @@ class OpcionDetallePage extends StatelessWidget {
               getColorCirclesWidgetValues(global.usuario.token, _index_comida, _opcion),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(
+              return CircularProgressIndicator(
                   strokeWidth: 2,
                   semanticsLabel: "Loading",
                   backgroundColor: hexToColor("#cdcdcd"),
-                ),
-              );
+                );
             } else if (snapshot.hasData) {
               if (snapshot.data != null) {
                 return ColorCirclesWidget(
@@ -252,7 +250,7 @@ class OpcionDetallePage extends StatelessWidget {
         ),
       ),
     );
-  }
+  }  
 
   @override
   Widget build(BuildContext context) {

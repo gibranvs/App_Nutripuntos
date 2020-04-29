@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:nutripuntos_app/src/HexToColor.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:nutripuntos_app/globals.dart' as global;
@@ -13,10 +14,11 @@ import 'newmenu.dart' as newmenu;
 import '../src/bubble.dart';
 import '../src/MessageAlert.dart' as alert;
 
-final myListView = ScrollController();
 Color colorIcon = hexToColor("#9a9a9a");
 bool msgs_doctor_ready = false;
 bool msgs_user_ready = false;
+bool sending = false;
+double opacityDownVisible = 0;
 
 class NutriochatPage extends StatefulWidget {
   @override
@@ -24,6 +26,8 @@ class NutriochatPage extends StatefulWidget {
 }
 
 class _NutriochatPageState extends State<NutriochatPage> {
+  ScrollController myListView = ScrollController();
+
   ///
   /// Fondo
   ///
@@ -51,108 +55,145 @@ class _NutriochatPageState extends State<NutriochatPage> {
   ///
   /// List Mensajes
   ///
-  Container listMessages() {
-    if (global.list_mensajes != null && global.list_mensajes.length > 0) {
-      global.list_mensajes
-          .sort((a, b) => a.fecha.toString().compareTo(b.fecha.toString()));
-      //myListView.animateTo(global.list_mensajes.length.toDouble() * 1000, duration: const Duration(milliseconds: 200), curve: Curves.linear);
-      return Container(
-        height: MediaQuery.of(context).size.height - 130,
-        margin: EdgeInsets.only(bottom: 10),
-        child: Scrollbar(
-          child: ListView(
-            controller: myListView,
-            shrinkWrap: true,
-            children: global.list_mensajes.map((mensaje) {
-              if (mensaje.origen == "doctor") {
-                return Row(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(left: 10),
-                      width: 50,
-                      child: Image.asset("assets/icons/recurso_2.png"),
-                    ),
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      child: Container(
-                        alignment: Alignment.centerLeft,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5)),
+  Widget listMessages() {
+    return (global.list_mensajes != null && global.list_mensajes.length > 0)
+        ? Container(
+            height: MediaQuery.of(context).size.height - 130,
+            margin: EdgeInsets.only(bottom: 50),            
+            child: ListView(
+              controller: myListView,
+              shrinkWrap: true,
+              //physics: BouncingScrollPhysics(),
+              children: global.list_mensajes.map((mensaje) {
+                if (mensaje.origen == "doctor") {
+                  return Row(
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(left: 10),
+                        width: 50,
+                        child: Image.asset("assets/icons/recurso_2.png"),
+                      ),
+                      Container(
+                        margin: EdgeInsets.all(10),
                         child: Container(
-                          constraints: BoxConstraints(
-                              minWidth: 20, maxWidth: 220, minHeight: 40),
-                          child: Bubble(
-                            color: hexToColor("#bcbcbc"),
-                            nip: BubbleNip.leftBottom,
-                            nipWidth: 15,
-                            nipHeight: 10,
-                            radius: Radius.zero,
-                            margin: BubbleEdges.only(top: 10),
-                            stick: true,
-                            child: Text(
-                              mensaje.mensaje,
-                              style: TextStyle(color: hexToColor("#676767")),
+                          alignment: Alignment.centerLeft,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Container(
+                            constraints: BoxConstraints(
+                                minWidth: 20, maxWidth: 220, minHeight: 40),
+                            child: Bubble(
+                              color: hexToColor("#bcbcbc"),
+                              nip: BubbleNip.leftBottom,
+                              nipWidth: 15,
+                              nipHeight: 10,
+                              radius: Radius.zero,
+                              margin: BubbleEdges.only(top: 10),
+                              stick: true,
+                              child: Text(
+                                mensaje.mensaje,
+                                style: TextStyle(color: hexToColor("#676767")),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                );
-              } else {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.all(10),
-                      alignment: Alignment.centerRight,
-                      child: Container(
+                    ],
+                  );
+                } else {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.all(10),
                         alignment: Alignment.centerRight,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5)),
                         child: Container(
-                          constraints: BoxConstraints(
-                              minWidth: 20, maxWidth: 220, minHeight: 40),
-                          child: Bubble(
-                            color: hexToColor("#059696"),
-                            nip: BubbleNip.rightBottom,
-                            nipWidth: 15,
-                            nipHeight: 10,
-                            radius: Radius.zero,
-                            margin: BubbleEdges.only(top: 10),
-                            stick: true,
-                            child: Text(
-                              mensaje.mensaje,
-                              style: TextStyle(color: Colors.white),
+                          alignment: Alignment.centerRight,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Container(
+                            constraints: BoxConstraints(
+                                minWidth: 20, maxWidth: 220, minHeight: 40),
+                            child: Bubble(
+                              color: hexToColor("#059696"),
+                              nip: BubbleNip.rightBottom,
+                              nipWidth: 15,
+                              nipHeight: 10,
+                              radius: Radius.zero,
+                              margin: BubbleEdges.only(top: 10),
+                              stick: true,
+                              child: Text(
+                                mensaje.mensaje,
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      height: 50,
-                      width: 50,
-                      margin: EdgeInsets.only(right: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        image: global.image_foto == null
-                            ? DecorationImage(
-                                image: AssetImage("assets/images/photo.jpg"))
-                            : global.image_foto,
-                        //global.returnFileSelected(global.imageFile, global.imageFile.path),
+                      Container(
+                        height: 50,
+                        width: 50,
+                        margin: EdgeInsets.only(right: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          image: global.image_foto == null
+                              ? DecorationImage(
+                                  image: AssetImage("assets/images/photo.jpg"))
+                              : global.image_foto,
+                          //global.returnFileSelected(global.imageFile, global.imageFile.path),
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              }
-            }).toList(),
+                    ],
+                  );
+                }
+              }).toList(),
+            ),
+          )
+        : Offstage();
+  }
+
+  Widget floatingButton() {
+    return AnimatedOpacity(
+      opacity: opacityDownVisible,
+      duration: Duration(milliseconds: 500),
+          child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        alignment: Alignment.bottomRight,
+        margin: EdgeInsets.only(
+          right: 10,
+        ),
+        child: GestureDetector(
+          onTap: () {
+            //myListView.jumpTo(myListView.position.maxScrollExtent);
+            Future.delayed(Duration.zero, () {
+              myListView.animateTo(myListView.position.maxScrollExtent,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut);
+            });
+          },
+          child: Container(
+            width: 50,
+            height: 50,
+            margin: EdgeInsets.only(
+              bottom: 60,
+            ),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: hexToColor("#3DB2C2"),
+              borderRadius: BorderRadius.all(
+                Radius.circular(50),
+              ),
+            ),
+            child: Icon(
+              Icons.arrow_downward,
+              color: Colors.white,
+            ),
           ),
         ),
-      );
-    } else {
-      return Container();
-    }
+          ),
+    );
   }
 
   ///
@@ -183,19 +224,30 @@ class _NutriochatPageState extends State<NutriochatPage> {
               },
               decoration: InputDecoration(
                 labelText: "Escribe aquí tus dudas",
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    if (global.text_mensaje.text.length > 0) {
-                      print("Send message: " + global.text_mensaje.text);
-                      guardarMensajes(context, global.usuario.token,
-                          global.text_mensaje.text);
-                    }
-                  },
-                  child: Icon(
-                    Icons.send,
-                    color: colorIcon,
-                  ),
-                ),
+                suffixIcon: (sending == false)
+                    ? GestureDetector(
+                        onTap: () {
+                          if (global.text_mensaje.text.length > 0) {
+                            print("Send message: " + global.text_mensaje.text);
+                            guardarMensajes(context, global.usuario.token,
+                                global.text_mensaje.text);
+                          }
+                        },
+                        child: Icon(
+                          Icons.send,
+                          color: colorIcon,
+                        ),
+                      )
+                    : Container(
+                        padding: EdgeInsets.all(15),
+                        child: SizedBox(
+                          width: 10,
+                          height: 10,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      ),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.only(left: 20),
               ),
@@ -208,36 +260,84 @@ class _NutriochatPageState extends State<NutriochatPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+
+    myListView = new ScrollController();
     setState(() {
       msgs_user_ready = false;
       msgs_doctor_ready = false;
+      sending = false;
     });
-    db.DBManager.instance.getMensajes(global.usuario.id).then((mensajes) {
-      setState(() {
-        msgs_user_ready = true;
-        global.list_mensajes = mensajes;
-      });
-      getMensajesServer(global.usuario.token).then((_) {
+
+    getMensajesServer(global.usuario.token).then((_mensajesDoctor) {
+      if (_mensajesDoctor != null) {
         setState(() {
           msgs_doctor_ready = true;
-          if (global.list_mensajes == null ||
-              global.list_mensajes.length == 0) {
-            Timer.periodic(Duration(seconds: 1), (timer) {
-              alert.showMessageDialog(context, "Hola",
-                  "Escribe a un nutriólogo a través de  Nutrichat, un espacio creado para contactar a tu doctor, fácilmente.");
-              if (timer.tick > 0) timer.cancel();
-            });
-          }
         });
+      }
+
+      db.DBManager.instance
+          .getMensajes(global.usuario.id)
+          .then((_mensajesUsuario) {
+        setState(() {
+          msgs_user_ready = true;
+          global.list_mensajes = _mensajesDoctor +
+              _mensajesUsuario; //new List.from(_mensajesDoctor)..addAll(_mensajesUsuario);
+          global.list_mensajes
+              .sort((a, b) => a.fecha.toString().compareTo(b.fecha.toString()));
+        });
+
+        if (global.list_mensajes == null || global.list_mensajes.length == 0) {
+          Timer.periodic(Duration(seconds: 2), (timer) {
+            alert.showMessageDialog(context, "Hola",
+                "Escribe a un nutriólogo a través de Nutrichat, un espacio creado para contactar a tu doctor, fácilmente.");
+            if (timer.tick > 0) timer.cancel();
+          });
+        }
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {          
+          myListView.jumpTo(myListView.position.maxScrollExtent);
+
+          myListView.addListener(scrollListener);          
+        });        
       });
     });
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    myListView.dispose();
+  }
+
+  scrollListener() {
+    if (myListView.offset >= myListView.position.maxScrollExtent &&
+        !myListView.position.outOfRange) {
+          //print("reach the bottom");
+      setState(() {
+        opacityDownVisible = 0;
+      });
+    }
+    if (myListView.offset <= myListView.position.minScrollExtent &&
+        !myListView.position.outOfRange) {
+          //print("reach the top");
+      setState(() {
+        opacityDownVisible = 1;
+      });
+    }
+    if (myListView.offset < myListView.position.maxScrollExtent) {
+          //print("scrolled");
+      setState(() {
+        opacityDownVisible = 1;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomPadding: true,
       drawer: new newmenu.menu(6),
       appBar: AppBar(
         elevation: 4,
@@ -254,28 +354,37 @@ class _NutriochatPageState extends State<NutriochatPage> {
           ),
         ),
       ),
-      body: Stack(
-        children: <Widget>[
-          fondo(),
-          Center(
-            child: (msgs_user_ready == true && msgs_doctor_ready == true)
+      body: Container(
+        child: Stack(
+          children: <Widget>[
+            fondo(),
+            (msgs_user_ready == true && msgs_doctor_ready == true)
                 ? listMessages()
-                : CircularProgressIndicator(
-                    strokeWidth: 2,
-                    semanticsLabel: "Loading",
-                    backgroundColor: hexToColor("#cdcdcd"),
+                : Container(
+                    height: MediaQuery.of(context).size.height - 130,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        semanticsLabel: "Loading",
+                        backgroundColor: hexToColor("#cdcdcd"),
+                      ),
+                    ),
                   ),
-          ),
-          messageArea(),
-        ],
+            floatingButton(),
+            messageArea(),
+          ],
+        ),
       ),
     );
   }
 
   void guardarMensajes(
       BuildContext _context, String _token, String _mensaje) async {
+    setState(() {
+      sending = true;
+    });
     try {
-      FocusScope.of(_context).requestFocus(new FocusNode());
+      //FocusScope.of(_context).requestFocus(new FocusNode());
       var response = await http.post(global.server + "/aplicacion/api", body: {
         "tipo": "guarda_mensaje",
         "token": _token,
@@ -283,15 +392,20 @@ class _NutriochatPageState extends State<NutriochatPage> {
       });
       var datos = json.decode(utf8.decode(response.bodyBytes));
       //print(datos);
-      db.DBManager.instance.insertMensaje(global.usuario.id, _mensaje);
+      await db.DBManager.instance.insertMensaje(global.usuario.id, _mensaje);
+
       setState(() {
         global.list_mensajes.add(Mensaje(
             origen: "usuario", mensaje: _mensaje, fecha: DateTime.now()));
+        sending = false;
         global.text_mensaje.text = "";
-        colorIcon = hexToColor("#9a9a9a");
+        colorIcon = hexToColor("#9a9a9a");                
       });
-      myListView.animateTo(myListView.position.maxScrollExtent + 70,
-          duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+      Future.delayed(Duration.zero, () {
+            myListView.animateTo(myListView.position.maxScrollExtent + 70,
+                duration: const Duration(milliseconds: 800),
+                curve: Curves.easeOut);
+          });
     } catch (e) {
       print("Error guardarMensajes " + e.toString());
     }
@@ -369,20 +483,23 @@ Future<T> show_Dialog<T>({
   );
 }
 
-Future<void> getMensajesServer(String _token) async {
+Future<List<Mensaje>> getMensajesServer(String _token) async {
+  List<Mensaje> list = new List<Mensaje>();
   try {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "get_mensajes", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
     //print(datos);
     for (int i = 0; i < datos["response"].length; i++) {
-      global.list_mensajes.add(Mensaje(
+      list.add(Mensaje(
           origen: "doctor",
           mensaje: datos["response"][i]["texto"],
           fecha: DateTime.parse(datos["response"][i]["fecha"])));
     }
+    return list;
     //global.list_mensajes.sort((a, b) => a.toString().compareTo(b.toString()));
   } catch (e) {
     print("Error getMensajes " + e.toString());
+    return null;
   }
 }
