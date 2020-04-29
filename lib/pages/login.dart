@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
+import 'package:nutripuntos_app/src/usuario.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'home.dart';
@@ -86,13 +87,12 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                      child: 
-                      //FutureBuilder<List<Doctor>>(
-                      //future: fetchDoctores(),
-                      //builder: (context, snapshot) {
-                      //if (snapshot.hasData) {
-                      //if(listDoctores.length > 0) {
-
+                      child:
+                          //FutureBuilder<List<Doctor>>(
+                          //future: fetchDoctores(),
+                          //builder: (context, snapshot) {
+                          //if (snapshot.hasData) {
+                          //if(listDoctores.length > 0) {
 
                           DropdownButton<Doctor>(
                         iconSize: 0,
@@ -118,7 +118,6 @@ class _LoginPageState extends State<LoginPage> {
                           });
                         },
                       ),
-
 
                       /*
                             } else if (snapshot.hasError) {
@@ -148,8 +147,7 @@ class _LoginPageState extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0)),
                       onPressed: () {
-                        check_login(
-                            context, global.text_email.text, doctorSelect);
+                        check_login(global.text_email.text, doctorSelect);
                       },
                     ),
                   ),
@@ -177,39 +175,75 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ));
   }
-}
 
-void check_login(_context, _email, _doctorSelected) async {
-  if (_email != "") {
-    final response = await http.post(global.server + '/aplicacion/api',
-        body: {"tipo": "login", "usr": _email, "doc": _doctorSelected.id});
-    var responseJson = json.decode(utf8.decode(response.bodyBytes));
-    print(responseJson);
-    if (responseJson["status"] == 1) {
-      global.id_user = 1;
-      global.nombre_user = responseJson["response"][0]["nombre"];
-      global.apellidos_user = responseJson["response"][0]["apellidos"];
-      global.token = responseJson["response"][0]["token"];
-      global.recovery_token = responseJson["response"][0]["recoverytk"];
-      db.DBManager.instance.insertUsuario(
-          1,
-          responseJson["response"][0]["nombre"].toString(),
-          responseJson["response"][0]["apellidos"].toString(),
-          responseJson["response"][0]["token"].toString(),
-          "");
-      global.text_email.text = "";
-      global.selected_index = 0;
-      Navigator.push(
-        _context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
+  void check_login(_email, _doctorSelected) async {
+    if (_email != "") {
+      final response = await http.post(global.server + '/aplicacion/api',
+          body: {"tipo": "login", "usr": _email, "doc": _doctorSelected.id});
+      var responseJson = json.decode(utf8.decode(response.bodyBytes));
+      print(responseJson);
+      if (responseJson["status"] == 1) {
+        db.DBManager.instance.existUsuario(_email).then((usuario) {
+          if (usuario != null) {
+            global.usuario = usuario;
+            db.DBManager.instance.updateLogueado(usuario.id, 1).then((_) {
+              setState(() {
+                global.text_email.text = "";
+                global.selected_index = 0;
+              });
+              readFileContent().then((_) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              });
+            });
+          } else {
+            db.DBManager.instance
+                .insertUsuario(
+                    responseJson["response"][0]["nombre"],
+                    responseJson["response"][0]["apellidos"],
+                    _email,
+                    responseJson["response"][0]["token"],
+                    "foto",
+                    1)
+                .then((idUsuario) {
+              int id = idUsuario;
+              String nombre = responseJson["response"][0]["nombre"];
+              String apellidos = responseJson["response"][0]["apellidos"];
+              String correo = _email;
+              String token = responseJson["response"][0]["token"];
+              String foto = "foto";
+              int logueado = 1;
+              global.usuario = new Usuario(
+                  id: id,
+                  nombre: nombre,
+                  apellidos: apellidos,
+                  correo: correo,
+                  token: token,
+                  foto: foto,
+                  logueado: logueado);
+
+              setState(() {
+                global.text_email.text = "";
+                global.selected_index = 0;
+              });
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+              );
+            });
+          }
+        });
+      } else {
+        alert.showMessageDialog(context, "Error en el login",
+            "Verifica que tu correo y tu especialista sean correctos.");
+      }
     } else {
-      alert.showMessageDialog(_context, "Error en el login",
-          "Verifica que tu correo y tu especialista sean correctos.");
+      alert.showMessageDialog(
+          context, "Error en el login", "Ingresa todos los campos.");
     }
-  } else {
-    alert.showMessageDialog(
-        _context, "Error en el login", "Ingresa todos los campos.");
   }
 }
 

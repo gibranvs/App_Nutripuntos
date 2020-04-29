@@ -1,17 +1,16 @@
 import 'dart:io';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:nutripuntos_app/src/mensaje.dart';
+import 'package:nutripuntos_app/src/meta.dart';
+import 'package:nutripuntos_app/src/usuario.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path_provider_macos/path_provider_macos.dart' as path_ios;
 import '../globals.dart' as globals;
 import 'package:intl/intl.dart';
-import '../pages/home.dart';
-import '../pages/login.dart';
-import 'package:device_info/device_info.dart';
-import '../pages/progreso.dart' as progreso;
-import '../pages/nutriochat.dart' as chat;
 
 ///
 /// TABLA REGISTRO
@@ -20,14 +19,17 @@ final String tableRegistro = "REGISTRO";
 final String columnID = "ID";
 final String columnNombre = "NOMBRE";
 final String columnApellido = "APELLIDO";
+final String columnCorreo = "CORREO";
 final String columnToken = "TOKEN";
 final String columnFoto = "FOTO";
+final String columnLog = "LOGUEADO";
 
 ///
 /// TABLA RETOS
 ///
 final String tableRetos = "RETOS";
-final String columnTokenReto = "TOKEN";
+final String columnIDReto = "ID";
+final String columnIDUsuarioReto = "ID_USUARIO";
 final String columnReto = "RETO";
 final String columnFecha = "FECHA";
 final String columnStatus = "ESTATUS";
@@ -36,16 +38,17 @@ final String columnStatus = "ESTATUS";
 /// TABLA CHAT
 ///
 final String tableChat = "CHAT";
-final String columnTokenMsj = "TOKEN";
+final String columnIDMensaje = "ID";
+final String columnIDUsuarioChat = "ID_USUARIO";
 final String columnMensaje = "MENSAJE";
-final String columnEnviado = "FECHA";
+final String columnFechaEnviado = "FECHA";
 
 // singleton class to manage the database
 class DBManager {
   // This is the actual database filename that is saved in the docs directory.
   static final _databaseName = "RegistroUsuario.db";
   // Increment this version when you need to change the schema.
-  static final _databaseVersion = 2;
+  static final _databaseVersion = 4;
 
   // Make this a singleton class.
   DBManager._privateConstructor();
@@ -61,8 +64,9 @@ class DBManager {
 
   // open the database
   _initDatabase() async {
-    // The path_provider plugin gets the right directory for Android or iOS.
+    // The path_provider plugin gets the right directory for Android or iOS. 
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
+
     String path = join(documentsDirectory.path, _databaseName);
     // Open the database. Can also add an onUpdate callback parameter.
     return await openDatabase(path,
@@ -72,24 +76,26 @@ class DBManager {
   // SQL string to create the database
   Future _onCreate(Database db, int version) async {
     await db.execute('''CREATE TABLE $tableRegistro (    
-                $columnID INT NOT NULL,     
+                $columnID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,     
                 $columnNombre VARCHAR(100) NOT NULL,
                 $columnApellido VARCHAR(100) NOT NULL,
+                $columnCorreo VARCHAR(200) NOT NULL,
                 $columnToken VARCHAR(200) NOT NULL,
-                $columnFoto BLOB NOT NULL)''');
+                $columnFoto BLOB NOT NULL,
+                $columnLog INT NOT NULL)''');
 
     await db.execute('''CREATE TABLE $tableRetos (
-            $columnID INT NOT NULL,
-            $columnTokenReto VARCHAR(200) NOT NULL,
+            $columnIDReto INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,            
+            $columnIDUsuarioReto INT NOT NULL,
             $columnReto VARCHAR(200) NOT NULL,
             $columnFecha VARCHAR(100) NOT NULL,
             $columnStatus VARCHAR(2) NOT NULL)''');
 
-    await db.execute('''CREATE TABLE $tableChat (
-            $columnID INT NOT NULL,
-            $columnTokenMsj VARCHAR(200) NOT NULL,
+    await db.execute('''CREATE TABLE $tableChat (            
+            $columnIDMensaje INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            $columnIDUsuarioChat INT NOT NULL,
             $columnMensaje TEXT NOT NULL,            
-            $columnEnviado VARCHAR(100) NOT NULL)''');
+            $columnFechaEnviado VARCHAR(100) NOT NULL)''');
   }
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) {
@@ -99,24 +105,26 @@ class DBManager {
       db.execute('DROP TABLE IF EXISTS $tableChat');
 
       db.execute('''CREATE TABLE $tableRegistro (    
-                $columnID INT NOT NULL,     
+                $columnID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,     
                 $columnNombre VARCHAR(100) NOT NULL,
                 $columnApellido VARCHAR(100) NOT NULL,
+                $columnCorreo VARCHAR(200) NOT NULL,
                 $columnToken VARCHAR(200) NOT NULL,
-                $columnFoto BLOB NOT NULL)''');
+                $columnFoto BLOB NOT NULL,
+                $columnLog INT NOT NULL)''');
 
       db.execute('''CREATE TABLE $tableRetos (
-            $columnID INT NOT NULL,
-            $columnTokenReto VARCHAR(200) NOT NULL,
+            $columnIDReto INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,            
+            $columnIDUsuarioReto INT NOT NULL,
             $columnReto VARCHAR(200) NOT NULL,
             $columnFecha VARCHAR(100) NOT NULL,
             $columnStatus VARCHAR(2) NOT NULL)''');
 
-      db.execute('''CREATE TABLE $tableChat (
-            $columnID INT NOT NULL,
-            $columnTokenMsj VARCHAR(200) NOT NULL,
+      db.execute('''CREATE TABLE $tableChat (            
+            $columnIDMensaje INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            $columnIDUsuarioChat INT NOT NULL,
             $columnMensaje TEXT NOT NULL,            
-            $columnEnviado VARCHAR(100) NOT NULL)''');
+            $columnFechaEnviado VARCHAR(100) NOT NULL)''');
     }
   }
 
@@ -127,117 +135,140 @@ class DBManager {
   ///
   /// MÉTODOS PARA USO DE USUARIO:
   ///
-  insertUsuario(_id, _nombre, _apellido, _token, _foto) async {
+  Future<int> insertUsuario(
+      _nombre, _apellido, _correo, _token, _foto, _logueado) async {
     Database db = await database;
-    var queryResult = await db.rawQuery("SELECT * FROM $tableRegistro");
+    var result = await db.rawInsert(
+        "INSERT Into $tableRegistro($columnNombre, $columnApellido, $columnCorreo, $columnToken, $columnFoto, $columnLog) VALUES (?,?,?,?,?,?);",
+        [_nombre, _apellido, _correo, _token, _foto, _logueado]);
+    return result;
+  }
 
-    if (queryResult.isEmpty == true) {
-      await db.rawInsert(
-          "INSERT Into $tableRegistro($columnID, $columnNombre, $columnApellido, $columnToken, $columnFoto) VALUES (?,?,?,?,?);",
-          [_id, _nombre, _apellido, _token, _foto]);
+  Future<bool> updateLogueado(_id, _logueado) async {
+    Database db = await database;
+    var result = await db.rawQuery(
+        "UPDATE $tableRegistro SET $columnLog = ? WHERE $columnID = ?",
+        [_logueado, _id]);
+    return true;
+  }
+
+  Future<bool> updateFoto(_id, _foto) async {
+    Database db = await database;
+    var result = await db.rawQuery(
+        "UPDATE $tableRegistro SET $columnFoto = ? WHERE $columnID = ?",
+        [_foto, _id]);
+    return true;
+  }
+
+  Future<Usuario> getUsuarioLogueado() async {
+    Usuario usuario = new Usuario();
+    Database db = await database;
+    var res = await db
+        .rawQuery("SELECT * FROM $tableRegistro WHERE $columnLog = ?", [1]);
+    if (res.isEmpty == false) {
+      int id = res[res.length - 1]["ID"];
+      String nombre = res[res.length - 1]["NOMBRE"];
+      String apellido = res[res.length - 1]["APELLIDO"];
+      String correo = res[res.length - 1]["CORREO"];
+      String token = res[res.length - 1]["TOKEN"];
+      String foto = res[res.length - 1]["FOTO"];
+      int logueado = res[res.length - 1]["LOGUEADO"];
+      usuario = new Usuario(
+          id: id,
+          nombre: nombre,
+          apellidos: apellido,
+          correo: correo,
+          token: token,
+          foto: foto,
+          logueado: logueado);
+      return usuario;
     } else {
-      //print("update");
-      await db.rawQuery(
-          "UPDATE $tableRegistro SET $columnNombre = ?, $columnApellido = ?, $columnToken = ?, $columnFoto = ?",
-          [_nombre, _apellido, _token, _foto]);
+      return null;
     }
   }
 
-  getUsuario(_context) async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    try {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      print(androidInfo.device);
-      globals.dispositivo_utilizado = "android";
-    } catch (_) {}
-    try {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      print(iosInfo.name);
-      globals.dispositivo_utilizado = "ios";
-    } catch (_) {}
-
-    try {
-      Database db = await database;
-      var res = await db.rawQuery("SELECT * FROM $tableRegistro");
-      if (res.isEmpty == true) {
-        print("No hay usuario");
-        globals.user_exist = false;
-        //Navigator.of(_context).pushReplacementNamed('/HomeScreen');
-        Future.delayed(const Duration(milliseconds: 5000), () {
-          Navigator.push(
-          _context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
-        );
-        });
-
-        
-      } else {
-        //print(res);
-        globals.id_user = int.parse(res[res.length - 1]["ID"].toString());
-        globals.nombre_user = res[res.length - 1]["NOMBRE"].toString();
-        globals.apellidos_user = res[res.length - 1]["APELLIDO"].toString();
-        globals.token = res[res.length - 1]["TOKEN"].toString();
-
-        getMensajes(globals.id_user, globals.token);
-        chat.getMensajesServer(globals.token);
-
-        readFileContent();
-
-        Future.delayed(const Duration(milliseconds: 5000), () {
-          Navigator.push(
-            _context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
-        });
-      }
-    } catch (_ex) {
-      //globals.imageFilePath = "assets/images/photo.jpg";
-      globals.image_foto =
-          new DecorationImage(image: AssetImage("assets/images/photo.jpg"));
-    }
-  }
-
-  deleteAllRegistros() async {
+  Future<Usuario> existUsuario(_correo) async {
+    Usuario usuario;
     Database db = await database;
-    db.rawQuery("DELETE FROM $tableRegistro");
+    var res = await db.rawQuery(
+        "SELECT * FROM $tableRegistro WHERE $columnCorreo = ?", [_correo]);
+    if (res.isEmpty == false) {
+      int id = res[res.length - 1]["ID"];
+      String nombre = res[res.length - 1]["NOMBRE"];
+      String apellido = res[res.length - 1]["APELLIDO"];
+      String token = res[res.length - 1]["TOKEN"];
+      String foto = res[res.length - 1]["FOTO"];
+      int logueado = res[res.length - 1]["LOGUEADO"];
+      usuario = new Usuario(
+          id: id,
+          nombre: nombre,
+          apellidos: apellido,
+          correo: _correo,
+          token: token,
+          foto: foto,
+          logueado: logueado);
+      return usuario;
+    } else {
+      return null;
+    }
+  }
+
+  Future<bool> deleteAllRegistros() async {
+    Database db = await database;
+    var result = await db.rawQuery("DELETE FROM $tableRegistro");
+    return true;
   }
 
   ///
   /// MÉTODOS PARA USO DE CHAT:
   ///
-  insertMensaje(int _id, String _token, String _mensaje) async {
+  Future<int> insertMensaje(_idUsuario, _mensaje) async {
     Database db = await database;
-    db.rawQuery(
-        'INSERT Into $tableChat($columnID, $columnTokenMsj, $columnMensaje, $columnEnviado) VALUES(?,?,?,?);',
-        [_id, _token, _mensaje, DateTime.now().toString()]);
+    var result = await db.rawInsert(
+        'INSERT Into $tableChat($columnIDUsuarioChat, $columnMensaje, $columnFechaEnviado) VALUES(?,?,?);',
+        [_idUsuario, _mensaje, DateTime.now().toString()]);
+
+    return result;
   }
 
-  getMensajes(int _id, String _token) async {
+  Future<List<Mensaje>> getMensajes(int _id) async {
+    List<Mensaje> list = new List<Mensaje>();
     Database db = await database;
-    var res = await db
-        .rawQuery('SELECT * FROM $tableChat WHERE $columnID = ?', [_id]);
-    globals.list_mensajes = new List<chat.Mensaje>();
-    for (int i = 0; i < res.length; i++) {
-      globals.list_mensajes.add(chat.Mensaje(
+    var result = await db.rawQuery(
+        'SELECT * FROM $tableChat WHERE $columnIDUsuarioChat = ?', [_id]);
+
+    for (int i = 0; i < result.length; i++) {
+      list.add(Mensaje(
           origen: "usuario",
-          mensaje: res[i]["MENSAJE"],
-          fecha: DateTime.parse(res[i]["FECHA"])));
+          mensaje: result[i]["MENSAJE"],
+          fecha: DateTime.parse(result[i]["FECHA"])));
     }
+    return list;
   }
 
-  deleteAllMensajes() async {
+  Future<bool> deleteAllMensajes() async {
     Database db = await database;
-    db.rawQuery("DELETE FROM $tableChat");
+    var result = await db.rawQuery("DELETE FROM $tableChat");
+    return true;
   }
 
   ///
   /// MÉTODOS PARA USO DE RETOS:
   ///
-  Future<progreso.Meta> getReto(String _token) async {
+  Future<int> insertReto(_idUsuario, _reto) async {
+    Database db = await database;
+    var result = await db.rawInsert(
+        'INSERT Into $tableRetos($columnIDUsuarioReto, $columnReto, $columnFecha, $columnStatus) VALUES(?,?,?,?)',
+        [_idUsuario, _reto, DateTime.now().toString(), "Ok"]);
+    return result;
+  }
+
+  Future<Meta> getReto(_idUsuario) async {
+    Meta meta = new Meta();
     Database db = await database;
     var res = await db.rawQuery(
-        'SELECT * FROM $tableRetos WHERE $columnTokenReto = ?', [_token]);
-    progreso.Meta meta = new progreso.Meta();
+        'SELECT * FROM $tableRetos WHERE $columnIDUsuarioChat = ?',
+        [_idUsuario]);
     if (res.length > 0) {
       meta.meta = res[res.length - 1]["RETO"];
     } else {
@@ -247,14 +278,16 @@ class DBManager {
     return meta;
   }
 
-  Future<List<progreso.Meta>> getAllRetosPasados(String _token) async {
+  Future<List<Meta>> getAllRetosPasados(_idUsuario) async {
+    List<Meta> list = new List<Meta>();
     Database db = await database;
     var res = await db.rawQuery(
-        'SELECT * FROM $tableRetos WHERE $columnTokenReto = ?', [_token]);
+        'SELECT * FROM $tableRetos WHERE $columnIDUsuarioReto = ?',
+        [_idUsuario]);
 
-    List<progreso.Meta> list = new List<progreso.Meta>();
     for (int i = 0; i < res.length - 1; i++) {
-      list.add(progreso.Meta(
+      list.add(Meta(
+        id: res[i]["ID"],
           meta: res[i]["RETO"],
           status: res[i]["ESTATUS"],
           fecha: new DateFormat("dd-MM-yyyy")
@@ -264,34 +297,24 @@ class DBManager {
     return list;
   }
 
-  insertReto(int _id, String _token, String _reto) async {
+  Future<bool> deleteReto(_idReto) async {
     Database db = await database;
-    db.rawQuery(
-        'INSERT Into $tableRetos($columnID, $columnTokenReto, $columnReto, $columnFecha, $columnStatus) VALUES(?,?,?,?,?)',
-        [_id, _token, _reto, DateTime.now().toString(), "Ok"]);
+    var result = await db
+        .rawQuery("DELETE FROM $tableRetos WHERE $columnIDReto = ?", [_idReto]);
+    return true;
   }
 
-  deleteReto(String _reto) async {
+  Future<bool> updateReto(_idReto, _newReto) async {
     Database db = await database;
-    db.rawQuery("DELETE FROM $tableRetos WHERE $columnReto = ?", [_reto]);
+    var result = await db.rawQuery(
+        "UPDATE $tableRetos SET $columnReto = ? WHERE $columnIDReto = ?",
+        [_newReto, _idReto]);
+    return true;
   }
 
-  updateReto(String _oldReto, String _newReto) async {
+  Future<bool> deleteAllRetos() async {
     Database db = await database;
-    db.rawQuery("UPDATE $tableRetos SET $columnReto = ? WHERE $columnReto = ?",
-        [_newReto, _oldReto]);
+    var result = await db.rawQuery("DELETE FROM $tableRetos");
+    return true;
   }
-
-  deleteAllRetos() async {
-    Database db = await database;
-    db.rawQuery("DELETE FROM $tableRetos");
-  }
-}
-
-class Usuario {
-  String nombre;
-  String token;
-  String foto;
-
-  Usuario({this.nombre, this.token, this.foto});
 }

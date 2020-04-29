@@ -7,6 +7,7 @@ import 'package:nutripuntos_app/src/HexToColor.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:nutripuntos_app/globals.dart' as global;
 import 'package:http/http.dart' as http;
+import 'package:nutripuntos_app/src/mensaje.dart';
 import '../src/DBManager.dart' as db;
 import 'newmenu.dart' as newmenu;
 import '../src/bubble.dart';
@@ -14,6 +15,8 @@ import '../src/MessageAlert.dart' as alert;
 
 final myListView = ScrollController();
 Color colorIcon = hexToColor("#9a9a9a");
+bool msgs_doctor_ready = false;
+bool msgs_user_ready = false;
 
 class NutriochatPage extends StatefulWidget {
   @override
@@ -184,8 +187,8 @@ class _NutriochatPageState extends State<NutriochatPage> {
                   onTap: () {
                     if (global.text_mensaje.text.length > 0) {
                       print("Send message: " + global.text_mensaje.text);
-                      guardarMensajes(
-                          context, global.token, global.text_mensaje.text);
+                      guardarMensajes(context, global.usuario.token,
+                          global.text_mensaje.text);
                     }
                   },
                   child: Icon(
@@ -207,14 +210,29 @@ class _NutriochatPageState extends State<NutriochatPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    if (global.list_mensajes == null || global.list_mensajes.length == 0) {
-      Timer.periodic(Duration(seconds: 1), (timer) {
-        alert.showMessageDialog(context, "Hola",
-            "Escribe a un nutriólogo a través de  Nutrichat, un espacio creado para contactar a tu doctor, fácilmente.");
-        if (timer.tick > 0) timer.cancel();
+    setState(() {
+      msgs_user_ready = false;
+      msgs_doctor_ready = false;
+    });
+    db.DBManager.instance.getMensajes(global.usuario.id).then((mensajes) {
+      setState(() {
+        msgs_user_ready = true;
+        global.list_mensajes = mensajes;
       });
-    }
+      getMensajesServer(global.usuario.token).then((_) {
+        setState(() {
+          msgs_doctor_ready = true;
+          if (global.list_mensajes == null ||
+              global.list_mensajes.length == 0) {
+            Timer.periodic(Duration(seconds: 1), (timer) {
+              alert.showMessageDialog(context, "Hola",
+                  "Escribe a un nutriólogo a través de  Nutrichat, un espacio creado para contactar a tu doctor, fácilmente.");
+              if (timer.tick > 0) timer.cancel();
+            });
+          }
+        });
+      });
+    });
   }
 
   @override
@@ -239,7 +257,15 @@ class _NutriochatPageState extends State<NutriochatPage> {
       body: Stack(
         children: <Widget>[
           fondo(),
-          listMessages(),
+          Center(
+            child: (msgs_user_ready == true && msgs_doctor_ready == true)
+                ? listMessages()
+                : CircularProgressIndicator(
+                    strokeWidth: 2,
+                    semanticsLabel: "Loading",
+                    backgroundColor: hexToColor("#cdcdcd"),
+                  ),
+          ),
           messageArea(),
         ],
       ),
@@ -257,9 +283,10 @@ class _NutriochatPageState extends State<NutriochatPage> {
       });
       var datos = json.decode(utf8.decode(response.bodyBytes));
       //print(datos);
-      db.DBManager.instance.insertMensaje(global.id_user, _token, _mensaje);
+      db.DBManager.instance.insertMensaje(global.usuario.id, _mensaje);
       setState(() {
-        global.list_mensajes.add(Mensaje(origen: "usuario", mensaje: _mensaje, fecha: DateTime.now()));
+        global.list_mensajes.add(Mensaje(
+            origen: "usuario", mensaje: _mensaje, fecha: DateTime.now()));
         global.text_mensaje.text = "";
         colorIcon = hexToColor("#9a9a9a");
       });
@@ -342,7 +369,7 @@ Future<T> show_Dialog<T>({
   );
 }
 
-void getMensajesServer(String _token) async {
+Future<void> getMensajesServer(String _token) async {
   try {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "get_mensajes", "token": _token});
@@ -358,12 +385,4 @@ void getMensajesServer(String _token) async {
   } catch (e) {
     print("Error getMensajes " + e.toString());
   }
-}
-
-class Mensaje {
-  String origen;
-  String mensaje;
-  DateTime fecha;
-
-  Mensaje({this.origen, this.mensaje, this.fecha});
 }

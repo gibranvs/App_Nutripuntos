@@ -75,7 +75,7 @@ class _AgendaPageState extends State<AgendaPage> {
       margin: const EdgeInsets.only(top: 10),
       padding: EdgeInsets.all(10),
       child: FutureBuilder<List<Citas>>(
-        future: getCitasProximas(global.token),
+        future: getCitasProximas(global.usuario.token),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -223,7 +223,7 @@ class _AgendaPageState extends State<AgendaPage> {
                       ),
                     ),
                     expanded: FutureBuilder<List<Citas>>(
-                        future: getCitasPasadas(global.token),
+                        future: getCitasPasadas(global.usuario.token),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -408,7 +408,7 @@ class _AgendaPageState extends State<AgendaPage> {
                       ),
                     ),
                     expanded: FutureBuilder<List<Citas>>(
-                        future: getCitasProximas(global.token),
+                        future: getCitasProximas(global.usuario.token),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {

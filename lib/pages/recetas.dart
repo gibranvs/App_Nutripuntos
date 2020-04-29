@@ -45,18 +45,21 @@ class _RecetasPageState extends State<RecetasPage> {
                 borderRadius: BorderRadius.circular(50),
                 color: Colors.white,
               ),
+              padding: EdgeInsets.only(bottom: 3),
               child: TextField(
                 controller: global.text_busqueda_receta,
                 onChanged: (value) {
                   setState(() {
                     global.list_recetas = null;
-                    global.list_recetas = getReceta(value);
+                    getReceta(value).then((receta) {
+                      global.list_recetas = receta;
+                    });
                   });
                 },
                 decoration: InputDecoration(
                   labelText: "Filtrar recetas...",
                   suffixIcon: GestureDetector(
-                    onTap: () {                      
+                    onTap: () {
                       FocusScope.of(context).requestFocus(new FocusNode());
                     },
                     child: Icon(
@@ -65,7 +68,8 @@ class _RecetasPageState extends State<RecetasPage> {
                     ),
                   ),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(left: 20),
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 3, horizontal: 15),
                 ),
               ),
             ),
@@ -83,7 +87,7 @@ class _RecetasPageState extends State<RecetasPage> {
       padding: EdgeInsets.only(top: 50),
       child: Scrollbar(
         child: FutureBuilder<List<Receta>>(
-            future: global.list_recetas,
+            future: getReceta(""),
             //getReceta(global.text_busqueda_receta.text),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -129,10 +133,11 @@ class _RecetasPageState extends State<RecetasPage> {
                                   new Container(
                                     alignment: Alignment.centerLeft,
                                     child: new ColorCirclesWidget(
-                                        snapshot.data[index].azul,
-                                        snapshot.data[index].verde,
-                                        snapshot.data[index].naranja,
-                                        snapshot.data[index].amarillo),
+                                        azul: snapshot.data[index].azul,
+                                        verde: snapshot.data[index].verde,
+                                        naranja: snapshot.data[index].naranja,
+                                        amarillo:
+                                            snapshot.data[index].amarillo),
                                   ),
                                 ],
                               ),
@@ -169,6 +174,15 @@ class _RecetasPageState extends State<RecetasPage> {
             }),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    getReceta("").then((recetas) {
+      global.list_recetas = recetas;
+    });
   }
 
   @override

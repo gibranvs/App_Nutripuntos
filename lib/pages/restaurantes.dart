@@ -105,7 +105,11 @@ class _RestaurantesPageState extends State<RestaurantesPage> {
                       "En este momento no se pudo obtener la lista de restaurantes disponibles."),
                 );
               }
-              return new CircularProgressIndicator();
+              return new CircularProgressIndicator(
+                strokeWidth: 2,
+                semanticsLabel: "Loading",
+                backgroundColor: hexToColor("#cdcdcd"),
+              );
             }),
       ),
     );

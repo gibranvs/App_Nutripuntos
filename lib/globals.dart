@@ -3,6 +3,8 @@ library nutripuntos.globals;
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:nutripuntos_app/src/mensaje.dart';
+import 'package:nutripuntos_app/src/usuario.dart';
 import 'src/ColorCirclesWidget.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
@@ -18,11 +20,12 @@ import 'src/DBManager.dart' as db;
 String server = "http://c1370875.ferozo.com";
 
 bool user_exist;
-int id_user;
-String token;
-String recovery_token;
-String nombre_user;
-String apellidos_user;
+//int id_user;
+//String token;
+//String recovery_token;
+//String nombre_user;
+//String apellidos_user;
+Usuario usuario;
 String num_citas = "0";
 
 String dispositivo_utilizado = "";
@@ -55,12 +58,10 @@ int current_tab = 0;
 ///
 /// RECETAS
 ///
-dynamic detalle_receta;
 TextEditingController text_busqueda_receta = TextEditingController();
-ColorCirclesWidget widget = new ColorCirclesWidget(detalle_receta.azul,
-    detalle_receta.verde, detalle_receta.naranja, detalle_receta.amarillo);
+ColorCirclesWidget widget = new ColorCirclesWidget();
 List<Ingrediente> list_ingredientes;
-Future<List<Receta>> list_recetas;
+List<Receta> list_recetas;
 List<Platillo> list_platillos_restaurante;
 
 ///

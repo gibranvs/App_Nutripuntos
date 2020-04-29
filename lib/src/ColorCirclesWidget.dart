@@ -7,7 +7,7 @@ class ColorCirclesWidget extends StatelessWidget {
   final String verde;
   final String naranja;
   final String amarillo;
-  ColorCirclesWidget(this.azul, this.verde, this.naranja, this.amarillo);
+  ColorCirclesWidget({this.azul, this.verde, this.naranja, this.amarillo});
 
   @override
   Widget build(BuildContext context) {
