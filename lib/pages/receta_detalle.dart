@@ -7,6 +7,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
 
+Future<Detalle_Receta> detalle;
+Future<List<Ingrediente>> ingredientesReceta;
+Future<Valores_Puntos> puntosValores;
+
 class RecetaPage extends StatefulWidget {
   final BuildContext context;
   final int idReceta;
@@ -88,7 +92,7 @@ class _RecetaPageState extends State<RecetaPage> {
       alignment: Alignment.center,
       margin: EdgeInsets.only(top: 170),
       child: FutureBuilder<Valores_Puntos>(
-          future: getColorCirclesWidgetValues(idReceta),
+          future: puntosValores, //getColorCirclesWidgetValues(idReceta),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
@@ -139,7 +143,7 @@ class _RecetaPageState extends State<RecetaPage> {
           children: <Widget>[
             Flexible(
               child: FutureBuilder<List<Ingrediente>>(
-                  future: getIngredientesReceta(idReceta),
+                  future: ingredientesReceta, //getIngredientesReceta(idReceta),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
@@ -242,7 +246,7 @@ class _RecetaPageState extends State<RecetaPage> {
           children: <Widget>[
             Flexible(
               child: FutureBuilder<Detalle_Receta>(
-                  future: getDetallesReceta(idReceta),
+                  future: detalle, //getDetallesReceta(idReceta),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
@@ -288,6 +292,22 @@ class _RecetaPageState extends State<RecetaPage> {
         ),
       ],
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    puntosValores = getColorCirclesWidgetValues(idReceta);
+    detalle = getDetallesReceta(idReceta);
+    ingredientesReceta = getIngredientesReceta(idReceta);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override

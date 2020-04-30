@@ -9,6 +9,8 @@ import 'receta_detalle.dart' as detalle;
 import 'package:http/http.dart' as http;
 import 'dart:math';
 
+Future<List<Receta>> listRecetas;
+
 class RecetasPage extends StatefulWidget {
   @override
   _RecetasPageState createState() => new _RecetasPageState();
@@ -87,7 +89,7 @@ class _RecetasPageState extends State<RecetasPage> {
       padding: EdgeInsets.only(top: 50),
       child: Scrollbar(
         child: FutureBuilder<List<Receta>>(
-            future: getReceta(""),
+            future: listRecetas, //getReceta(""),
             //getReceta(global.text_busqueda_receta.text),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -179,6 +181,8 @@ class _RecetasPageState extends State<RecetasPage> {
   @override
   void initState() {
     super.initState();
+
+    listRecetas = getReceta("");
 
     getReceta("").then((recetas) {
       global.list_recetas = recetas;

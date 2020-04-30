@@ -222,13 +222,11 @@ class DBManager {
   ///
   /// MÉTODOS PARA USO DE CHAT:
   ///
-  Future<int> insertMensaje(_idUsuario, _mensaje) async {
+  Future<void> insertMensaje(_idUsuario, _mensaje) async {
     Database db = await database;
-    var result = await db.rawInsert(
+    var result = await db.rawQuery(
         'INSERT Into $tableChat($columnIDUsuarioChat, $columnMensaje, $columnFechaEnviado) VALUES(?,?,?);',
         [_idUsuario, _mensaje, DateTime.now().toString()]);
-
-    return result;
   }
 
   Future<List<Mensaje>> getMensajes(int _id) async {

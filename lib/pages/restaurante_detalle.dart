@@ -7,6 +7,8 @@ import 'dart:convert';
 import '../src/HexToColor.dart';
 import '../src/ColorCirclesWidget.dart';
 
+Future<List<Platillo>> listPlatillos;
+
 class RestauranteDetallePage extends StatefulWidget {
   final String idRestaurante;
   RestauranteDetallePage(this.idRestaurante);
@@ -49,7 +51,7 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
       },
       child: Container(
         alignment: Alignment.topLeft,
-        margin: EdgeInsets.only(top: 30, left: 10),
+        margin: EdgeInsets.only(top: 40, left: 20,),
         child: Icon(Icons.arrow_back, color: Colors.white),
       ),
     );
@@ -147,7 +149,7 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
           child: Container(
             width: MediaQuery.of(context).size.width * 0.9,
             child: FutureBuilder<List<Platillo>>(
-                future: getPlatillos(idRestaurante),
+                future: listPlatillos, //getPlatillos(idRestaurante),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Container(
@@ -246,6 +248,19 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    listPlatillos = getPlatillos(idRestaurante);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override

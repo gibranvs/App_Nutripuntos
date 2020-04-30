@@ -13,6 +13,9 @@ import 'package:http/http.dart' as http;
 
 List<DateTime> _markedDates = new List<DateTime>();
 
+Future<List<Citas>> proximasCitas;
+Future<List<Citas>> citasPasadas;
+
 class AgendaPage extends StatefulWidget {
   @override
   _AgendaPageState createState() => new _AgendaPageState();
@@ -75,7 +78,7 @@ class _AgendaPageState extends State<AgendaPage> {
       margin: const EdgeInsets.only(top: 10),
       padding: EdgeInsets.all(10),
       child: FutureBuilder<List<Citas>>(
-        future: getCitasProximas(global.usuario.token),
+        future: proximasCitas, //getCitasProximas(global.usuario.token),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -223,7 +226,7 @@ class _AgendaPageState extends State<AgendaPage> {
                       ),
                     ),
                     expanded: FutureBuilder<List<Citas>>(
-                        future: getCitasPasadas(global.usuario.token),
+                        future: citasPasadas, //getCitasPasadas(global.usuario.token),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -408,7 +411,7 @@ class _AgendaPageState extends State<AgendaPage> {
                       ),
                     ),
                     expanded: FutureBuilder<List<Citas>>(
-                        future: getCitasProximas(global.usuario.token),
+                        future: proximasCitas, //getCitasProximas(global.usuario.token),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -563,6 +566,20 @@ class _AgendaPageState extends State<AgendaPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    proximasCitas = getCitasProximas(global.usuario.token);
+    citasPasadas = getCitasPasadas(global.usuario.token);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //getAllCitas(global.token);
     global.list_citas = null;
@@ -584,6 +601,7 @@ class _AgendaPageState extends State<AgendaPage> {
         ),
       ),
       body: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: DefaultTabController(
           length: 2,
           child: Scaffold(

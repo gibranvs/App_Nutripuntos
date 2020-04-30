@@ -16,6 +16,10 @@ import 'package:nutripuntos_app/globals.dart' as global;
 final myTextEdit = TextEditingController();
 final myTextUpdate = TextEditingController();
 
+Future<String> lastPeso;
+Future<String> lastGrasa;
+Future<List<Progreso>> progreso;
+
 class ProgresoPage extends StatefulWidget {
   final int index_tab;
   ProgresoPage(this.index_tab);
@@ -83,7 +87,7 @@ class _ProgresoPageState extends State<ProgresoPage>
               alignment: Alignment.topCenter,
               margin: EdgeInsets.only(top: 0),
               child: FutureBuilder<String>(
-                  future: getLastPeso(),
+                  future: lastPeso, //getLastPeso(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
@@ -157,7 +161,7 @@ class _ProgresoPageState extends State<ProgresoPage>
               alignment: Alignment.topCenter,
               margin: EdgeInsets.only(top: 0),
               child: FutureBuilder<String>(
-                  future: getLastGrasa(),
+                  future: lastGrasa, // getLastGrasa(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
@@ -302,7 +306,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                     Container(
                       margin: EdgeInsets.only(left: 30, bottom: 30),
                       child: FutureBuilder<List<Progreso>>(
-                          future: getProgreso(),
+                          future: progreso, //getProgreso(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
@@ -534,7 +538,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                     Container(
                       margin: EdgeInsets.only(left: 30, bottom: 30),
                       child: FutureBuilder<List<Progreso>>(
-                          future: getProgreso(),
+                          future: progreso, //getProgreso(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
@@ -1037,9 +1041,20 @@ class _ProgresoPageState extends State<ProgresoPage>
 
   @override
   void initState() {
+    super.initState();
+
+    lastGrasa = getLastGrasa();
+    lastPeso = getLastPeso();
+    progreso = getProgreso();
+
     _tabController =
         new TabController(length: 3, vsync: this, initialIndex: index_tab);
-    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -1063,6 +1078,7 @@ class _ProgresoPageState extends State<ProgresoPage>
         ),
       ),
       body: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: DefaultTabController(
           length: 3,
           child: Scaffold(
