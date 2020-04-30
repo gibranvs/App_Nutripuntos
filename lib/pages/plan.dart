@@ -429,8 +429,27 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
     super.initState();
 
     pestanas = getPestanas();
-
     opciones_dieta = getOpcionesDieta(global.usuario.token);
+    getColoresComida(0).then((_colores)
+    {
+      if (_colores != null) {
+        setState(() {
+          colores = _colores;
+          valor_naranja = _colores.naranja;
+          valor_azul = _colores.azul;
+          valor_amarillo = _colores.amarillo;
+          valor_verde = "L";
+        });
+      } else {
+        setState(() {
+          valor_naranja = "0";
+          valor_azul = "0";
+          valor_amarillo = "0";
+          valor_verde = "L";
+        });
+      }
+    });
+    
     setState(() {
       global.current_tab = index_tab;
     });
@@ -1026,35 +1045,38 @@ Future<List<String>> getAlimentosColor(_token, _color) async {
     String alimento;
     if (datos["status"] == 1) {
       for (int i = 0; i < datos["response"].length; i++) {
-        porcion = double.parse(datos["response"][i]["porcion"]);
-        if (porcion % 1 == 0)
-          porcion_str = porcion.toString().split(".")[0];
-        else
-          porcion_str = porcion.toString();
-
-        if (porcion <= 1) {
-          alimento = porcion_str +
-              " " +
-              datos["response"][i]["medida"].toString().toLowerCase() +
-              " de " +
-              datos["response"][i]["nombre"].toString().toLowerCase();
-        } else {
-          if (datos["response"][i]["medida"].toString()[
-                  datos["response"][i]["medida"].toString().length - 1] !=
-              "s")
-            alimento = porcion_str +
-                " " +
-                datos["response"][i]["medida"].toString().toLowerCase() +
-                "s de " +
-                datos["response"][i]["nombre"].toString().toLowerCase();
+        if (_color != "4") {
+          porcion = double.parse(datos["response"][i]["porcion"]);
+          if (porcion % 1 == 0)
+            porcion_str = porcion.toString().split(".")[0];
           else
+            porcion_str = porcion.toString();
+
+          if (porcion <= 1) {
             alimento = porcion_str +
                 " " +
                 datos["response"][i]["medida"].toString().toLowerCase() +
                 " de " +
                 datos["response"][i]["nombre"].toString().toLowerCase();
-        }
-        list.add(alimento);
+          } else {
+            if (datos["response"][i]["medida"].toString()[
+                    datos["response"][i]["medida"].toString().length - 1] !=
+                "s")
+              alimento = porcion_str +
+                  " " +
+                  datos["response"][i]["medida"].toString().toLowerCase() +
+                  "s de " +
+                  datos["response"][i]["nombre"].toString().toLowerCase();
+            else
+              alimento = porcion_str +
+                  " " +
+                  datos["response"][i]["medida"].toString().toLowerCase() +
+                  " de " +
+                  datos["response"][i]["nombre"].toString().toLowerCase();
+          }
+          list.add(alimento);
+        } else
+          list.add(datos["response"][i]["nombre"].toString());
       }
     }
     return list;
