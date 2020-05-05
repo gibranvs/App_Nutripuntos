@@ -293,7 +293,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
   /// List sugerencias
   ///
   Widget sugerencias(_context, _index_comida) {
-    return Container(
+    return (opciones_dieta != null) ? Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height - 350,
       child: SingleChildScrollView(
@@ -420,7 +420,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
               : CircularProgressIndicator(),
         ),
       ),
-    );
+    ) : Offstage();
   }
 
   @override
@@ -430,14 +430,13 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
 
     pestanas = getPestanas();
     opciones_dieta = getOpcionesDieta(global.usuario.token);
-    getColoresComida(0).then((_colores)
-    {
+    getColoresComida(0).then((_colores) {
       if (_colores != null) {
         setState(() {
-          colores = _colores;
-          valor_naranja = _colores.naranja;
-          valor_azul = _colores.azul;
-          valor_amarillo = _colores.amarillo;
+          colores = _colores[0];
+          valor_naranja = colores.naranja;
+          valor_azul = colores.azul;
+          valor_amarillo = colores.amarillo;
           valor_verde = "L";
         });
       } else {
@@ -449,7 +448,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
         });
       }
     });
-    
+
     setState(() {
       global.current_tab = index_tab;
     });
@@ -552,10 +551,10 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                           global.current_tab = index;
                           await getColoresComida(index).then((_colores) {
                             if (_colores != null) {
-                              colores = _colores;
-                              valor_naranja = _colores.naranja;
-                              valor_azul = _colores.azul;
-                              valor_amarillo = _colores.amarillo;
+                              colores = _colores[index];
+                              valor_naranja = colores.naranja;
+                              valor_azul = colores.azul;
+                              valor_amarillo = colores.amarillo;
                               valor_verde = "L";
                             } else {
                               valor_naranja = "0";
@@ -894,11 +893,10 @@ Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "dieta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    //print(datos);
+    //print(datos["response"]["d6"]);
     if (datos["status"] == 1) {
-      for (int dias = 0;
-          dias < datos["response"]["d" + weekday].length;
-          dias++) {
+      //for (int dias = 0; dias < datos["response"]["d" + weekday].length; dias++)
+      for (int dias = 0; dias < datos["response"].length; dias++) {
         list.add(Opciones_Dieta(
           id: (dias + 1).toString(),
           nombre: "Opción " + (dias + 1).toString(),
@@ -911,13 +909,13 @@ Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {
   }
 }
 
-Future<Colores> getColoresComida(_index_comida) async {
+Future<List<Colores>> getColoresComida(_index_comida) async {
   try {
     DateTime time = DateTime.now();
     String weekday = time.weekday.toString();
-    Colores valores_puntos;
+    List<Colores> list = new List<Colores>();
     String azul = "0";
-    String verde = "0";
+    String verde = "L";
     String naranja = "0";
     String amarillo = "0";
 
@@ -926,100 +924,51 @@ Future<Colores> getColoresComida(_index_comida) async {
     var datos = json.decode(utf8.decode(response.bodyBytes));
 
     if (datos["status"] == 1) {
-      int receta = datos["response"]["d$weekday"][_index_comida].length - 1;
-
-      if (datos["response"]["d$weekday"][_index_comida][receta]["azul"] !=
-          null) {
-        if (datos["response"]["d$weekday"][_index_comida][receta]["azul"]
-                .toString()
-                .contains('.') ==
-            true) {
-          if (datos["response"]["d$weekday"][_index_comida][receta]["azul"]
-                  .split('.')[1] ==
-              "0")
-            azul = datos["response"]["d$weekday"][_index_comida][receta]["azul"]
-                .split('.')[0];
-          else
-            azul = datos["response"]["d$weekday"][_index_comida][receta]["azul"]
-                .toString();
+      //print(datos["puntos"]);
+      for (int comida = 0; comida < datos["puntos"].length; comida++) {
+        if (datos["puntos"][comida]["azul"] != null) {
+          if (datos["puntos"][comida]["azul"].toString().contains('.') ==
+              true) {
+            if (datos["puntos"][comida]["azul"].split('.')[1] == "0")
+              azul = datos["puntos"][comida]["azul"].split('.')[0];
+            else
+              azul = datos["puntos"][comida]["azul"].toString();
+          } else
+            azul = datos["puntos"][comida]["azul"].toString();
         } else
-          azul = datos["response"]["d$weekday"][_index_comida][receta]["azul"]
-              .toString();
-      } else
-        azul = "0";
+          azul = "0";
 
-      if (datos["response"]["d$weekday"][_index_comida][receta]["verde"] !=
-          null) {
-        if (datos["response"]["d$weekday"][_index_comida][receta]["verde"]
-                .toString()
-                .contains('.') ==
-            true) {
-          if (datos["response"]["d$weekday"][_index_comida][receta]["verde"]
-                  .split('.')[1] ==
-              "0")
-            verde = datos["response"]["d$weekday"][_index_comida][receta]
-                    ["verde"]
-                .split('.')[0];
-          else
-            verde = datos["response"]["d$weekday"][_index_comida][receta]
-                    ["verde"]
-                .toString();
+        if (datos["puntos"][comida]["naranja"] != null) {
+          if (datos["puntos"][comida]["naranja"].toString().contains('.') ==
+              true) {
+            if (datos["puntos"][comida]["naranja"].split('.')[1] == "0")
+              naranja = datos["puntos"][comida]["naranja"].split('.')[0];
+            else
+              naranja = datos["puntos"][comida]["naranja"].toString();
+          } else
+            naranja = datos["puntos"][comida]["naranja"].toString();
         } else
-          verde = datos["response"]["d$weekday"][_index_comida][receta]["verde"]
-              .toString();
-      } else
-        verde = "0";
+          naranja = "0";
 
-      if (datos["response"]["d$weekday"][_index_comida][receta]["naranja"] !=
-          null) {
-        if (datos["response"]["d$weekday"][_index_comida][receta]["naranja"]
-                .toString()
-                .contains('.') ==
-            true) {
-          if (datos["response"]["d$weekday"][_index_comida][receta]["naranja"]
-                  .split('.')[1] ==
-              "0")
-            naranja = datos["response"]["d$weekday"][_index_comida][receta]
-                    ["naranja"]
-                .split('.')[0];
-          else
-            naranja = datos["response"]["d$weekday"][_index_comida][receta]
-                    ["naranja"]
-                .toString();
+        if (datos["puntos"][comida]["amarillo"] != null) {
+          if (datos["puntos"][comida]["amarillo"].toString().contains('.') ==
+              true) {
+            if (datos["puntos"][comida]["amarillo"].split('.')[1] == "0")
+              amarillo = datos["puntos"][comida]["amarillo"].split('.')[0];
+            else
+              amarillo = datos["puntos"][comida]["amarillo"].toString();
+          } else
+            amarillo = datos["puntos"][comida]["amarillo"].toString();
         } else
-          naranja = datos["response"]["d$weekday"][_index_comida][receta]
-                  ["naranja"]
-              .toString();
-      } else
-        naranja = "0";
+          amarillo = "0";
 
-      if (datos["response"]["d$weekday"][_index_comida][receta]["amarillo"] !=
-          null) {
-        if (datos["response"]["d$weekday"][_index_comida][receta]["amarillo"]
-                .toString()
-                .contains('.') ==
-            true) {
-          if (datos["response"]["d$weekday"][_index_comida][receta]["amarillo"]
-                  .split('.')[1] ==
-              "0")
-            amarillo = datos["response"]["d$weekday"][_index_comida][receta]
-                    ["amarillo"]
-                .split('.')[0];
-          else
-            amarillo = datos["response"]["d$weekday"][_index_comida][receta]
-                    ["amarillo"]
-                .toString();
-        } else
-          amarillo = datos["response"]["d$weekday"][_index_comida][receta]
-                  ["amarillo"]
-              .toString();
-      } else
-        amarillo = "0";
+        verde = "L";
 
-      valores_puntos = new Colores(
-          azul: azul, verde: verde, naranja: naranja, amarillo: amarillo);
+        list.add(Colores(
+            azul: azul, naranja: naranja, amarillo: amarillo, verde: verde));
+      }
 
-      return valores_puntos;
+      return list;
     }
   } catch (ex) {
     print("Error getColorCirclesWidgetValues: $ex");
