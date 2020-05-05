@@ -40,7 +40,7 @@ class _RecetaPageState extends State<RecetaPage> {
       },
       child: Container(
         alignment: Alignment.topLeft,
-        margin: EdgeInsets.only(top: 30, left: 10),
+        margin: EdgeInsets.only(top: 40, left: 15),
         child: Icon(Icons.arrow_back, color: Colors.white),
       ),
     );
