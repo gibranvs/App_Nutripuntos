@@ -7,7 +7,7 @@ import '../src/ColorCirclesWidget.dart';
 import 'dart:convert';
 
 void main() {
-  runApp(OpcionDetallePage("", 0, "", 0));
+  runApp(OpcionDetallePage("", 0, "", 0, null));
 }
 
 class OpcionDetallePage extends StatelessWidget {
@@ -16,7 +16,8 @@ class OpcionDetallePage extends StatelessWidget {
   final int index_comida;
   final String opcion;
   final int current_tab;
-  OpcionDetallePage(this.token, this.index_comida, this.opcion, this.current_tab);
+  final Colores colores;
+  OpcionDetallePage(this.token, this.index_comida, this.opcion, this.current_tab, this.colores);
 
   ///
   /// Botón regresar
@@ -111,10 +112,10 @@ class OpcionDetallePage extends StatelessWidget {
             } else if (snapshot.hasData) {
               if (snapshot.data != null) {
                 return ColorCirclesWidget(
-                    azul: snapshot.data.azul,
-                    verde: "L", //snapshot.data.verde,
-                    naranja: snapshot.data.naranja,
-                    amarillo: snapshot.data.amarillo);
+                    azul: colores.azul, //snapshot.data.azul,
+                    verde: colores.verde, //snapshot.data.verde,
+                    naranja: colores.naranja, //snapshot.data.naranja,
+                    amarillo: colores.amarillo); //snapshot.data.amarillo);
               } else {
                 return new Text("No hay puntajes.",
                     style: TextStyle(color: hexToColor("#606060")));
