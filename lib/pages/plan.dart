@@ -293,134 +293,153 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
   /// List sugerencias
   ///
   Widget sugerencias(_context, _index_comida) {
-    return (opciones_dieta != null) ? Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height - 350,
-      child: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-          ),
-          child: (opciones_dieta != null)
-              ? FutureBuilder<List<Opciones_Dieta>>(
-                  future:
-                      opciones_dieta, //getOpcionesDieta(global.usuario.token),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          semanticsLabel: "Loading",
-                          backgroundColor: hexToColor("#cdcdcd"),
-                        ),
-                      );
-                    } else if (snapshot.hasData) {
-                      if (snapshot.data.length > 0) {
-                        return new ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (context, index) {
-                              String asset;
-                              switch (_index_comida) {
-                                case 0:
-                                  asset = "assets/icons/tiempo_desayuno.png";
-                                  break;
-                                case 1:
-                                  asset = "assets/icons/tiempo_snack.png";
-                                  break;
-                                case 2:
-                                  asset = "assets/icons/tiempo_comida.png";
-                                  break;
-                                case 3:
-                                  asset = "assets/icons/tiempo_snack.png";
-                                  break;
-                                case 4:
-                                  asset = "assets/icons/tiempo_cena.png";
-                                  break;
-                                case 5:
-                                  asset = "assets/icons/tiempo_bebida.png";
-                                  break;
-                              }
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    _context,
-                                    MaterialPageRoute(
-                                      builder: (context) => OpcionDetallePage(
-                                        global.usuario.token,
-                                        _index_comida,
-                                        (index + 1).toString(),
-                                        global.current_tab,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: Card(
-                                  margin: EdgeInsets.only(bottom: 15),
-                                  elevation: 0,
-                                  color: hexToColor("#f2f2f2"),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 5, left: 5, bottom: 3),
-                                            child: Container(
-                                              margin: EdgeInsets.only(left: 5),
-                                              height: 80,
-                                              padding: EdgeInsets.all(5),
-                                              child: new Image.asset(asset),
-                                            ),
+    return (opciones_dieta != null)
+        ? Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height - 350,
+            child: SingleChildScrollView(
+              child: Container(
+                padding: EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                ),
+                child: (opciones_dieta != null)
+                    ? FutureBuilder<List<Opciones_Dieta>>(
+                        future:
+                            opciones_dieta, //getOpcionesDieta(global.usuario.token),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                semanticsLabel: "Loading",
+                                backgroundColor: hexToColor("#cdcdcd"),
+                              ),
+                            );
+                          } else if (snapshot.hasData) {
+                            if (snapshot.data.length > 0) {
+                              return new ListView.builder(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder: (context, index) {
+                                    String asset;
+                                    switch (_index_comida) {
+                                      case 0:
+                                        asset =
+                                            "assets/icons/tiempo_desayuno.png";
+                                        break;
+                                      case 1:
+                                        asset = "assets/icons/tiempo_snack.png";
+                                        break;
+                                      case 2:
+                                        asset =
+                                            "assets/icons/tiempo_comida.png";
+                                        break;
+                                      case 3:
+                                        asset = "assets/icons/tiempo_snack.png";
+                                        break;
+                                      case 4:
+                                        asset = "assets/icons/tiempo_cena.png";
+                                        break;
+                                      case 5:
+                                        asset =
+                                            "assets/icons/tiempo_bebida.png";
+                                        break;
+                                    }
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(
+                                          _context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                OpcionDetallePage(
+                                                    global.usuario.token,
+                                                    _index_comida,
+                                                    (index + 1).toString(),
+                                                    global.current_tab,
+                                                    Colores(
+                                                        azul: valor_azul,
+                                                        naranja: valor_naranja,
+                                                        amarillo:
+                                                            valor_amarillo,
+                                                        verde: valor_verde)),
                                           ),
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 0, left: 20),
-                                            child: Container(
-                                              width: 180,
-                                              child: Text(
-                                                snapshot.data[index].nombre
-                                                    .toString()
-                                                    .toUpperCase(),
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color:
-                                                        hexToColor("#505050"),
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
+                                        );
+                                      },
+                                      child: Card(
+                                        margin: EdgeInsets.only(bottom: 15),
+                                        elevation: 0,
+                                        color: hexToColor("#f2f2f2"),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 5,
+                                                      left: 5,
+                                                      bottom: 3),
+                                                  child: Container(
+                                                    margin: EdgeInsets.only(
+                                                        left: 5),
+                                                    height: 80,
+                                                    padding: EdgeInsets.all(5),
+                                                    child:
+                                                        new Image.asset(asset),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                        ],
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 0, left: 20),
+                                                  child: Container(
+                                                    width: 180,
+                                                    child: Text(
+                                                      snapshot
+                                                          .data[index].nombre
+                                                          .toString()
+                                                          .toUpperCase(),
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          color: hexToColor(
+                                                              "#505050"),
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            });
-                      } else {
-                        return new Text("No hay sugerencias de comida.",
-                            style: TextStyle(color: hexToColor("#606060")));
-                      }
-                    } else if (snapshot.hasError) {
-                      return new Text("Error al obtener sugerencias de comida.",
-                          style: TextStyle(color: hexToColor("#606060")));
-                    }
-                  })
-              : CircularProgressIndicator(),
-        ),
-      ),
-    ) : Offstage();
+                                    );
+                                  });
+                            } else {
+                              return new Text("No hay sugerencias de comida.",
+                                  style:
+                                      TextStyle(color: hexToColor("#606060")));
+                            }
+                          } else if (snapshot.hasError) {
+                            return new Text(
+                                "Error al obtener sugerencias de comida.",
+                                style: TextStyle(color: hexToColor("#606060")));
+                          }
+                        })
+                    : CircularProgressIndicator(),
+              ),
+            ),
+          )
+        : Offstage();
   }
 
   @override
