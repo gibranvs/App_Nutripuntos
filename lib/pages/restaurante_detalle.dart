@@ -96,10 +96,12 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
         decoration: BoxDecoration(
           border: Border.all(width: 0, color: Colors.white),
           shape: BoxShape.circle,
-          image: (global.foto_restaurante != null) ? DecorationImage(
-            image: global
-                .foto_restaurante, //global.returnFileSelected(global.imageFile),
-          ) : null,
+          image: (global.foto_restaurante != null)
+              ? DecorationImage(
+                  image: global
+                      .foto_restaurante, //global.returnFileSelected(global.imageFile),
+                )
+              : null,
         ),
       ),
     );
@@ -176,23 +178,23 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
                             return Card(
                               margin: EdgeInsets.only(bottom: 15),
                               color: hexToColor("#f2f2f2"),
-                              elevation: 0,                              
+                              elevation: 0,
                               child: Row(
                                 children: <Widget>[
                                   Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 5, left: 5, bottom: 3),
-                                        child: Container(
-                                          margin: new EdgeInsets.only(
-                                              top: 0, left: 0),
-                                          child: Container(
-                                            margin: EdgeInsets.only(left: 5),
-                                            height: 80,
-                                            child: new Image.asset(
-                                                "assets/icons/Recurso_26.png"),
-                                          ),
-                                        ),
+                                    padding: EdgeInsets.only(
+                                        top: 5, left: 5, bottom: 3),
+                                    child: Container(
+                                      margin:
+                                          new EdgeInsets.only(top: 0, left: 0),
+                                      child: Container(
+                                        margin: EdgeInsets.only(left: 5),
+                                        height: 80,
+                                        child: new Image.asset(
+                                            "assets/icons/Recurso_26.png"),
                                       ),
+                                    ),
+                                  ),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -231,10 +233,19 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
                                     ],
                                   ),
                                   Container(
-                                    margin: EdgeInsets.only(left:20,),
+                                    margin: EdgeInsets.only(
+                                      left: 25,
+                                    ),
                                     child: IconButton(
                                       onPressed: () {
-                                        show_Dialog(context: context, comentarios: snapshot.data[index].comentarios);
+                                        show_Dialog(
+                                            context: context,
+                                            platillo:
+                                                snapshot.data[index].nombre,
+                                            descripcion: snapshot
+                                                .data[index].descripcion,
+                                            comentarios: snapshot
+                                                .data[index].comentarios);
                                       },
                                       icon: Icon(
                                         Icons.info,
@@ -264,104 +275,153 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
   }
 
   Future<T> show_Dialog<T>({
-  @required BuildContext context,
-  @required String comentarios,
-}) {
-  return showGeneralDialog(
-    context: context,
-    barrierDismissible: true,
-    barrierLabel: "",
-    barrierColor: null,
-    transitionDuration: const Duration(milliseconds: 150),
-    pageBuilder: (BuildContext buildContext, Animation<double> animation,
-        Animation<double> secondaryAnimation) {
-      return Builder(builder: (BuildContext context) {
-        return Stack(
-          children: <Widget>[
-            /// BACK POPUP
-            Container(
-              width: 400,
-              height: MediaQuery.of(context).size.height - 50, //600,
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(left: 30, right: 30, top: 50, bottom: 50),
-              decoration: new BoxDecoration(
-                color: hexToColor("#505050"),
-                borderRadius: new BorderRadius.all(
-                  const Radius.circular(20.0),
-                ),
-              ),
-            ),
-
-            /// BOTÓN CERRAR
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                margin: EdgeInsets.only(
-                    top: 70, left: MediaQuery.of(context).size.width * 0.8),
-                child: Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ),
-            ),
-
-            Container(
-              margin: EdgeInsets.only(top: 70),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: 20),
-                    child: Text(
-                      "Comentarios",
-                      style: TextStyle(
-                        decoration: TextDecoration.none,
-                        fontFamily: "Arial",
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+    @required BuildContext context,
+    @required String platillo,
+    @required String descripcion,
+    @required String comentarios,
+  }) {
+    return showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: "",
+      barrierColor: null,
+      transitionDuration: const Duration(milliseconds: 150),
+      pageBuilder: (BuildContext buildContext, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        return Builder(builder: (BuildContext context) {
+          return Stack(
+            children: <Widget>[
+              /// BACK POPUP
+              Container(
+                width: 400,
+                height: MediaQuery.of(context).size.height - 50, //600,
+                alignment: Alignment.center,
+                margin:
+                    EdgeInsets.only(left: 30, right: 30, top: 50, bottom: 50),
+                decoration: new BoxDecoration(
+                  color: hexToColor("#505050"),
+                  borderRadius: new BorderRadius.all(
+                    Radius.circular(20.0),
                   ),
+                ),
+              ),
 
-                  SizedBox(height: 20,),
+              /// BOTÓN CERRAR
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(
+                      top: 70, left: MediaQuery.of(context).size.width * 0.8),
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                ),
+              ),
 
-                  Container(
-                    alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: 10),
-                    child: SizedBox(
-                      width: 270,
+              Container(
+                margin: EdgeInsets.only(top: 70),
+                width: 400,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 40,
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 250,                      
+                      constraints: BoxConstraints(
+                        maxWidth: 250,
+                      ),                      
                       child: AutoSizeText(
-                        comentarios,
-                        maxLines: 3,
+                        platillo,                        
                         textAlign: TextAlign.center,
-                        wrapWords: false,
                         style: TextStyle(
                           decoration: TextDecoration.none,
                           fontFamily: "Arial",
-                          fontSize: 14,
                           color: Colors.white,
-                          fontWeight: FontWeight.normal,
+                          fontSize: 25,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                  ),
-                  
-
-                ],
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      alignment: Alignment.topCenter,
+                      margin: EdgeInsets.only(top: 10),
+                      child: SizedBox(
+                        width: 270,
+                        child: AutoSizeText(
+                          descripcion,
+                          //maxLines: 3,
+                          textAlign: TextAlign.justify,
+                          wrapWords: false,
+                          style: TextStyle(
+                            decoration: TextDecoration.none,
+                            fontFamily: "Arial",
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                      alignment: Alignment.topCenter,
+                      margin: EdgeInsets.only(top: 20),
+                      child: Text(
+                        "Comentarios",
+                        style: TextStyle(
+                          decoration: TextDecoration.none,
+                          fontFamily: "Arial",
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      alignment: Alignment.topCenter,
+                      margin: EdgeInsets.only(top: 10),
+                      child: SizedBox(
+                        width: 270,
+                        child: AutoSizeText(
+                          comentarios,
+                          //axLines: 3,
+                          textAlign: TextAlign.justify,
+                          wrapWords: false,
+                          style: TextStyle(
+                            decoration: TextDecoration.none,
+                            fontFamily: "Arial",
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        );
-      });
-    },    
-  );
-}
+            ],
+          );
+        });
+      },
+    );
+  }
 
   @override
   void initState() {
