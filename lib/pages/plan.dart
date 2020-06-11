@@ -296,7 +296,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
     return (opciones_dieta != null)
         ? Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height - 350,
+            height: MediaQuery.of(context).size.height - 356,
             child: SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(

@@ -16,11 +16,11 @@ import 'login.dart';
 class menu extends StatelessWidget {
   final int selected_index;
   menu(this.selected_index);
-
+  
   ///
   /// Stack datos
   ///
-  Stack datos(_context) {
+  Stack datos(_context) {    
     return Stack(
       children: <Widget>[
         Row(
@@ -89,10 +89,11 @@ class menu extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(color: Color(0xFF059696), width: 6),
                     color: Colors.white,
-                    shape: BoxShape.circle,
+                    shape: BoxShape.circle,                    
                     image: global.image_foto == null
                         ? DecorationImage(
-                            image: AssetImage("assets/images/photo.jpg"))
+                            image: AssetImage("assets/images/photo.jpg"), fit: BoxFit.cover,
+                          )
                         : global.image_foto,
                   ),
                 ),
