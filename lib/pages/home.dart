@@ -283,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                               width: 150,
                               child: SizedBox(
                                 child: Text(
-                                  "Nuevas recetas disponibles",
+                                  "Recomendaciones",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 16.0,
@@ -489,7 +489,7 @@ class _HomePageState extends State<HomePage> {
                             width: 150,
                             child: SizedBox(
                               child: Text(
-                                "Restaurantes disponibles en tu zona",
+                                "Restaurantes",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 16.0,

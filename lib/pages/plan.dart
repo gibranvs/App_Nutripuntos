@@ -352,7 +352,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                                       onTap: () {
                                         Navigator.push(
                                           _context,
-                                          MaterialPageRoute(
+                                          MaterialPageRoute(                                            
                                             builder: (context) =>
                                                 OpcionDetallePage(
                                                     global.usuario.token,
@@ -631,7 +631,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
       var response = await http.post(global.server + "/aplicacion/api",
           body: {"tipo": "dieta", "token": global.usuario.token});
       var datos = json.decode(utf8.decode(response.bodyBytes));
-      //print(datos);
+      print(datos);
       if (datos["status"] == 1) {
         for (int i = 0; i < datos["response"]["d" + weekday].length; i++) {
           list.add(list_pestanas[i]);

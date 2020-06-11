@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
@@ -51,7 +52,10 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
       },
       child: Container(
         alignment: Alignment.topLeft,
-        margin: EdgeInsets.only(top: 40, left: 20,),
+        margin: EdgeInsets.only(
+          top: 40,
+          left: 20,
+        ),
         child: Icon(Icons.arrow_back, color: Colors.white),
       ),
     );
@@ -92,10 +96,10 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
         decoration: BoxDecoration(
           border: Border.all(width: 0, color: Colors.white),
           shape: BoxShape.circle,
-          image: DecorationImage(
+          image: (global.foto_restaurante != null) ? DecorationImage(
             image: global
                 .foto_restaurante, //global.returnFileSelected(global.imageFile),
-          ),
+          ) : null,
         ),
       ),
     );
@@ -109,8 +113,9 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
       alignment: Alignment.topCenter,
       padding: EdgeInsets.only(top: 0),
       margin: EdgeInsets.only(left: 0, top: 180),
-      child: Text(
+      child: AutoSizeText(
         global.nombre_restaurante,
+        maxLines: 2,
         style: TextStyle(
             fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
       ),
@@ -153,14 +158,14 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Container(
-                        alignment: Alignment.center,                        
-                        height: 50,
-                        width: 40,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          backgroundColor: hexToColor("#cdcdcd"),
-                        ),
-                      );
+                      alignment: Alignment.center,
+                      height: 50,
+                      width: 40,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        backgroundColor: hexToColor("#cdcdcd"),
+                      ),
+                    );
                   } else if (snapshot.hasData) {
                     if (snapshot.data.length > 0) {
                       return new ListView.builder(
@@ -171,14 +176,10 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
                             return Card(
                               margin: EdgeInsets.only(bottom: 15),
                               color: hexToColor("#f2f2f2"),
-                              elevation: 0,
+                              elevation: 0,                              
                               child: Row(
                                 children: <Widget>[
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
+                                  Padding(
                                         padding: EdgeInsets.only(
                                             top: 5, left: 5, bottom: 3),
                                         child: Container(
@@ -192,8 +193,6 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -202,9 +201,11 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
                                         padding: EdgeInsets.only(
                                             top: 0, bottom: 10, left: 10),
                                         child: Container(
-                                          width: 180,
-                                          child: Text(
+                                          width: 150,
+                                          child: AutoSizeText(
                                             snapshot.data[index].nombre,
+                                            maxLines: 2,
+                                            minFontSize: 15,
                                             style: new TextStyle(
                                                 fontSize: 18.0,
                                                 fontFamily: "PT Sans",
@@ -217,7 +218,7 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
                                         padding: EdgeInsets.only(
                                             top: 0, bottom: 5, left: 10),
                                         child: Container(
-                                          width: 180,
+                                          //width: 160,
                                           child: ColorCirclesWidget(
                                               azul: snapshot.data[index].azul,
                                               verde: snapshot.data[index].verde,
@@ -228,6 +229,18 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
                                         ),
                                       ),
                                     ],
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(left:20,),
+                                    child: IconButton(
+                                      onPressed: () {
+                                        show_Dialog(context: context, comentarios: snapshot.data[index].comentarios);
+                                      },
+                                      icon: Icon(
+                                        Icons.info,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -249,6 +262,106 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
       ),
     );
   }
+
+  Future<T> show_Dialog<T>({
+  @required BuildContext context,
+  @required String comentarios,
+}) {
+  return showGeneralDialog(
+    context: context,
+    barrierDismissible: true,
+    barrierLabel: "",
+    barrierColor: null,
+    transitionDuration: const Duration(milliseconds: 150),
+    pageBuilder: (BuildContext buildContext, Animation<double> animation,
+        Animation<double> secondaryAnimation) {
+      return Builder(builder: (BuildContext context) {
+        return Stack(
+          children: <Widget>[
+            /// BACK POPUP
+            Container(
+              width: 400,
+              height: MediaQuery.of(context).size.height - 50, //600,
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(left: 30, right: 30, top: 50, bottom: 50),
+              decoration: new BoxDecoration(
+                color: hexToColor("#505050"),
+                borderRadius: new BorderRadius.all(
+                  const Radius.circular(20.0),
+                ),
+              ),
+            ),
+
+            /// BOTÓN CERRAR
+            GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                margin: EdgeInsets.only(
+                    top: 70, left: MediaQuery.of(context).size.width * 0.8),
+                child: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+            ),
+
+            Container(
+              margin: EdgeInsets.only(top: 70),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 20),
+                    child: Text(
+                      "Comentarios",
+                      style: TextStyle(
+                        decoration: TextDecoration.none,
+                        fontFamily: "Arial",
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: 20,),
+
+                  Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 10),
+                    child: SizedBox(
+                      width: 270,
+                      child: AutoSizeText(
+                        comentarios,
+                        maxLines: 3,
+                        textAlign: TextAlign.center,
+                        wrapWords: false,
+                        style: TextStyle(
+                          decoration: TextDecoration.none,
+                          fontFamily: "Arial",
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ),
+                  
+
+                ],
+              ),
+            ),
+          ],
+        );
+      });
+    },    
+  );
+}
 
   @override
   void initState() {
@@ -299,7 +412,7 @@ Future<List<Platillo>> getPlatillos(_idRestaurante) async {
       "id_restaurante": _idRestaurante.toString()
     });
     var datos = json.decode(utf8.decode(response.bodyBytes));
-
+    print(datos);
     var azul;
     var verde;
     var naranja;
@@ -341,6 +454,8 @@ Future<List<Platillo>> getPlatillos(_idRestaurante) async {
       list.add(Platillo(
           id: int.parse(datos[i]["id"]),
           nombre: datos[i]["nombre"].toString(),
+          descripcion: datos[i]["descripcion"].toString(),
+          comentarios: datos[i]["comentarios"].toString(),
           azul: azul,
           verde: verde,
           naranja: naranja,
@@ -355,6 +470,8 @@ Future<List<Platillo>> getPlatillos(_idRestaurante) async {
 class Platillo {
   int id;
   String nombre;
+  String descripcion;
+  String comentarios;
   String azul;
   String verde;
   String naranja;
@@ -363,6 +480,8 @@ class Platillo {
   Platillo(
       {this.id,
       this.nombre,
+      this.descripcion,
+      this.comentarios,
       this.azul,
       this.verde,
       this.naranja,
