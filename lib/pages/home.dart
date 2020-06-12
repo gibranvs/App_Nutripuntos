@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                 image: global.image_foto == null
                     ? DecorationImage(
                         image: AssetImage("assets/images/photo.jpg"),
-                        fit: BoxFit.contain)
+                        fit: BoxFit.cover)
                     : global.image_foto,
               ),
             ),
@@ -283,7 +283,7 @@ class _HomePageState extends State<HomePage> {
                               width: 150,
                               child: SizedBox(
                                 child: Text(
-                                  "Nuevas recetas disponibles",
+                                  "Recomendaciones",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 16.0,
@@ -489,7 +489,7 @@ class _HomePageState extends State<HomePage> {
                             width: 150,
                             child: SizedBox(
                               child: Text(
-                                "Restaurantes disponibles en tu zona",
+                                "Restaurantes",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 16.0,
@@ -565,7 +565,7 @@ class _HomePageState extends State<HomePage> {
             //_file = img;
             //buildCroppingImage();
             global.image_foto =
-                new DecorationImage(image: Image.file(img).image);
+                new DecorationImage(image: Image.file(img).image, fit:BoxFit.cover,);
             db.DBManager.instance.updateFoto(global.usuario.id, img.path);
             List<int> imageBytes = img.readAsBytesSync();
             writeFileContent(base64Encode(imageBytes));
@@ -578,7 +578,7 @@ class _HomePageState extends State<HomePage> {
       print("Error pickImageFrom " + e.toString());
       setState(() {
         global.image_foto =
-            DecorationImage(image: AssetImage("assets/images/photo.jpg"));
+            DecorationImage(image: AssetImage("assets/images/photo.jpg"), fit: BoxFit.cover,);
       });
     }
   }

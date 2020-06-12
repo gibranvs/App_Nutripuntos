@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
@@ -36,10 +37,10 @@ class _RestaurantesPageState extends State<RestaurantesPage> {
                             horizontal: 15, vertical: 6),
                         child: new InkWell(
                           onTap: () {
-                            global.foto_restaurante = NetworkImage(
+                            global.foto_restaurante = (snapshot.data[index].logo != "") ? NetworkImage(
                                 global.server +
                                     "/aplicacion/media/restaurantes/logo/" +
-                                    snapshot.data[index].logo);
+                                    snapshot.data[index].logo) : null;
                             global.nombre_restaurante =
                                 snapshot.data[index].nombre;
                             Navigator.push(
@@ -60,23 +61,25 @@ class _RestaurantesPageState extends State<RestaurantesPage> {
                                       height: 70,
                                       width: 70,
                                       margin: EdgeInsets.only(right: 15),
-                                      decoration: BoxDecoration(
+                                      decoration: (snapshot.data[index].logo != "") ? BoxDecoration(
                                         border: Border.all(color: Colors.white),
                                         shape: BoxShape.circle,
                                         image: DecorationImage(
                                           fit: BoxFit.contain,
-                                          image: NetworkImage(global.server +
+                                          image:  NetworkImage(global.server +
                                               "/aplicacion/media/restaurantes/logo/" +
                                               snapshot.data[index].logo),
                                         ),
-                                      ),
+                                      ) : null,
                                     ),
                                   ],
                                 ),
                                 Expanded(
                                   flex: 2,
-                                  child: Text(
+                                  child: AutoSizeText(
                                     snapshot.data[index].nombre,
+                                    wrapWords: false,
+                                    maxLines: 2,
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       height: 1.6,
@@ -179,7 +182,7 @@ List<Restaurante> createRestaurantesList(List data) {
   for (int i = 0; i < data.length; i++) {
     String id = data[i]["id"];
     String nombre = data[i]["nombre"];
-    String logo = data[i]["logo"];
+    String logo = (data[i]["logo"] != null && data[i]["logo"] != "") ? data[i]["logo"] : "";
     String descripcion = data[i]["descripcion"];
 
     Restaurante restaurante = new Restaurante(

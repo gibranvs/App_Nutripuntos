@@ -50,11 +50,12 @@ class _RecetasPageState extends State<RecetasPage> {
               padding: EdgeInsets.only(bottom: 3),
               child: TextField(
                 controller: global.text_busqueda_receta,
-                onChanged: (value) {
+                onChanged: (value) async {
+                  listRecetas = getReceta(value);
                   setState(() {
-                    global.list_recetas = null;
+                    global.list_recetas = null;                    
                     getReceta(value).then((receta) {
-                      global.list_recetas = receta;
+                      global.list_recetas = receta;                      
                     });
                   });
                 },
