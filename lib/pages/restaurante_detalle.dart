@@ -179,80 +179,86 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
                               margin: EdgeInsets.only(bottom: 15),
                               color: hexToColor("#f2f2f2"),
                               elevation: 0,
-                              child: Row(
+                              child: Stack(
+                                alignment: Alignment.center,
                                 children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 5, left: 5, bottom: 3),
-                                    child: Container(
-                                      margin:
-                                          new EdgeInsets.only(top: 0, left: 0),
-                                      child: Container(
-                                        margin: EdgeInsets.only(left: 5),
-                                        height: 80,
-                                        child: new Image.asset(
-                                            "assets/icons/Recurso_26.png"),
-                                      ),
-                                    ),
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  Row(
                                     children: <Widget>[
                                       Padding(
                                         padding: EdgeInsets.only(
-                                            top: 0, bottom: 10, left: 10),
+                                            top: 5, left: 5, bottom: 3),
                                         child: Container(
-                                          width: 150,
-                                          child: AutoSizeText(
-                                            snapshot.data[index].nombre,
-                                            maxLines: 2,
-                                            minFontSize: 15,
-                                            style: new TextStyle(
-                                                fontSize: 18.0,
-                                                fontFamily: "PT Sans",
-                                                fontWeight: FontWeight.bold,
-                                                color: hexToColor("#666666")),
+                                          margin:
+                                              new EdgeInsets.only(top: 0, left: 0),
+                                          child: Container(
+                                            margin: EdgeInsets.only(left: 5),
+                                            height: 80,
+                                            child: new Image.asset(
+                                                "assets/icons/Recurso_26.png"),
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 0, bottom: 5, left: 10),
-                                        child: Container(
-                                          //width: 160,
-                                          child: ColorCirclesWidget(
-                                              azul: snapshot.data[index].azul,
-                                              verde: snapshot.data[index].verde,
-                                              naranja:
-                                                  snapshot.data[index].naranja,
-                                              amarillo: snapshot
-                                                  .data[index].amarillo),
-                                        ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 0, bottom: 10, left: 10),
+                                            child: Container(
+                                              width: 150,
+                                              child: AutoSizeText(
+                                                snapshot.data[index].nombre,
+                                                maxLines: 2,
+                                                minFontSize: 15,
+                                                style: new TextStyle(
+                                                    fontSize: 18.0,
+                                                    fontFamily: "PT Sans",
+                                                    fontWeight: FontWeight.bold,
+                                                    color: hexToColor("#666666")),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 0, bottom: 5, left: 10),
+                                            child: Container(
+                                              //width: 160,
+                                              child: ColorCirclesWidget(
+                                                  azul: snapshot.data[index].azul,
+                                                  verde: snapshot.data[index].verde,
+                                                  naranja:
+                                                      snapshot.data[index].naranja,
+                                                  amarillo: snapshot
+                                                      .data[index].amarillo),
+                                            ),
+                                          ),
+                                        ],
                                       ),
+                                      
                                     ],
                                   ),
+
                                   Container(
-                                    margin: EdgeInsets.only(
-                                      left: 25,
-                                    ),
-                                    child: IconButton(
-                                      onPressed: () {
-                                        show_Dialog(
-                                            context: context,
-                                            platillo:
-                                                snapshot.data[index].nombre,
-                                            descripcion: snapshot
-                                                .data[index].descripcion,
-                                            comentarios: snapshot
-                                                .data[index].comentarios);
-                                      },
-                                      icon: Icon(
-                                        Icons.info,
-                                        color: Colors.grey,
+                                        alignment: Alignment.topRight,
+                                        width: double.infinity,                                        
+                                        child: IconButton(
+                                          onPressed: () {
+                                            show_Dialog(
+                                                context: context,
+                                                platillo:
+                                                    snapshot.data[index].nombre,
+                                                descripcion: snapshot
+                                                    .data[index].descripcion,
+                                                comentarios: snapshot
+                                                    .data[index].comentarios);
+                                          },
+                                          icon: Icon(
+                                            Icons.info,
+                                            color: Color(0xFF059696),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
                                 ],
                               ),
                             );
@@ -377,8 +383,9 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
                       height: 30,
                     ),
                     Container(
-                      alignment: Alignment.topCenter,
-                      margin: EdgeInsets.only(top: 20),
+                      alignment: Alignment.centerLeft,
+                      margin: EdgeInsets.only(top: 20,),
+                      width: 270,
                       child: Text(
                         "Comentarios",
                         style: TextStyle(
