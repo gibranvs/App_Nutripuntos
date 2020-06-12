@@ -451,8 +451,9 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
     opciones_dieta = getOpcionesDieta(global.usuario.token);
     getColoresComida(0).then((_colores) {
       if (_colores != null) {
+        //print("Naranja: " + _colores.naranja.toString());
         setState(() {
-          colores = _colores[0];
+          colores = _colores;
           valor_naranja = colores.naranja;
           valor_azul = colores.azul;
           valor_amarillo = colores.amarillo;
@@ -571,7 +572,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                           
                           await getColoresComida(index).then((_colores) {
                             if (_colores != null) {
-                              colores = _colores[index];
+                              colores = _colores;
                               valor_naranja = colores.naranja;
                               valor_azul = colores.azul;
                               valor_amarillo = colores.amarillo;
@@ -900,11 +901,9 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
     }
   }
 
-  Future<List<Colores>> getColoresComida(_index_comida) async {
-    try {
-      DateTime time = DateTime.now();
-      String weekday = time.weekday.toString();
-      List<Colores> list = new List<Colores>();
+  Future<Colores> getColoresComida(_index_comida) async {
+    try {            
+      Colores colores;
       String azul = "0";
       String verde = "L";
       String naranja = "0";
@@ -915,53 +914,52 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
       var datos = json.decode(utf8.decode(response.bodyBytes));
 
       if (datos["status"] == 1) {
-        //print(datos["puntos"]);
-        for (int comida = 0;
-            comida < datos["response"]["dieta"]["pts_dia"].length;
-            comida++) {
-          if (datos["puntos"]["dieta"][comida]["azul"] != null) {
-            if (datos["puntos"]["dieta"][comida]["azul"].toString().contains('.') ==
+        print(_index_comida);
+        print(datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]);
+        //for (int comida = 0;comida < datos["response"]["dieta"]["pts_dia"].length;comida++) {
+          if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["azul"] != null) {
+            if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["azul"].toString().contains('.') ==
                 true) {
-              if (datos["puntos"]["dieta"][comida]["azul"].split('.')[1] == "0")
-                azul = datos["puntos"]["dieta"][comida]["azul"].split('.')[0];
+              if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["azul"].split('.')[1] == "0")
+                azul = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["azul"].split('.')[0];
               else
-                azul = datos["puntos"]["dieta"][comida]["azul"].toString();
+                azul = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["azul"].toString();
             } else
-              azul = datos["puntos"]["dieta"][comida]["azul"].toString();
+              azul = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["azul"].toString();
           } else
             azul = "0";
 
-          if (datos["puntos"]["dieta"][comida]["naranja"] != null) {
-            if (datos["puntos"]["dieta"][comida]["naranja"].toString().contains('.') ==
+          if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["naranja"] != null) {
+            if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["naranja"].toString().contains('.') ==
                 true) {
-              if (datos["puntos"]["dieta"][comida]["naranja"].split('.')[1] == "0")
-                naranja = datos["puntos"]["dieta"][comida]["naranja"].split('.')[0];
+              if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["naranja"].split('.')[1] == "0")
+                naranja = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["naranja"].split('.')[0];
               else
-                naranja = datos["puntos"]["dieta"][comida]["naranja"].toString();
+                naranja = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["naranja"].toString();
             } else
-              naranja = datos["puntos"]["dieta"][comida]["naranja"].toString();
+              naranja = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["naranja"].toString();
           } else
             naranja = "0";
 
-          if (datos["puntos"]["dieta"][comida]["amarillo"] != null) {
-            if (datos["puntos"]["dieta"][comida]["amarillo"].toString().contains('.') ==
+          if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["amarillo"] != null) {
+            if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["amarillo"].toString().contains('.') ==
                 true) {
-              if (datos["puntos"]["dieta"][comida]["amarillo"].split('.')[1] == "0")
-                amarillo = datos["puntos"]["dieta"][comida]["amarillo"].split('.')[0];
+              if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["amarillo"].split('.')[1] == "0")
+                amarillo = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["amarillo"].split('.')[0];
               else
-                amarillo = datos["puntos"]["dieta"][comida]["amarillo"].toString();
+                amarillo = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["amarillo"].toString();
             } else
-              amarillo = datos["puntos"]["dieta"][comida]["amarillo"].toString();
+              amarillo = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["amarillo"].toString();
           } else
             amarillo = "0";
 
           verde = "L";
 
-          list.add(Colores(
-              azul: azul, naranja: naranja, amarillo: amarillo, verde: verde));
-        }
+          colores = new Colores(
+              azul: azul, naranja: naranja, amarillo: amarillo, verde: verde);
+        //}
 
-        return list;
+        return colores;
       }
     } catch (ex) {
       print("Error getColorCirclesWidgetValues: $ex");
@@ -984,7 +982,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
       var response = await http.post(global.server + "/aplicacion/api",
           body: {"tipo": "dieta", "token": global.usuario.token});
       var datos = json.decode(utf8.decode(response.bodyBytes));
-      print(datos["response"]["dieta"]["pts_dia"]);
+      //print(datos["response"]["dieta"]["pts_dia"]);
       if (datos["status"] == 1) {
         for(int i = 0; i < datos["response"]["dieta"]["pts_dia"].length; i++)
         {
