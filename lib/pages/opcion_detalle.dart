@@ -309,87 +309,87 @@ Future<Valores_Puntos> getColorCirclesWidgetValues(
     var datos = json.decode(utf8.decode(response.bodyBytes));
 
     if (datos["status"] == 1) {
-      int receta = datos["response"]["d$_dia"][_index_comida].length - 1;
+      int receta = datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida].length - 1;
 
-      if (datos["response"]["d$_dia"][_index_comida][receta]["azul"] != null) {
-        if (datos["response"]["d$_dia"][_index_comida][receta]["azul"]
+      if (datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["azul"] != null) {
+        if (datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["azul"]
                 .toString()
                 .contains('.') ==
             true) {
-          if (datos["response"]["d$_dia"][_index_comida][receta]["azul"]
+          if (datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["azul"]
                   .split('.')[1] ==
               "0")
-            azul = datos["response"]["d$_dia"][_index_comida][receta]["azul"]
+            azul = datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["azul"]
                 .split('.')[0];
           else
-            azul = datos["response"]["d$_dia"][_index_comida][receta]["azul"]
+            azul = datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["azul"]
                 .toString();
         } else
-          azul = datos["response"]["d$_dia"][_index_comida][receta]["azul"]
+          azul = datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["azul"]
               .toString();
       } else
         azul = "0";
 
-      if (datos["response"]["d$_dia"][_index_comida][receta]["verde"] != null) {
-        if (datos["response"]["d$_dia"][_index_comida][receta]["verde"]
+      if (datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["verde"] != null) {
+        if (datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["verde"]
                 .toString()
                 .contains('.') ==
             true) {
-          if (datos["response"]["d$_dia"][_index_comida][receta]["verde"]
+          if (datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["verde"]
                   .split('.')[1] ==
               "0")
-            verde = datos["response"]["d$_dia"][_index_comida][receta]["verde"]
+            verde = datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["verde"]
                 .split('.')[0];
           else
-            verde = datos["response"]["d$_dia"][_index_comida][receta]["verde"]
+            verde = datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["verde"]
                 .toString();
         } else
-          verde = datos["response"]["d$_dia"][_index_comida][receta]["verde"]
+          verde = datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["verde"]
               .toString();
       } else
         verde = "0";
 
-      if (datos["response"]["d$_dia"][_index_comida][receta]["naranja"] !=
+      if (datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["naranja"] !=
           null) {
-        if (datos["response"]["d$_dia"][_index_comida][receta]["naranja"]
+        if (datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["naranja"]
                 .toString()
                 .contains('.') ==
             true) {
-          if (datos["response"]["d$_dia"][_index_comida][receta]["naranja"]
+          if (datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["naranja"]
                   .split('.')[1] ==
               "0")
-            naranja = datos["response"]["d$_dia"][_index_comida][receta]
+            naranja = datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]
                     ["naranja"]
                 .split('.')[0];
           else
-            naranja = datos["response"]["d$_dia"][_index_comida][receta]
+            naranja = datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]
                     ["naranja"]
                 .toString();
         } else
-          naranja = datos["response"]["d$_dia"][_index_comida][receta]
+          naranja = datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]
                   ["naranja"]
               .toString();
       } else
         naranja = "0";
 
-      if (datos["response"]["d$_dia"][_index_comida][receta]["amarillo"] !=
+      if (datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["amarillo"] !=
           null) {
-        if (datos["response"]["d$_dia"][_index_comida][receta]["amarillo"]
+        if (datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["amarillo"]
                 .toString()
                 .contains('.') ==
             true) {
-          if (datos["response"]["d$_dia"][_index_comida][receta]["amarillo"]
+          if (datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["amarillo"]
                   .split('.')[1] ==
               "0")
-            amarillo = datos["response"]["d$_dia"][_index_comida][receta]
+            amarillo = datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]
                     ["amarillo"]
                 .split('.')[0];
           else
-            amarillo = datos["response"]["d$_dia"][_index_comida][receta]
+            amarillo = datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]
                     ["amarillo"]
                 .toString();
         } else
-          amarillo = datos["response"]["d$_dia"][_index_comida][receta]
+          amarillo = datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]
                   ["amarillo"]
               .toString();
       } else
@@ -417,11 +417,11 @@ Future<List<Detalle_Opcion>> getDetallesOpcion(
     //print(datos);
     if (datos["status"] == 1) {
       for (int receta = 0;
-          receta < datos["response"]["d$_dia"][_index_comida].length;
+          receta < datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida].length;
           receta++) {
-        if (datos["response"]["d$_dia"][_index_comida][receta]["receta"] !=
+        if (datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["receta"] !=
             null) {
-          preparacion = datos["response"]["d$_dia"][_index_comida][receta]
+          preparacion = datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]
                   ["receta"]
               .toString();
         } else {
@@ -429,16 +429,16 @@ Future<List<Detalle_Opcion>> getDetallesOpcion(
         }
 
         list.add(Detalle_Opcion(
-          id: datos["response"]["d$_dia"][_index_comida][receta]["id"]
+          id: datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["id"]
               .toString(),
-          index: datos["response"]["d$_dia"][_index_comida][receta]["index"]
+          index: datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["index"]
               .toString(),
-          cantidad: datos["response"]["d$_dia"][_index_comida][receta]
+          cantidad: datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]
                   ["porcion"]
               .toString(),
-          unidad: datos["response"]["d$_dia"][_index_comida][receta]["medida"]
+          unidad: datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["medida"]
               .toString(),
-          nombre: datos["response"]["d$_dia"][_index_comida][receta]["nombre"]
+          nombre: datos["response"]["dieta"]["dieta"]["d$_dia"][_index_comida][receta]["nombre"]
               .toString(),
           preparacion: preparacion,
         ));
