@@ -352,7 +352,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                                       onTap: () {
                                         Navigator.push(
                                           _context,
-                                          MaterialPageRoute(                                            
+                                          MaterialPageRoute(
                                             builder: (context) =>
                                                 OpcionDetallePage(
                                                     global.usuario.token,
@@ -568,6 +568,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                         tabs: tabs,
                         onTap: (index) async {
                           global.current_tab = index;
+                          
                           await getColoresComida(index).then((_colores) {
                             if (_colores != null) {
                               colores = _colores[index];
@@ -582,6 +583,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                               valor_verde = "L";
                             }
                           });
+                                                    
                           setState(() {});
                         },
                       ),
@@ -610,189 +612,156 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
     );
   }
 
-  Future<List<Data_pestanas>> getPestanas() async {
-    List<Data_pestanas> list_pestanas = new List<Data_pestanas>();
-    list_pestanas.add(Data_pestanas(0, "Desayunos", "Desayuno en puntos",
-        "Sugerencias de desayuno", "desayuno"));
-    list_pestanas.add(Data_pestanas(1, "CM", "Colación matutina en puntos",
-        "Sugerencias de colación matutina", "colación matutina"));
-    list_pestanas.add(Data_pestanas(2, "Comidas", "Almuerzo en puntos",
-        "Sugerencias de almuerzo", "almuerzo"));
-    list_pestanas.add(Data_pestanas(3, "CV", "Colación vespertina en puntos",
-        "Sugerencias de colación vespertina", "colación vespertina"));
-    list_pestanas.add(Data_pestanas(
-        4, "Cenas", "Cena en puntos", "Sugerencias de cena", "cena"));
-    List<Data_pestanas> list = new List<Data_pestanas>();
-
-    DateTime time = DateTime.now();
-    String weekday = time.weekday.toString();
-
-    try {
-      var response = await http.post(global.server + "/aplicacion/api",
-          body: {"tipo": "dieta", "token": global.usuario.token});
-      var datos = json.decode(utf8.decode(response.bodyBytes));
-      print(datos);
-      if (datos["status"] == 1) {
-        for (int i = 0; i < datos["response"]["d" + weekday].length; i++) {
-          list.add(list_pestanas[i]);
-        }
-
-        return list;
-      }
-    } catch (e) {
-      print("Error getPestañas " + e.toString());
-    }
-  }
-}
-
-void dialog(_context, _imagen, _titulo, _comida) async {
-  showDialog(
-      context: _context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(20.0),
-            ),
-          ),
-          backgroundColor: hexToColor("#505050"),
-          content: Container(
-            padding: EdgeInsets.only(top: 0),
-            height: 380,
-            child: Stack(
-              children: <Widget>[
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(
-                        top: 0, left: MediaQuery.of(context).size.width * 0.58),
-                    child: Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
-                ),
-                Container(
-                  height: 90,
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.only(top: 25),
-                  child: Image.asset(_imagen),
-                ),
-                Container(
-                  alignment: Alignment.topCenter,
-                  margin: EdgeInsets.only(top: 130),
-                  child: Text(
-                    _titulo,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.topCenter,
-                  margin: EdgeInsets.only(top: 180),
-                  child: SizedBox(
-                    width: 270,
-                    child: AutoSizeText(
-                      "Elige un elemento de este grupo para equilibrar tu $_comida dentro del plan nutrimental",
-                      maxLines: 3,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      });
-}
-
-Future<T> show_Dialog<T>({
-  @required BuildContext context,
-  @required String imagen,
-  @required String titulo,
-  @required String comida,
-  @required String grupo,
-}) {
-  return showGeneralDialog(
-    context: context,
-    pageBuilder: (BuildContext buildContext, Animation<double> animation,
-        Animation<double> secondaryAnimation) {
-      return Builder(builder: (BuildContext context) {
-        return Stack(
-          children: <Widget>[
-            /// BACK POPUP
-            Container(
-              width: 400,
-              height: MediaQuery.of(context).size.height - 50, //600,
-              alignment: Alignment.center,
-              margin: EdgeInsets.only(left: 30, right: 30, top: 50, bottom: 50),
-              decoration: new BoxDecoration(
-                color: hexToColor("#505050"),
-                borderRadius: new BorderRadius.all(
-                  const Radius.circular(20.0),
-                ),
+  void dialog(_context, _imagen, _titulo, _comida) async {
+    showDialog(
+        context: _context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(20.0),
               ),
             ),
-
-            /// BOTÓN CERRAR
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                margin: EdgeInsets.only(
-                    top: 70, left: MediaQuery.of(context).size.width * 0.8),
-                child: Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ),
-            ),
-
-            Container(
-              margin: EdgeInsets.only(top: 70),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+            backgroundColor: hexToColor("#505050"),
+            content: Container(
+              padding: EdgeInsets.only(top: 0),
+              height: 380,
+              child: Stack(
                 children: <Widget>[
-                  /// IMAGEN GRUPO ALIMENTICIO
-                  Container(
-                    height: 90,
-                    alignment: Alignment.center,
-                    margin: EdgeInsets.only(top: 0),
-                    child: Image.asset(imagen),
-                  ),
-
-                  /// TEXT TÍTULO GRUPO
-                  Container(
-                    alignment: Alignment.topCenter,
-                    margin: EdgeInsets.only(top: 20),
-                    child: Text(
-                      titulo,
-                      style: TextStyle(
-                        decoration: TextDecoration.none,
-                        fontFamily: "Arial",
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(
+                          top: 0,
+                          left: MediaQuery.of(context).size.width * 0.58),
+                      child: Icon(
+                        Icons.close,
                         color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        size: 30,
                       ),
                     ),
                   ),
+                  Container(
+                    height: 90,
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.only(top: 25),
+                    child: Image.asset(_imagen),
+                  ),
+                  Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 130),
+                    child: Text(
+                      _titulo,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.topCenter,
+                    margin: EdgeInsets.only(top: 180),
+                    child: SizedBox(
+                      width: 270,
+                      child: AutoSizeText(
+                        "Elige un elemento de este grupo para equilibrar tu $_comida dentro del plan nutrimental",
+                        maxLines: 3,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
 
-                  /// TEXT INTRUCCIÓN
-                  /*
+  Future<T> show_Dialog<T>({
+    @required BuildContext context,
+    @required String imagen,
+    @required String titulo,
+    @required String comida,
+    @required String grupo,
+  }) {
+    return showGeneralDialog(
+      context: context,
+      pageBuilder: (BuildContext buildContext, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        return Builder(builder: (BuildContext context) {
+          return Stack(
+            children: <Widget>[
+              /// BACK POPUP
+              Container(
+                width: 400,
+                height: MediaQuery.of(context).size.height - 50, //600,
+                alignment: Alignment.center,
+                margin:
+                    EdgeInsets.only(left: 30, right: 30, top: 50, bottom: 50),
+                decoration: new BoxDecoration(
+                  color: hexToColor("#505050"),
+                  borderRadius: new BorderRadius.all(
+                    const Radius.circular(20.0),
+                  ),
+                ),
+              ),
+
+              /// BOTÓN CERRAR
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  margin: EdgeInsets.only(
+                      top: 70, left: MediaQuery.of(context).size.width * 0.8),
+                  child: Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                ),
+              ),
+
+              Container(
+                margin: EdgeInsets.only(top: 70),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    /// IMAGEN GRUPO ALIMENTICIO
+                    Container(
+                      height: 90,
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(top: 0),
+                      child: Image.asset(imagen),
+                    ),
+
+                    /// TEXT TÍTULO GRUPO
+                    Container(
+                      alignment: Alignment.topCenter,
+                      margin: EdgeInsets.only(top: 20),
+                      child: Text(
+                        titulo,
+                        style: TextStyle(
+                          decoration: TextDecoration.none,
+                          fontFamily: "Arial",
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+
+                    /// TEXT INTRUCCIÓN
+                    /*
                   Container(
                     alignment: Alignment.topCenter,
                     margin: EdgeInsets.only(top: 10),
@@ -815,182 +784,231 @@ Future<T> show_Dialog<T>({
                   ),
                   */
 
-                  /// LIST ALIMENTOS
-                  Container(
-                    alignment: Alignment.center,
-                    child: Container(
+                    /// LIST ALIMENTOS
+                    Container(
                       alignment: Alignment.center,
-                      height: MediaQuery.of(context).size.height - 350,
-                      margin: EdgeInsets.only(
-                          left: 30, right: 30, top: 10, bottom: 50),
-                      child: FutureBuilder<List<String>>(
-                          future:
-                              getAlimentosColor(global.usuario.token, grupo),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  semanticsLabel: "Loading",
-                                  backgroundColor: hexToColor("#cdcdcd"),
-                                ),
-                              );
-                            } else if (snapshot.hasData) {
-                              if (snapshot.data.length > 0) {
-                                List<Color> coloresElementos = [
-                                  hexToColor("#f6871f"),
-                                  hexToColor("#22abd6"),
-                                  hexToColor("#fcdc28"),
-                                  hexToColor("#8acb4b"),
-                                ];
-                                return Scrollbar(
-                                  child: ListView.builder(
-                                      shrinkWrap: true,
-                                      padding: EdgeInsets.all(0),
-                                      itemCount: snapshot.data.length,
-                                      itemBuilder: (context, index) {
-                                        return Container(
-                                          color: Colors.transparent,
-                                          child: Container(
-                                            height: 40,
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              snapshot.data[index],
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                decoration: TextDecoration.none,
-                                                fontFamily: "Arial",
-                                                fontSize: 15,
-                                                color: coloresElementos[
-                                                    int.parse(grupo) -
-                                                        1], //Colors.lightGreen,
-                                                fontWeight: FontWeight.bold,
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: MediaQuery.of(context).size.height - 350,
+                        margin: EdgeInsets.only(
+                            left: 30, right: 30, top: 10, bottom: 50),
+                        child: FutureBuilder<List<String>>(
+                            future:
+                                getAlimentosColor(global.usuario.token, grupo),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    semanticsLabel: "Loading",
+                                    backgroundColor: hexToColor("#cdcdcd"),
+                                  ),
+                                );
+                              } else if (snapshot.hasData) {
+                                if (snapshot.data.length > 0) {
+                                  List<Color> coloresElementos = [
+                                    hexToColor("#f6871f"),
+                                    hexToColor("#22abd6"),
+                                    hexToColor("#fcdc28"),
+                                    hexToColor("#8acb4b"),
+                                  ];
+                                  return Scrollbar(
+                                    child: ListView.builder(
+                                        shrinkWrap: true,
+                                        padding: EdgeInsets.all(0),
+                                        itemCount: snapshot.data.length,
+                                        itemBuilder: (context, index) {
+                                          return Container(
+                                            color: Colors.transparent,
+                                            child: Container(
+                                              height: 40,
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                snapshot.data[index],
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  decoration:
+                                                      TextDecoration.none,
+                                                  fontFamily: "Arial",
+                                                  fontSize: 15,
+                                                  color: coloresElementos[int
+                                                          .parse(grupo) -
+                                                      1], //Colors.lightGreen,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        );
-                                      }),
-                                );
-                              } else {
+                                          );
+                                        }),
+                                  );
+                                } else {
+                                  return new Text(
+                                      "No hay sugerencias de alimentos para este grupo.",
+                                      style: TextStyle(
+                                          color: hexToColor("#606060")));
+                                }
+                              } else if (snapshot.hasError) {
                                 return new Text(
-                                    "No hay sugerencias de alimentos para este grupo.",
+                                    "Error al obtener sugerencias de alimentos del grupo.",
                                     style: TextStyle(
                                         color: hexToColor("#606060")));
                               }
-                            } else if (snapshot.hasError) {
-                              return new Text(
-                                  "Error al obtener sugerencias de alimentos del grupo.",
-                                  style:
-                                      TextStyle(color: hexToColor("#606060")));
-                            }
-                          }),
+                            }),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        );
-      });
-    },
-    barrierDismissible: true,
-    barrierLabel: "",
-    barrierColor: null,
-    transitionDuration: const Duration(milliseconds: 150),
-  );
-}
-
-Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {
-  //print (_token);
-  try {
-    List<Opciones_Dieta> list = new List<Opciones_Dieta>();
-
-    DateTime time = DateTime.now();
-    String weekday = time.weekday.toString();
-
-    var response = await http.post(global.server + "/aplicacion/api",
-        body: {"tipo": "dieta", "token": _token});
-    var datos = json.decode(utf8.decode(response.bodyBytes));
-    //print(datos["response"]["d6"]);
-    if (datos["status"] == 1) {
-      //for (int dias = 0; dias < datos["response"]["d" + weekday].length; dias++)
-      for (int dias = 0; dias < datos["response"].length; dias++) {
-        list.add(Opciones_Dieta(
-          id: (dias + 1).toString(),
-          nombre: "Opción " + (dias + 1).toString(),
-        ));
-      }
-      return list;
-    }
-  } catch (e) {
-    print("Error getOpcionesDieta " + e.toString());
+            ],
+          );
+        });
+      },
+      barrierDismissible: true,
+      barrierLabel: "",
+      barrierColor: null,
+      transitionDuration: const Duration(milliseconds: 150),
+    );
   }
-}
 
-Future<List<Colores>> getColoresComida(_index_comida) async {
-  try {
+  Future<List<Opciones_Dieta>> getOpcionesDieta(_token) async {
+    //print (_token);
+    try {
+      List<Opciones_Dieta> list = new List<Opciones_Dieta>();
+
+      DateTime time = DateTime.now();
+      String weekday = time.weekday.toString();
+
+      var response = await http.post(global.server + "/aplicacion/api",
+          body: {"tipo": "dieta", "token": _token});
+      var datos = json.decode(utf8.decode(response.bodyBytes));
+      //print(datos["response"]["dieta"]["dieta"]);
+      if (datos["status"] == 1) {
+        //for (int dias = 0; dias < datos["response"]["d" + weekday].length; dias++)
+        for (int dias = 0;
+            dias < datos["response"]["dieta"]["dieta"].length;
+            dias++) {
+          list.add(Opciones_Dieta(
+            id: (dias + 1).toString(),
+            nombre: "Opción " + (dias + 1).toString(),
+          ));
+        }
+        return list;
+      }
+    } catch (e) {
+      print("Error getOpcionesDieta " + e.toString());
+    }
+  }
+
+  Future<List<Colores>> getColoresComida(_index_comida) async {
+    try {
+      DateTime time = DateTime.now();
+      String weekday = time.weekday.toString();
+      List<Colores> list = new List<Colores>();
+      String azul = "0";
+      String verde = "L";
+      String naranja = "0";
+      String amarillo = "0";
+
+      var response = await http.post(global.server + "/aplicacion/api",
+          body: {"tipo": "dieta", "token": global.usuario.token});
+      var datos = json.decode(utf8.decode(response.bodyBytes));
+
+      if (datos["status"] == 1) {
+        //print(datos["puntos"]);
+        for (int comida = 0;
+            comida < datos["response"]["dieta"]["pts_dia"].length;
+            comida++) {
+          if (datos["puntos"]["dieta"][comida]["azul"] != null) {
+            if (datos["puntos"]["dieta"][comida]["azul"].toString().contains('.') ==
+                true) {
+              if (datos["puntos"]["dieta"][comida]["azul"].split('.')[1] == "0")
+                azul = datos["puntos"]["dieta"][comida]["azul"].split('.')[0];
+              else
+                azul = datos["puntos"]["dieta"][comida]["azul"].toString();
+            } else
+              azul = datos["puntos"]["dieta"][comida]["azul"].toString();
+          } else
+            azul = "0";
+
+          if (datos["puntos"]["dieta"][comida]["naranja"] != null) {
+            if (datos["puntos"]["dieta"][comida]["naranja"].toString().contains('.') ==
+                true) {
+              if (datos["puntos"]["dieta"][comida]["naranja"].split('.')[1] == "0")
+                naranja = datos["puntos"]["dieta"][comida]["naranja"].split('.')[0];
+              else
+                naranja = datos["puntos"]["dieta"][comida]["naranja"].toString();
+            } else
+              naranja = datos["puntos"]["dieta"][comida]["naranja"].toString();
+          } else
+            naranja = "0";
+
+          if (datos["puntos"]["dieta"][comida]["amarillo"] != null) {
+            if (datos["puntos"]["dieta"][comida]["amarillo"].toString().contains('.') ==
+                true) {
+              if (datos["puntos"]["dieta"][comida]["amarillo"].split('.')[1] == "0")
+                amarillo = datos["puntos"]["dieta"][comida]["amarillo"].split('.')[0];
+              else
+                amarillo = datos["puntos"]["dieta"][comida]["amarillo"].toString();
+            } else
+              amarillo = datos["puntos"]["dieta"][comida]["amarillo"].toString();
+          } else
+            amarillo = "0";
+
+          verde = "L";
+
+          list.add(Colores(
+              azul: azul, naranja: naranja, amarillo: amarillo, verde: verde));
+        }
+
+        return list;
+      }
+    } catch (ex) {
+      print("Error getColorCirclesWidgetValues: $ex");
+    }
+  }
+
+  Future<List<Data_pestanas>> getPestanas() async {
+    List<Data_pestanas> list_pestanas = new List<Data_pestanas>();
+    List<Data_pestanas> list = new List<Data_pestanas>();
+    //list_pestanas.add(Data_pestanas(0, "Desayunos", "Desayuno en puntos","Sugerencias de desayuno", "desayuno"));
+    //list_pestanas.add(Data_pestanas(1, "CM", "Colación matutina en puntos","Sugerencias de colación matutina", "colación matutina"));
+    //list_pestanas.add(Data_pestanas(2, "Comidas", "Almuerzo en puntos","Sugerencias de almuerzo", "almuerzo"));
+    //list_pestanas.add(Data_pestanas(3, "CV", "Colación vespertina en puntos","Sugerencias de colación vespertina", "colación vespertina"));
+    //list_pestanas.add(Data_pestanas(4, "Cenas", "Cena en puntos", "Sugerencias de cena", "cena"));
+
     DateTime time = DateTime.now();
     String weekday = time.weekday.toString();
-    List<Colores> list = new List<Colores>();
-    String azul = "0";
-    String verde = "L";
-    String naranja = "0";
-    String amarillo = "0";
 
-    var response = await http.post(global.server + "/aplicacion/api",
-        body: {"tipo": "dieta", "token": global.usuario.token});
-    var datos = json.decode(utf8.decode(response.bodyBytes));
+    try {
+      var response = await http.post(global.server + "/aplicacion/api",
+          body: {"tipo": "dieta", "token": global.usuario.token});
+      var datos = json.decode(utf8.decode(response.bodyBytes));
+      print(datos["response"]["dieta"]["pts_dia"]);
+      if (datos["status"] == 1) {
+        for(int i = 0; i < datos["response"]["dieta"]["pts_dia"].length; i++)
+        {
+          list_pestanas.add(Data_pestanas(i, int.parse(datos["response"]["dieta"]["pts_dia"][i]["id_comida"]),
+          datos["response"]["dieta"]["pts_dia"][i]["comida"].toString(),
+          datos["response"]["dieta"]["pts_dia"][i]["comida"].toString() + " en puntos",
+          "Sugerencias de " + datos["response"]["dieta"]["pts_dia"][i]["comida"].toString(),
+          datos["response"]["dieta"]["pts_dia"][i]["comida"].toString(),
+          datos["response"]["dieta"]["pts_dia"][i]["puntos"][1].toString(),
+          "L",
+          datos["response"]["dieta"]["pts_dia"][i]["puntos"][0].toString(),
+          datos["response"]["dieta"]["pts_dia"][i]["puntos"][2].toString(),
+          ));
+        }
 
-    if (datos["status"] == 1) {
-      //print(datos["puntos"]);
-      for (int comida = 0; comida < datos["puntos"].length; comida++) {
-        if (datos["puntos"][comida]["azul"] != null) {
-          if (datos["puntos"][comida]["azul"].toString().contains('.') ==
-              true) {
-            if (datos["puntos"][comida]["azul"].split('.')[1] == "0")
-              azul = datos["puntos"][comida]["azul"].split('.')[0];
-            else
-              azul = datos["puntos"][comida]["azul"].toString();
-          } else
-            azul = datos["puntos"][comida]["azul"].toString();
-        } else
-          azul = "0";
+        for (int i = 0; i < datos["response"]["dieta"]["dieta"]["d" + weekday].length; i++) {
+          list.add(list_pestanas[i]);
+        }
 
-        if (datos["puntos"][comida]["naranja"] != null) {
-          if (datos["puntos"][comida]["naranja"].toString().contains('.') ==
-              true) {
-            if (datos["puntos"][comida]["naranja"].split('.')[1] == "0")
-              naranja = datos["puntos"][comida]["naranja"].split('.')[0];
-            else
-              naranja = datos["puntos"][comida]["naranja"].toString();
-          } else
-            naranja = datos["puntos"][comida]["naranja"].toString();
-        } else
-          naranja = "0";
-
-        if (datos["puntos"][comida]["amarillo"] != null) {
-          if (datos["puntos"][comida]["amarillo"].toString().contains('.') ==
-              true) {
-            if (datos["puntos"][comida]["amarillo"].split('.')[1] == "0")
-              amarillo = datos["puntos"][comida]["amarillo"].split('.')[0];
-            else
-              amarillo = datos["puntos"][comida]["amarillo"].toString();
-          } else
-            amarillo = datos["puntos"][comida]["amarillo"].toString();
-        } else
-          amarillo = "0";
-
-        verde = "L";
-
-        list.add(Colores(
-            azul: azul, naranja: naranja, amarillo: amarillo, verde: verde));
+        return list;
       }
-
-      return list;
+    } catch (e) {
+      print("Error getPestañas " + e.toString());
     }
-  } catch (ex) {
-    print("Error getColorCirclesWidgetValues: $ex");
   }
 }
 
@@ -1062,12 +1080,17 @@ class Opciones_Dieta {
 
 class Data_pestanas {
   int index;
+  int id_comida;
   String nombre;
   String titulo1;
   String titulo2;
+  String azul;
+  String verde;
+  String naranja;
+  String amarillo;
   String boton;
-  Data_pestanas(
-      this.index, this.nombre, this.titulo1, this.titulo2, this.boton);
+  Data_pestanas(this.index, this.id_comida, this.nombre, this.titulo1, this.titulo2, this.boton,
+      this.azul, this.verde, this.naranja, this.amarillo);
 }
 
 class Colores {
