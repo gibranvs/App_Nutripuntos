@@ -443,15 +443,12 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
   }
 
   @override
-  void initState() {
-    // TODO: implement initState
+  void initState() {    
     super.initState();
-
     pestanas = getPestanas();
     opciones_dieta = getOpcionesDieta(global.usuario.token);
     getColoresComida(0).then((_colores) {
-      if (_colores != null) {
-        //print("Naranja: " + _colores.naranja.toString());
+      if (_colores != null) {        
         setState(() {
           colores = _colores;
           valor_naranja = colores.naranja;
@@ -468,15 +465,15 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
         });
       }
     });
-
     setState(() {
       global.current_tab = index_tab;
     });
+
+    
   }
 
   @override
-  void dispose() {
-    // TODO: implement dispose
+  void dispose() {    
     super.dispose();
   }
 
@@ -526,7 +523,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                 _tabController = new TabController(
                     length: snapshot.data.length,
                     vsync: this,
-                    initialIndex: global.current_tab);
+                    initialIndex: global.current_tab);                
 
                 int items = snapshot.data.length;
                 List<Tab> tabs = new List<Tab>();
@@ -566,10 +563,9 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                         indicatorSize: TabBarIndicatorSize.tab,
                         isScrollable: true,
                         indicatorColor: Colors.white,
-                        tabs: tabs,
+                        tabs: tabs,                                                
                         onTap: (index) async {
-                          global.current_tab = index;
-                          
+                          global.current_tab = index;                          
                           await getColoresComida(index).then((_colores) {
                             if (_colores != null) {
                               colores = _colores;
@@ -586,7 +582,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                           });
                                                     
                           setState(() {});
-                        },
+                        },                        
                       ),
                       flexibleSpace: Container(
                         decoration: BoxDecoration(
@@ -602,6 +598,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                     body: TabBarView(
                       controller: _tabController,
                       children: pages,
+                      physics: NeverScrollableScrollPhysics(),
                     ),
                   ),
                 );
@@ -913,9 +910,8 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
           body: {"tipo": "dieta", "token": global.usuario.token});
       var datos = json.decode(utf8.decode(response.bodyBytes));
 
-      if (datos["status"] == 1) {
-        print(_index_comida);
-        print(datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]);
+      if (datos["status"] == 1) {        
+        //print(datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]);
         //for (int comida = 0;comida < datos["response"]["dieta"]["pts_dia"].length;comida++) {
           if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["azul"] != null) {
             if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["azul"].toString().contains('.') ==
