@@ -766,13 +766,13 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     validaCuenta(global.usuario.token).then((_validada) {
-      setState(() {        
-      validada = _validada;
+      setState(() {
+        validada = _validada;
       });
     });
 
     getRecomendacion(global.usuario.token).then((_recomendaciones) {
-      setState(() {        
+      setState(() {
         recomendaciones = _recomendaciones;
       });
     });
@@ -841,11 +841,13 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-
-          !validada ? Container(width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          color: Colors.transparent,
-          ) : Offstage(),
+          !validada
+              ? Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  color: Colors.transparent,
+                )
+              : Offstage(),
         ],
       ),
     );
@@ -904,17 +906,18 @@ Future<String> getRecomendacion(_token) async {
   }
 }
 
-Future<bool> validaCuenta(_token) async 
-{
+Future<bool> validaCuenta(_token) async {
   try {
     bool vailda = false;
     var response = await http.post(global.server + "/aplicacion/api",
-    body: {"tipo": "validar_cuenta", "token": _token});
+        body: {"tipo": "validar_cuenta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
     print(datos);
-    return false;
-  }
-  catch (ex) {
+    if (datos["status"] == 0)
+      return false;
+    else
+      return true;
+  } catch (ex) {
     print("Error validaCuenta " + ex.toString());
   }
 }
