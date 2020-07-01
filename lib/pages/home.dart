@@ -23,6 +23,8 @@ import 'package:http/http.dart' as http;
 import '../src/DBManager.dart' as db;
 
 File croppedFile;
+String recomendaciones = "";
+bool validada = false;
 
 class HomePage extends StatefulWidget {
   String prueba;
@@ -128,7 +130,7 @@ class _HomePageState extends State<HomePage> {
       padding: EdgeInsets.only(top: 0),
       margin: EdgeInsets.only(left: 0, top: 150),
       child: Text(
-        "Activo     |     " + global.num_citas + " citas",
+        validada ? "Activo" : "Inactivo",
         style: TextStyle(fontSize: 14, color: Colors.white),
       ),
     );
@@ -257,6 +259,7 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     GestureDetector(
                       onTap: () {
+                        /*
                         global.selected_index = 4;
                         getReceta("").then((recetas) {
                           global.list_recetas = recetas;
@@ -267,6 +270,9 @@ class _HomePageState extends State<HomePage> {
                             ),
                           );
                         });
+                        */
+                        show_Dialog(
+                            context: context, recomendacion: recomendaciones);
                       },
                       child: Container(
                         width: 150,
@@ -368,12 +374,13 @@ class _HomePageState extends State<HomePage> {
                                           constraints: BoxConstraints(
                                               minWidth: 150,
                                               maxWidth: 150,
-                                              maxHeight: 30,
+                                              //maxHeight: 50,
                                               minHeight: 30),
                                           child: AutoSizeText(
                                             snapshot.data.meta,
                                             maxLines: 3,
                                             maxFontSize: 16,
+                                            minFontSize: 16,
                                             wrapWords: false,
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
@@ -511,6 +518,111 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Future<T> show_Dialog<T>({
+    @required BuildContext context,
+    @required String recomendacion,
+  }) {
+    return showGeneralDialog(
+      context: context,
+      pageBuilder: (BuildContext buildContext, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        return Builder(builder: (BuildContext context) {
+          return Container(
+            width: 400,
+            height: 600,
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(
+              left: 30,
+              right: 30,
+              top: MediaQuery.of(context).size.height * 0.3,
+              bottom: MediaQuery.of(context).size.height * 0.3,
+            ),
+            decoration: new BoxDecoration(
+              color: hexToColor("#505050"),
+              borderRadius: new BorderRadius.all(
+                const Radius.circular(20.0),
+              ),
+            ),
+            child: Column(
+              children: <Widget>[
+                /// BOTÓN CERRAR
+                Container(
+                  width: double.infinity,
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        top: 20,
+                        right: 20,
+                      ),
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ),
+
+                Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      /// TEXT TÍTULO GRUPO
+                      Container(
+                        alignment: Alignment.topCenter,
+                        child: Text(
+                          "Recomendaciones",
+                          style: TextStyle(
+                            decoration: TextDecoration.none,
+                            fontFamily: "Arial",
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                      /// TEXT INTRUCCIÓN
+                      Container(
+                        alignment: Alignment.topCenter,
+                        margin: EdgeInsets.only(top: 30),
+                        child: SizedBox(
+                          width: 270,
+                          child: AutoSizeText(
+                            recomendacion,
+                            //maxLines: 3,
+                            textAlign: TextAlign.center,
+                            wrapWords: false,
+                            style: TextStyle(
+                              decoration: TextDecoration.none,
+                              fontFamily: "Arial",
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+      },
+      barrierDismissible: true,
+      barrierLabel: "",
+      barrierColor: null,
+      transitionDuration: const Duration(milliseconds: 150),
+    );
+  }
+
   void showAlertOption() {
     AlertDialog alert = AlertDialog(
       title: Text("Selecciona una fuente..."),
@@ -564,8 +676,10 @@ class _HomePageState extends State<HomePage> {
           if (img != null) {
             //_file = img;
             //buildCroppingImage();
-            global.image_foto =
-                new DecorationImage(image: Image.file(img).image, fit:BoxFit.cover,);
+            global.image_foto = new DecorationImage(
+              image: Image.file(img).image,
+              fit: BoxFit.cover,
+            );
             db.DBManager.instance.updateFoto(global.usuario.id, img.path);
             List<int> imageBytes = img.readAsBytesSync();
             writeFileContent(base64Encode(imageBytes));
@@ -577,8 +691,10 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {
       print("Error pickImageFrom " + e.toString());
       setState(() {
-        global.image_foto =
-            DecorationImage(image: AssetImage("assets/images/photo.jpg"), fit: BoxFit.cover,);
+        global.image_foto = DecorationImage(
+          image: AssetImage("assets/images/photo.jpg"),
+          fit: BoxFit.cover,
+        );
       });
     }
   }
@@ -646,60 +762,93 @@ class _HomePageState extends State<HomePage> {
   }
 */
 
+  @override
+  void initState() {
+    super.initState();
+    validaCuenta(global.usuario.token).then((_validada) {
+      setState(() {
+        validada = _validada;
+      });
+    });
+
+    getRecomendacion(global.usuario.token).then((_recomendaciones) {
+      setState(() {
+        recomendaciones = _recomendaciones;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return new WillPopScope(
       onWillPop: () {
         exit(0);
       },
-      child: Scaffold(
-        drawer: new newmenu.menu(0),
-        drawerDragStartBehavior: DragStartBehavior.start,
-        appBar: new AppBar(
-          centerTitle: true,
-          elevation: 0,
-          title: Image.asset(
-            'assets/icons/recurso_1.png',
-            width: MediaQuery.of(context).size.width * 0.22,
-          ),
-        ),
-        body: Stack(
-          children: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              decoration: new BoxDecoration(
-                color: const Color(0x00FFCC00),
-                image: new DecorationImage(
-                  image: new AssetImage("assets/images/fondo.jpg"),
-                  colorFilter: new ColorFilter.mode(
-                      Colors.black.withOpacity(0.2), BlendMode.dstATop),
-                  fit: BoxFit.cover,
-                ),
+      child: Stack(
+        children: <Widget>[
+          Scaffold(
+            drawer: new newmenu.menu(0),
+            drawerDragStartBehavior: DragStartBehavior.start,
+            appBar: new AppBar(
+              centerTitle: true,
+              elevation: 0,
+              title: Image.asset(
+                'assets/icons/recurso_1.png',
+                width: MediaQuery.of(context).size.width * 0.22,
               ),
             ),
-            Stack(
+            body: Stack(
               children: <Widget>[
-                ///
-                /// SCROLLEABLE AREA
-                ///
                 Container(
-                  margin: EdgeInsets.only(top: 170),
-                  child: ListView(
-                    children: <Widget>[
-                      proximaCita(),
-                      botones(),
-                    ],
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: new BoxDecoration(
+                    color: const Color(0x00FFCC00),
+                    image: new DecorationImage(
+                      image: new AssetImage("assets/images/fondo.jpg"),
+                      colorFilter: new ColorFilter.mode(
+                          Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
+                Stack(
+                  children: <Widget>[
+                    ///
+                    /// SCROLLEABLE AREA
+                    ///
+                    Container(
+                      margin: EdgeInsets.only(top: 170),
+                      child: ListView(
+                        children: <Widget>[
+                          proximaCita(),
+                          botones(),
+                        ],
+                      ),
+                    ),
 
-                header(),
-                foto(),
-                nombre(),
-                estatus(),
+                    header(),
+                    foto(),
+                    nombre(),
+                    estatus(),
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          ),
+          !validada
+              ? Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  color: Colors.transparent,
+                )
+              : Offstage(),
+        ],
       ),
     );
   }
@@ -734,6 +883,42 @@ Future<String> readFileContent() async {
     //return contents;
   } catch (e) {
     return 'Error';
+  }
+}
+
+Future<String> getRecomendacion(_token) async {
+  try {
+    String recomendacion;
+    var response = await http.post(global.server + "/aplicacion/api",
+        body: {"tipo": "recomendaciones", "token": _token});
+    var datos = json.decode(utf8.decode(response.bodyBytes));
+    //print(datos);
+    if (datos["status"] == 1) {
+      if (datos["response"].toString() != "" && datos["response"] != null)
+        recomendacion = datos["response"].toString();
+      else
+        recomendacion =
+            "En este momento el especialista no ha hecho ninguna recomendación";
+    }
+    return recomendacion;
+  } catch (ex) {
+    print("Error geRecomendacion " + ex.toString());
+  }
+}
+
+Future<bool> validaCuenta(_token) async {
+  try {
+    bool vailda = false;
+    var response = await http.post(global.server + "/aplicacion/api",
+        body: {"tipo": "validar_cuenta", "token": _token});
+    var datos = json.decode(utf8.decode(response.bodyBytes));
+    print(datos);
+    if (datos["status"] == 0)
+      return false;
+    else
+      return true;
+  } catch (ex) {
+    print("Error validaCuenta " + ex.toString());
   }
 }
 
