@@ -272,7 +272,9 @@ class _HomePageState extends State<HomePage> {
                         });
                         */
                         show_Dialog(
-                            context: context, recomendacion: recomendaciones);
+                            context: context,
+                            titulo: "Recomendaciones",
+                            mensaje: recomendaciones);
                       },
                       child: Container(
                         width: 150,
@@ -520,7 +522,8 @@ class _HomePageState extends State<HomePage> {
 
   Future<T> show_Dialog<T>({
     @required BuildContext context,
-    @required String recomendacion,
+    @required String titulo,
+    @required String mensaje,
   }) {
     return showGeneralDialog(
       context: context,
@@ -576,7 +579,7 @@ class _HomePageState extends State<HomePage> {
                       Container(
                         alignment: Alignment.topCenter,
                         child: Text(
-                          "Recomendaciones",
+                          titulo,
                           style: TextStyle(
                             decoration: TextDecoration.none,
                             fontFamily: "Arial",
@@ -594,7 +597,7 @@ class _HomePageState extends State<HomePage> {
                         child: SizedBox(
                           width: 270,
                           child: AutoSizeText(
-                            recomendacion,
+                            mensaje,
                             //maxLines: 3,
                             textAlign: TextAlign.center,
                             wrapWords: false,
@@ -769,6 +772,12 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         validada = _validada;
       });
+      if (!validada)
+        show_Dialog(
+            context: context,
+            titulo: "¡Lo sentimos! :(",
+            mensaje:
+                "Tu plan de alimentación ya no está disponible, ponte en contacto con tu especialista para obtener uno nuevo.");
     });
 
     getRecomendacion(global.usuario.token).then((_recomendaciones) {
@@ -842,11 +851,20 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           !validada
-              ? Container(
+              ? GestureDetector(
+                onTap: () {
+                  show_Dialog(
+            context: context,
+            titulo: "¡Lo sentimos! :(",
+            mensaje:
+                "Tu plan de alimentación ya no está disponible, ponte en contacto con tu especialista para obtener uno nuevo.");
+                },
+                child:
+              Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   color: Colors.transparent,
-                )
+                ),)
               : Offstage(),
         ],
       ),
