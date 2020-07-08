@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:nutripuntos_app/pages/pdf_material.dart';
 import 'package:nutripuntos_app/src/HexToColor.dart';
 import 'package:nutripuntos_app/src/mensaje.dart';
 import '../globals.dart' as global;
@@ -126,6 +127,8 @@ class menu extends StatelessWidget {
                 "assets/icons/recurso_9.png", 35),
             ItemMenu(selected_index, 6, "Nutrichat",
                 "assets/icons/recurso_10.png", 35),
+            ItemMenu(selected_index, 7, "Material de apoyo",
+                "assets/icons/recurso_10.png", 35),
           ],
         ),
       ),
@@ -203,18 +206,6 @@ class ItemMenu extends StatelessWidget {
               );
               break;
             case 4:
-              /*
-              getReceta("").then((recetas) {
-                global.list_recetas = recetas;
-                global.text_busqueda_receta.text = "";
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => RecetasPage(),
-                  ),
-                );
-              });
-              */
               global.text_busqueda_receta.text = "";
               Navigator.push(
                 context,
@@ -240,22 +231,14 @@ class ItemMenu extends StatelessWidget {
                   builder: (context) => NutriochatPage(),
                 ),
               );
-              /*
-              db.DBManager.instance
-                  .getMensajes(global.usuario.id)
-                  .then((mensajes) {                    
-                global.list_mensajes = mensajes;
-                getMensajesServer(global.usuario.token).then((_) {
-                  global.text_mensaje.text = "";
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NutriochatPage(),
-                    ),
-                  );
-                });
-              });
-              */
+              break;
+              case 7:
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PDFMaterialPage(),
+                ),
+              );
               break;
           }
         },

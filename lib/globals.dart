@@ -20,11 +20,6 @@ import 'src/DBManager.dart' as db;
 String server = "http://c1370875.ferozo.com";
 
 bool user_exist;
-//int id_user;
-//String token;
-//String recovery_token;
-//String nombre_user;
-//String apellidos_user;
 Usuario usuario;
 String num_citas = "0";
 
@@ -80,3 +75,9 @@ List<Citas> list_citas;
 ///
 List<Mensaje> list_mensajes;
 TextEditingController text_mensaje = TextEditingController();
+
+///
+/// PDF VIEWER
+///
+bool pdf_loaded = false;
+String url_pdf = "";

@@ -1353,7 +1353,7 @@ Future<List<Progreso>> getProgreso() async {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "record", "token": global.usuario.token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    //print(datos);
+    print(datos);    
 
     if (datos["status"] == 1) {
       list.clear();

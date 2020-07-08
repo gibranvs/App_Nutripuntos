@@ -772,7 +772,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         validada = _validada;
       });
-      if (!validada)
+      if (validada == false)
         show_Dialog(
             context: context,
             titulo: "¡Lo sentimos! :(",
@@ -850,7 +850,7 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          !validada
+          (validada == false)
               ? GestureDetector(
                 onTap: () {
                   show_Dialog(
