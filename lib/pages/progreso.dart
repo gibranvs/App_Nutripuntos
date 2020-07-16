@@ -1428,7 +1428,7 @@ Future<List<Progreso>> getProgreso() async {
       }
 
       for (int i = list.length; i > 0; i--) {
-        if (list.length > 5)
+        if (list.length > 4)
           list.removeAt(0);
         else
           break;
