@@ -372,7 +372,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     enable: true,
                                     elevation: 3,
                                     textAlignment: ChartAlignment.center,
-                                    format: 'point.y kg',
+                                    format: 'point.y kg  [point.x]',
                                     header: "Peso",
                                   ),
                                   primaryXAxis: CategoryAxis(
@@ -602,7 +602,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                   plotAreaBorderWidth: 1,
                                   tooltipBehavior: TooltipBehavior(
                                     enable: true,
-                                    format: 'point.y kg',
+                                    format: 'point.y kg  [point.x]',
                                     header: "Grasa",
                                   ),
                                   primaryXAxis: CategoryAxis(
