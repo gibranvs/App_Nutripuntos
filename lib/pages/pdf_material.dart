@@ -29,8 +29,7 @@ class PDFMaterialPageState extends State<PDFMaterialPage> {
     setState(() {
       isLoading = false;
       isInit = true;
-      globals.url_pdf =
-          "http://sd-1757126-h00002.ferozo.net/sistema/recibos/recibo1.pdf";
+      globals.url_pdf = globals.server + globals.url_pdf; //"http://sd-1757126-h00002.ferozo.net/sistema/recibos/recibo1.pdf";
     });
     if (globals.pdf_loaded == false) loadFromURL();
   }

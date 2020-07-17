@@ -80,4 +80,4 @@ TextEditingController text_mensaje = TextEditingController();
 /// PDF VIEWER
 ///
 bool pdf_loaded = false;
-String url_pdf = "";
+String url_pdf = "/aplicacion/media/material_apoyo.pdf";
