@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-{"_info":"// This is a generated file; do not edit or check into version control.","dependencyGraph":[{"name":"device_info","dependencies":[]},{"name":"image_crop","dependencies":[]},{"name":"image_picker","dependencies":[]},{"name":"path_provider","dependencies":[]},{"name":"path_provider_macos","dependencies":[]},{"name":"sqflite","dependencies":[]},{"name":"url_launcher","dependencies":[]}]}
-=======
 {"_info":"// This is a generated file; do not edit or check into version control.","dependencyGraph":[{"name":"device_info","dependencies":[]},{"name":"flutter_plugin_android_lifecycle","dependencies":[]},{"name":"image_crop","dependencies":[]},{"name":"image_picker","dependencies":["flutter_plugin_android_lifecycle"]},{"name":"path_provider","dependencies":[]},{"name":"path_provider_macos","dependencies":[]},{"name":"sqflite","dependencies":[]},{"name":"url_launcher","dependencies":[]}]}
->>>>>>> 32b5fa560488c7217834d27724223029dc3a5d3d
