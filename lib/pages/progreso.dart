@@ -372,7 +372,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     enable: true,
                                     elevation: 3,
                                     textAlignment: ChartAlignment.center,
-                                    format: 'point.y kg',
+                                    format: 'point.y kg  [point.x]',
                                     header: "Peso",
                                   ),
                                   primaryXAxis: CategoryAxis(
@@ -602,7 +602,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                   plotAreaBorderWidth: 1,
                                   tooltipBehavior: TooltipBehavior(
                                     enable: true,
-                                    format: 'point.y kg',
+                                    format: 'point.y kg  [point.x]',
                                     header: "Grasa",
                                   ),
                                   primaryXAxis: CategoryAxis(
@@ -1353,7 +1353,7 @@ Future<List<Progreso>> getProgreso() async {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "record", "token": global.usuario.token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    //print(datos);
+    print(datos);    
 
     if (datos["status"] == 1) {
       list.clear();
@@ -1428,7 +1428,7 @@ Future<List<Progreso>> getProgreso() async {
       }
 
       for (int i = list.length; i > 0; i--) {
-        if (list.length > 5)
+        if (list.length > 4)
           list.removeAt(0);
         else
           break;
