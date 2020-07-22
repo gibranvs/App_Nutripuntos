@@ -257,6 +257,8 @@ class OpcionDetallePage extends StatelessWidget {
   Widget build(BuildContext context) {
     //getDetallesOpcion(token, index_comida, opcion);
     return MaterialApp(
+      title: "Nutripuntos",
+      debugShowCheckedModeBanner: false,
       home: new Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(50.0),

@@ -313,6 +313,8 @@ class _RecetaPageState extends State<RecetaPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "Nutripuntos",
+      debugShowCheckedModeBanner: false,
       home: DefaultTabController(
         length: 2,
         child: Scaffold(

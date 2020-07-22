@@ -497,6 +497,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
         ),
       ),
       body: MaterialApp(
+        title: "Nutripuntos",
         debugShowCheckedModeBanner: false,
         home: Container(
           decoration: new BoxDecoration(

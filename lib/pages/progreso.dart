@@ -1078,6 +1078,7 @@ class _ProgresoPageState extends State<ProgresoPage>
         ),
       ),
       body: MaterialApp(
+        title: "Nutripuntos",
         debugShowCheckedModeBanner: false,
         home: DefaultTabController(
           length: 3,

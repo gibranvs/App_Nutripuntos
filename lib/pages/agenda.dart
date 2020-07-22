@@ -601,6 +601,7 @@ class _AgendaPageState extends State<AgendaPage> {
         ),
       ),
       body: MaterialApp(
+        title: "Nutripuntos",
         debugShowCheckedModeBanner: false,
         home: DefaultTabController(
           length: 2,
