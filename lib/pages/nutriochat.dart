@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:nutripuntos_app/pages/home.dart';
 import 'package:nutripuntos_app/src/HexToColor.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:nutripuntos_app/globals.dart' as global;
@@ -338,11 +339,24 @@ class _NutriochatPageState extends State<NutriochatPage> {
     return new Scaffold(
       resizeToAvoidBottomInset: true,
       resizeToAvoidBottomPadding: true,
-      drawer: new newmenu.menu(6),
+      //drawer: new newmenu.menu(6),
       appBar: AppBar(
         elevation: 4,
         title: Text("Nutrichat"),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+              ModalRoute.withName('/'),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(

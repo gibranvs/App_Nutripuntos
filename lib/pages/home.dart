@@ -63,8 +63,8 @@ class _HomePageState extends State<HomePage> {
       width: MediaQuery.of(context).size.width,
       child: GestureDetector(
         onTap: () {
-          //showAlertOption();
-          pickImageFrom(context, ImageSource.gallery);
+          showAlertOption();
+          //pickImageFrom(context, ImageSource.gallery);
         },
         child: Stack(
           children: <Widget>[
@@ -646,8 +646,10 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             FlatButton(
-              child: Text("Seleccionar de galería",
-                  style: TextStyle(color: Colors.blue)),
+              child: Text(
+                "Seleccionar de galería",
+                style: TextStyle(color: Colors.blue),
+              ),
               onPressed: () {
                 pickImageFrom(context, ImageSource.gallery);
               },
@@ -852,19 +854,19 @@ class _HomePageState extends State<HomePage> {
           ),
           (validada == false)
               ? GestureDetector(
-                onTap: () {
-                  show_Dialog(
-            context: context,
-            titulo: "¡Lo sentimos! :(",
-            mensaje:
-                "Tu plan de alimentación ya no está disponible, ponte en contacto con tu especialista para obtener uno nuevo.");
-                },
-                child:
-              Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  color: Colors.transparent,
-                ),)
+                  onTap: () {
+                    show_Dialog(
+                        context: context,
+                        titulo: "¡Lo sentimos! :(",
+                        mensaje:
+                            "Tu plan de alimentación ya no está disponible, ponte en contacto con tu especialista para obtener uno nuevo.");
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    color: Colors.transparent,
+                  ),
+                )
               : Offstage(),
         ],
       ),

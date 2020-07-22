@@ -17,11 +17,11 @@ import 'login.dart';
 class menu extends StatelessWidget {
   final int selected_index;
   menu(this.selected_index);
-  
+
   ///
   /// Stack datos
   ///
-  Stack datos(_context) {    
+  Stack datos(_context) {
     return Stack(
       children: <Widget>[
         Row(
@@ -42,6 +42,7 @@ class menu extends StatelessWidget {
                 ),
 
                 /// LABEL CERRAR SESIÓN
+                /*
                 Container(
                   padding: EdgeInsets.only(top: 5, left: 20),
                   child: GestureDetector(
@@ -64,7 +65,8 @@ class menu extends StatelessWidget {
                       ),
                     ),
                   ),
-                )
+                ),
+                */
               ],
             ),
           ],
@@ -90,10 +92,11 @@ class menu extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(color: Color(0xFF059696), width: 6),
                     color: Colors.white,
-                    shape: BoxShape.circle,                    
+                    shape: BoxShape.circle,
                     image: global.image_foto == null
                         ? DecorationImage(
-                            image: AssetImage("assets/images/photo.jpg"), fit: BoxFit.cover,
+                            image: AssetImage("assets/images/photo.jpg"),
+                            fit: BoxFit.cover,
                           )
                         : global.image_foto,
                   ),
@@ -128,6 +131,8 @@ class menu extends StatelessWidget {
             ItemMenu(selected_index, 6, "Nutrichat",
                 "assets/icons/recurso_10.png", 35),
             ItemMenu(selected_index, 7, "Material de apoyo",
+                "assets/icons/recurso_10.png", 35),
+            ItemMenu(selected_index, 8, "Cerrar sesión",
                 "assets/icons/recurso_10.png", 35),
           ],
         ),
@@ -232,12 +237,19 @@ class ItemMenu extends StatelessWidget {
                 ),
               );
               break;
-              case 7:
+            case 7:
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => PDFMaterialPage(),
                 ),
+              );
+              break;
+            case 8:
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+                ModalRoute.withName('/'),
               );
               break;
           }

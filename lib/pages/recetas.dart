@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:nutripuntos_app/pages/home.dart';
 import '../src/hexToColor.dart';
 import 'package:nutripuntos_app/globals.dart' as global;
 import 'dart:convert';
@@ -195,11 +196,24 @@ class _RecetasPageState extends State<RecetasPage> {
     return new Scaffold(
       resizeToAvoidBottomInset: false,
       resizeToAvoidBottomPadding: false,
-      drawer: new newmenu.menu(4),
+      //drawer: new newmenu.menu(4),
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
         title: Text("Recetas"),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+              ModalRoute.withName('/'),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(

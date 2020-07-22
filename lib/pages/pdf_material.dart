@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_plugin_pdf_viewer/flutter_plugin_pdf_viewer.dart';
+import 'package:nutripuntos_app/pages/home.dart';
 import 'newmenu.dart' as newmenu;
 import '../globals.dart' as globals;
 
@@ -14,7 +15,7 @@ class PDFMaterialPageState extends State<PDFMaterialPage> {
   PDFDocument document = null;
 
   loadFromURL() async {
-    await PDFDocument.fromURL(globals.url_pdf).then((result) {
+    await PDFDocument.fromURL(globals.server + globals.url_pdf).then((result) {
       print("Result: " + result.toString());
       setState(() {
         globals.pdf_loaded = true;
@@ -27,11 +28,11 @@ class PDFMaterialPageState extends State<PDFMaterialPage> {
   void initState() {
     super.initState();
     setState(() {
+      globals.pdf_loaded = false;
       isLoading = false;
-      isInit = true;
-      globals.url_pdf = globals.server + globals.url_pdf; //"http://sd-1757126-h00002.ferozo.net/sistema/recibos/recibo1.pdf";
-    });
-    if (globals.pdf_loaded == false) loadFromURL();
+      isInit = true;      
+      if (globals.pdf_loaded == false) loadFromURL();
+    });    
   }
 
   @override
@@ -42,11 +43,24 @@ class PDFMaterialPageState extends State<PDFMaterialPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: new newmenu.menu(7),
+      //drawer: new newmenu.menu(7),
       appBar: AppBar(
         elevation: 4,
         title: Text("Material de apoyo"),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+              ModalRoute.withName('/'),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
