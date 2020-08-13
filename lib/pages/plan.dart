@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
+import 'package:nutripuntos_app/pages/home.dart';
 import 'newmenu.dart' as newmenu;
 import 'package:nutripuntos_app/pages/opcion_detalle.dart';
 import 'package:nutripuntos_app/src/HexToColor.dart';
@@ -443,12 +444,12 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
   }
 
   @override
-  void initState() {    
+  void initState() {
     super.initState();
     pestanas = getPestanas();
     opciones_dieta = getOpcionesDieta(global.usuario.token);
     getColoresComida(0).then((_colores) {
-      if (_colores != null) {        
+      if (_colores != null) {
         setState(() {
           colores = _colores;
           valor_naranja = colores.naranja;
@@ -468,23 +469,34 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
     setState(() {
       global.current_tab = index_tab;
     });
-
-    
   }
 
   @override
-  void dispose() {    
+  void dispose() {
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: new newmenu.menu(1),
+      //drawer: new newmenu.menu(1),
       appBar: AppBar(
         elevation: 0,
         title: Text("Plan de alimentación"),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+              ModalRoute.withName('/'),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -497,6 +509,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
         ),
       ),
       body: MaterialApp(
+        title: "Nutripuntos",
         debugShowCheckedModeBanner: false,
         home: Container(
           decoration: new BoxDecoration(
@@ -523,7 +536,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                 _tabController = new TabController(
                     length: snapshot.data.length,
                     vsync: this,
-                    initialIndex: global.current_tab);                
+                    initialIndex: global.current_tab);
 
                 int items = snapshot.data.length;
                 List<Tab> tabs = new List<Tab>();
@@ -563,9 +576,9 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                         indicatorSize: TabBarIndicatorSize.tab,
                         isScrollable: true,
                         indicatorColor: Colors.white,
-                        tabs: tabs,                                                
+                        tabs: tabs,
                         onTap: (index) async {
-                          global.current_tab = index;                          
+                          global.current_tab = index;
                           await getColoresComida(index).then((_colores) {
                             if (_colores != null) {
                               colores = _colores;
@@ -580,9 +593,9 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                               valor_verde = "L";
                             }
                           });
-                                                    
+
                           setState(() {});
-                        },                        
+                        },
                       ),
                       flexibleSpace: Container(
                         decoration: BoxDecoration(
@@ -899,7 +912,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
   }
 
   Future<Colores> getColoresComida(_index_comida) async {
-    try {            
+    try {
       Colores colores;
       String azul = "0";
       String verde = "L";
@@ -910,49 +923,91 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
           body: {"tipo": "dieta", "token": global.usuario.token});
       var datos = json.decode(utf8.decode(response.bodyBytes));
 
-      if (datos["status"] == 1) {        
+      if (datos["status"] == 1) {
         //print(datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]);
         //for (int comida = 0;comida < datos["response"]["dieta"]["pts_dia"].length;comida++) {
-          if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["azul"] != null) {
-            if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["azul"].toString().contains('.') ==
-                true) {
-              if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["azul"].split('.')[1] == "0")
-                azul = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["azul"].split('.')[0];
-              else
-                azul = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["azul"].toString();
-            } else
-              azul = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["azul"].toString();
+        if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]
+                ["azul"] !=
+            null) {
+          if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]
+                      ["azul"]
+                  .toString()
+                  .contains('.') ==
+              true) {
+            if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]
+                        ["azul"]
+                    .split('.')[1] ==
+                "0")
+              azul = datos["response"]["dieta"]["pts_dia"][_index_comida]
+                      ["puntos"]["azul"]
+                  .split('.')[0];
+            else
+              azul = datos["response"]["dieta"]["pts_dia"][_index_comida]
+                      ["puntos"]["azul"]
+                  .toString();
           } else
-            azul = "0";
+            azul = datos["response"]["dieta"]["pts_dia"][_index_comida]
+                    ["puntos"]["azul"]
+                .toString();
+        } else
+          azul = "0";
 
-          if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["naranja"] != null) {
-            if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["naranja"].toString().contains('.') ==
-                true) {
-              if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["naranja"].split('.')[1] == "0")
-                naranja = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["naranja"].split('.')[0];
-              else
-                naranja = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["naranja"].toString();
-            } else
-              naranja = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["naranja"].toString();
+        if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]
+                ["naranja"] !=
+            null) {
+          if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]
+                      ["naranja"]
+                  .toString()
+                  .contains('.') ==
+              true) {
+            if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]
+                        ["naranja"]
+                    .split('.')[1] ==
+                "0")
+              naranja = datos["response"]["dieta"]["pts_dia"][_index_comida]
+                      ["puntos"]["naranja"]
+                  .split('.')[0];
+            else
+              naranja = datos["response"]["dieta"]["pts_dia"][_index_comida]
+                      ["puntos"]["naranja"]
+                  .toString();
           } else
-            naranja = "0";
+            naranja = datos["response"]["dieta"]["pts_dia"][_index_comida]
+                    ["puntos"]["naranja"]
+                .toString();
+        } else
+          naranja = "0";
 
-          if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["amarillo"] != null) {
-            if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["amarillo"].toString().contains('.') ==
-                true) {
-              if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["amarillo"].split('.')[1] == "0")
-                amarillo = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["amarillo"].split('.')[0];
-              else
-                amarillo = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["amarillo"].toString();
-            } else
-              amarillo = datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]["amarillo"].toString();
+        if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]
+                ["amarillo"] !=
+            null) {
+          if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]
+                      ["amarillo"]
+                  .toString()
+                  .contains('.') ==
+              true) {
+            if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]
+                        ["amarillo"]
+                    .split('.')[1] ==
+                "0")
+              amarillo = datos["response"]["dieta"]["pts_dia"][_index_comida]
+                      ["puntos"]["amarillo"]
+                  .split('.')[0];
+            else
+              amarillo = datos["response"]["dieta"]["pts_dia"][_index_comida]
+                      ["puntos"]["amarillo"]
+                  .toString();
           } else
-            amarillo = "0";
+            amarillo = datos["response"]["dieta"]["pts_dia"][_index_comida]
+                    ["puntos"]["amarillo"]
+                .toString();
+        } else
+          amarillo = "0";
 
-          verde = "L";
+        verde = "L";
 
-          colores = new Colores(
-              azul: azul, naranja: naranja, amarillo: amarillo, verde: verde);
+        colores = new Colores(
+            azul: azul, naranja: naranja, amarillo: amarillo, verde: verde);
         //}
 
         return colores;
@@ -980,21 +1035,26 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
       var datos = json.decode(utf8.decode(response.bodyBytes));
       //print(datos["response"]["dieta"]["pts_dia"]);
       if (datos["status"] == 1) {
-        for(int i = 0; i < datos["response"]["dieta"]["pts_dia"].length; i++)
-        {
-          list_pestanas.add(Data_pestanas(i, int.parse(datos["response"]["dieta"]["pts_dia"][i]["id_comida"]),
-          datos["response"]["dieta"]["pts_dia"][i]["comida"].toString(),
-          datos["response"]["dieta"]["pts_dia"][i]["comida"].toString() + " en puntos",
-          "Sugerencias de " + datos["response"]["dieta"]["pts_dia"][i]["comida"].toString(),
-          datos["response"]["dieta"]["pts_dia"][i]["comida"].toString(),
-          datos["response"]["dieta"]["pts_dia"][i]["puntos"][1].toString(),
-          "L",
-          datos["response"]["dieta"]["pts_dia"][i]["puntos"][0].toString(),
-          datos["response"]["dieta"]["pts_dia"][i]["puntos"][2].toString(),
+        for (int i = 0; i < datos["response"]["dieta"]["pts_dia"].length; i++) {
+          list_pestanas.add(Data_pestanas(
+            i,
+            int.parse(datos["response"]["dieta"]["pts_dia"][i]["id_comida"]),
+            datos["response"]["dieta"]["pts_dia"][i]["comida"].toString(),
+            datos["response"]["dieta"]["pts_dia"][i]["comida"].toString() +
+                " en puntos",
+            "Sugerencias de " +
+                datos["response"]["dieta"]["pts_dia"][i]["comida"].toString(),
+            datos["response"]["dieta"]["pts_dia"][i]["comida"].toString(),
+            datos["response"]["dieta"]["pts_dia"][i]["puntos"][1].toString(),
+            "L",
+            datos["response"]["dieta"]["pts_dia"][i]["puntos"][0].toString(),
+            datos["response"]["dieta"]["pts_dia"][i]["puntos"][2].toString(),
           ));
         }
 
-        for (int i = 0; i < datos["response"]["dieta"]["dieta"]["d" + weekday].length; i++) {
+        for (int i = 0;
+            i < datos["response"]["dieta"]["dieta"]["d" + weekday].length;
+            i++) {
           list.add(list_pestanas[i]);
         }
 
@@ -1083,8 +1143,17 @@ class Data_pestanas {
   String naranja;
   String amarillo;
   String boton;
-  Data_pestanas(this.index, this.id_comida, this.nombre, this.titulo1, this.titulo2, this.boton,
-      this.azul, this.verde, this.naranja, this.amarillo);
+  Data_pestanas(
+      this.index,
+      this.id_comida,
+      this.nombre,
+      this.titulo1,
+      this.titulo2,
+      this.boton,
+      this.azul,
+      this.verde,
+      this.naranja,
+      this.amarillo);
 }
 
 class Colores {

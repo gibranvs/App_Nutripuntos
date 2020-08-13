@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:intl/intl.dart';
+import 'package:nutripuntos_app/pages/home.dart';
 import 'dart:math';
 import 'package:nutripuntos_app/src/HexToColor.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -1061,11 +1062,24 @@ class _ProgresoPageState extends State<ProgresoPage>
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      drawer: new newmenu.menu(2),
+      //drawer: new newmenu.menu(2),
       appBar: AppBar(
         elevation: 0,
         title: Text("Progreso"),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+              ModalRoute.withName('/'),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -1078,6 +1092,7 @@ class _ProgresoPageState extends State<ProgresoPage>
         ),
       ),
       body: MaterialApp(
+        title: "Nutripuntos",
         debugShowCheckedModeBanner: false,
         home: DefaultTabController(
           length: 3,

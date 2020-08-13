@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
+import 'package:nutripuntos_app/pages/home.dart';
 import 'newmenu.dart' as newmenu;
 import '../src/HexToColor.dart';
 import 'dart:async';
@@ -136,11 +137,24 @@ class _RestaurantesPageState extends State<RestaurantesPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      drawer: new newmenu.menu(5),
+      //drawer: new newmenu.menu(5),
       appBar: AppBar(
         elevation: 4,
         title: Text("Restaurantes"),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+              ModalRoute.withName('/'),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(

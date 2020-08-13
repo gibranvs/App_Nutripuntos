@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:nutripuntos_app/pages/home.dart';
 import '../src/HexToColor.dart';
 import 'package:nutripuntos_app/flutter_calendar_carousel.dart' as calendar;
 import 'package:nutripuntos_app/globals.dart' as global;
@@ -584,11 +585,24 @@ class _AgendaPageState extends State<AgendaPage> {
     //getAllCitas(global.token);
     global.list_citas = null;
     return Scaffold(
-      drawer: new newmenu.menu(3),
+      //drawer: new newmenu.menu(3),
       appBar: AppBar(
         elevation: 0,
         title: Text("Agenda"),
         centerTitle: true,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+              ModalRoute.withName('/'),
+            );
+          },
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         flexibleSpace: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -601,6 +615,7 @@ class _AgendaPageState extends State<AgendaPage> {
         ),
       ),
       body: MaterialApp(
+        title: "Nutripuntos",
         debugShowCheckedModeBanner: false,
         home: DefaultTabController(
           length: 2,
