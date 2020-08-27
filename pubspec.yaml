@@ -33,7 +33,7 @@ dependencies:
   charts_flutter: ^0.8.1
   #flutter_charts: ^0.1.10
   flutter_slidable: "^0.5.4"
-  syncfusion_flutter_charts: ^1.0.0-beta.3
+  syncfusion_flutter_charts: ^18.2.55 #^1.0.0-beta.3
   flutter_plugin_pdf_viewer: ^1.0.7
   #camera: 0.5.4+1
   

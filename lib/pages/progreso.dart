@@ -378,7 +378,8 @@ class _ProgresoPageState extends State<ProgresoPage>
                                   ),
                                   primaryXAxis: CategoryAxis(
                                     labelRotation: 90,
-                                    labelPosition: LabelPosition.outside,
+                                    labelPosition:
+                                        ChartDataLabelPosition.outside,
                                     tickPosition: TickPosition.outside,
                                     edgeLabelPlacement: EdgeLabelPlacement.none,
                                     axisLine: AxisLine(
@@ -608,7 +609,8 @@ class _ProgresoPageState extends State<ProgresoPage>
                                   ),
                                   primaryXAxis: CategoryAxis(
                                     labelRotation: 90,
-                                    labelPosition: LabelPosition.outside,
+                                    labelPosition:
+                                        ChartDataLabelPosition.outside,
                                     tickPosition: TickPosition.outside,
                                     edgeLabelPlacement: EdgeLabelPlacement.none,
                                     axisLine: AxisLine(
@@ -808,8 +810,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                             return GestureDetector(
                               onTap: () {
                                 myTextUpdate.text = snapshot.data[index].meta;
-                                _showUpdateDialog(                                    
-                                    snapshot.data[index].id,
+                                _showUpdateDialog(snapshot.data[index].id,
                                     snapshot.data[index].meta);
                               },
                               child: Slidable(
@@ -1368,7 +1369,7 @@ Future<List<Progreso>> getProgreso() async {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "record", "token": global.usuario.token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    print(datos);    
+    print(datos);
 
     if (datos["status"] == 1) {
       list.clear();
