@@ -340,7 +340,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     FlSpot(
                                         4, double.parse(snapshot.data[3].peso)),
                                   ],
-                                  isCurved: true,
+                                  isCurved: false,
                                   colors: [
                                     hexToColor("#059696"),
                                   ],
@@ -681,7 +681,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     FlSpot(4,
                                         double.parse(snapshot.data[3].grasa)),
                                   ],
-                                  isCurved: true,
+                                  isCurved: false,
                                   colors: [
                                     hexToColor("#059696"),
                                   ],
