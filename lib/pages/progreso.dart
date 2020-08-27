@@ -1346,6 +1346,7 @@ class _ProgresoPageState extends State<ProgresoPage>
             ),
             body: TabBarView(
               controller: _tabController,
+              physics: NeverScrollableScrollPhysics(),
               children: [
                 /// TAB PESO
                 Stack(
