@@ -8,7 +8,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:nutripuntos_app/src/meta.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
+//import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'newmenu.dart' as newmenu;
 import '../src/DBManager.dart' as db;
 import 'package:http/http.dart' as http;
@@ -20,6 +21,9 @@ final myTextUpdate = TextEditingController();
 Future<String> lastPeso;
 Future<String> lastGrasa;
 Future<List<Progreso>> progreso;
+
+LineChartBarData lineChartBarDataPeso;
+LineChartBarData lineChartBarDataGrasa;
 
 class ProgresoPage extends StatefulWidget {
   final int index_tab;
@@ -305,7 +309,12 @@ class _ProgresoPageState extends State<ProgresoPage>
 
                     /// CHART
                     Container(
-                      margin: EdgeInsets.only(left: 30, bottom: 30),
+                      padding: EdgeInsets.only(
+                        left: 30,
+                        right: 30,
+                        top: 30,
+                        bottom: 70,
+                      ),
                       child: FutureBuilder<List<Progreso>>(
                           future: progreso, //getProgreso(),
                           builder: (context, snapshot) {
@@ -320,6 +329,108 @@ class _ProgresoPageState extends State<ProgresoPage>
                               );
                             } else if (snapshot.hasData) {
                               if (snapshot.data != null) {
+                                lineChartBarDataPeso = LineChartBarData(
+                                  spots: [
+                                    FlSpot(
+                                        1, double.parse(snapshot.data[0].peso)),
+                                    FlSpot(
+                                        2, double.parse(snapshot.data[1].peso)),
+                                    FlSpot(
+                                        3, double.parse(snapshot.data[2].peso)),
+                                    FlSpot(
+                                        4, double.parse(snapshot.data[3].peso)),
+                                  ],
+                                  isCurved: false,
+                                  colors: [
+                                    hexToColor("#059696"),
+                                  ],
+                                  barWidth: 2,
+                                  isStrokeCapRound: true,
+                                  dotData: FlDotData(
+                                    show: true,
+                                  ),
+                                  belowBarData: BarAreaData(
+                                    show: false,
+                                  ),
+                                );
+
+                                return LineChart(
+                                  LineChartData(
+                                    lineTouchData: LineTouchData(
+                                      touchTooltipData: LineTouchTooltipData(
+                                        tooltipBgColor: Colors.white,
+                                      ),
+                                      touchCallback:
+                                          (LineTouchResponse touchResponse) {},
+                                      handleBuiltInTouches: true,
+                                    ),
+                                    gridData: FlGridData(
+                                      show: true,
+                                    ),
+                                    titlesData: FlTitlesData(
+                                      bottomTitles: SideTitles(
+                                        showTitles: true,
+                                        margin: 20,
+                                        textStyle: TextStyle(
+                                          color: hexToColor("#676767"),
+                                          fontSize: 12,
+                                        ),
+                                        getTitles: (value) {
+                                          switch (value.toInt()) {
+                                            case 1:
+                                              return snapshot.data[0].fecha;
+                                            case 2:
+                                              return snapshot.data[1].fecha;
+                                            case 3:
+                                              return snapshot.data[2].fecha;
+                                            case 4:
+                                              return snapshot.data[3].fecha;
+                                              break;
+                                          }
+                                          return '';
+                                        },
+                                        rotateAngle: 90,
+                                      ),
+                                      leftTitles: SideTitles(
+                                        showTitles: true,
+                                        textStyle: TextStyle(
+                                          color: hexToColor("#676767"),
+                                          fontSize: 10,
+                                        ),
+                                        rotateAngle: 0,
+                                        margin: 10,
+                                      ),
+                                    ),
+                                    borderData: FlBorderData(
+                                      show: true,
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: Colors.black,
+                                          width: 1,
+                                        ),
+                                        left: BorderSide(
+                                          color: Colors.black,
+                                          width: 1,
+                                        ),
+                                        right: BorderSide(
+                                          color: Colors.transparent,
+                                        ),
+                                        top: BorderSide(
+                                          color: Colors.transparent,
+                                        ),
+                                      ),
+                                    ),
+                                    minX: 0,
+                                    maxX: 4,
+                                    //maxY: 4,
+                                    minY: 0,
+                                    lineBarsData: [lineChartBarDataPeso],
+                                  ),
+                                  swapAnimationDuration:
+                                      const Duration(milliseconds: 250),
+                                );
+
+                                /*
                                 var data = [
                                   new TimeSeriesDatos(
                                     new DateTime(
@@ -365,8 +476,8 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     ),
                                     double.parse(snapshot.data[3].peso),
                                   ),
-                                ];
-
+                                ];                                
+                                
                                 return SfCartesianChart(
                                   plotAreaBorderWidth: 1,
                                   tooltipBehavior: TooltipBehavior(
@@ -378,7 +489,8 @@ class _ProgresoPageState extends State<ProgresoPage>
                                   ),
                                   primaryXAxis: CategoryAxis(
                                     labelRotation: 90,
-                                    labelPosition: LabelPosition.outside,
+                                    labelPosition:
+                                        ChartDataLabelPosition.outside,
                                     tickPosition: TickPosition.outside,
                                     edgeLabelPlacement: EdgeLabelPlacement.none,
                                     axisLine: AxisLine(
@@ -424,6 +536,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     )
                                   ],
                                 );
+                                */
                               } else {
                                 return new Center(
                                     child: Text("No hay datos.",
@@ -537,7 +650,12 @@ class _ProgresoPageState extends State<ProgresoPage>
 
                     /// CHART
                     Container(
-                      margin: EdgeInsets.only(left: 30, bottom: 30),
+                      padding: EdgeInsets.only(
+                        left: 30,
+                        right: 30,
+                        top: 30,
+                        bottom: 70,
+                      ),
                       child: FutureBuilder<List<Progreso>>(
                           future: progreso, //getProgreso(),
                           builder: (context, snapshot) {
@@ -552,6 +670,108 @@ class _ProgresoPageState extends State<ProgresoPage>
                               );
                             } else if (snapshot.hasData) {
                               if (snapshot.data != null) {
+                                lineChartBarDataGrasa = LineChartBarData(
+                                  spots: [
+                                    FlSpot(1,
+                                        double.parse(snapshot.data[0].grasa)),
+                                    FlSpot(2,
+                                        double.parse(snapshot.data[1].grasa)),
+                                    FlSpot(3,
+                                        double.parse(snapshot.data[2].grasa)),
+                                    FlSpot(4,
+                                        double.parse(snapshot.data[3].grasa)),
+                                  ],
+                                  isCurved: false,
+                                  colors: [
+                                    hexToColor("#059696"),
+                                  ],
+                                  barWidth: 2,
+                                  isStrokeCapRound: true,
+                                  dotData: FlDotData(
+                                    show: true,
+                                  ),
+                                  belowBarData: BarAreaData(
+                                    show: false,
+                                  ),
+                                );
+
+                                return LineChart(
+                                  LineChartData(
+                                    lineTouchData: LineTouchData(
+                                      touchTooltipData: LineTouchTooltipData(
+                                        tooltipBgColor: Colors.white,
+                                      ),
+                                      touchCallback:
+                                          (LineTouchResponse touchResponse) {},
+                                      handleBuiltInTouches: true,
+                                    ),
+                                    gridData: FlGridData(
+                                      show: true,
+                                    ),
+                                    titlesData: FlTitlesData(
+                                      bottomTitles: SideTitles(
+                                        showTitles: true,
+                                        margin: 20,
+                                        textStyle: TextStyle(
+                                          color: hexToColor("#676767"),
+                                          fontSize: 12,
+                                        ),
+                                        getTitles: (value) {
+                                          switch (value.toInt()) {
+                                            case 1:
+                                              return snapshot.data[0].fecha;
+                                            case 2:
+                                              return snapshot.data[1].fecha;
+                                            case 3:
+                                              return snapshot.data[2].fecha;
+                                            case 4:
+                                              return snapshot.data[3].fecha;
+                                              break;
+                                          }
+                                          return '';
+                                        },
+                                        rotateAngle: 90,
+                                      ),
+                                      leftTitles: SideTitles(
+                                        showTitles: true,
+                                        textStyle: TextStyle(
+                                          color: hexToColor("#676767"),
+                                          fontSize: 10,
+                                        ),
+                                        rotateAngle: 0,
+                                        margin: 10,
+                                      ),
+                                    ),
+                                    borderData: FlBorderData(
+                                      show: true,
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: Colors.black,
+                                          width: 1,
+                                        ),
+                                        left: BorderSide(
+                                          color: Colors.black,
+                                          width: 1,
+                                        ),
+                                        right: BorderSide(
+                                          color: Colors.transparent,
+                                        ),
+                                        top: BorderSide(
+                                          color: Colors.transparent,
+                                        ),
+                                      ),
+                                    ),
+                                    minX: 0,
+                                    maxX: 4,
+                                    //maxY: 4,
+                                    minY: 0,
+                                    lineBarsData: [lineChartBarDataGrasa],
+                                  ),
+                                  swapAnimationDuration:
+                                      const Duration(milliseconds: 250),
+                                );
+
+/*
                                 var data = [
                                   new TimeSeriesDatos(
                                     new DateTime(
@@ -598,7 +818,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     double.parse(snapshot.data[3].grasa),
                                   ),
                                 ];
-
+                                                            
                                 return SfCartesianChart(
                                   plotAreaBorderWidth: 1,
                                   tooltipBehavior: TooltipBehavior(
@@ -608,7 +828,8 @@ class _ProgresoPageState extends State<ProgresoPage>
                                   ),
                                   primaryXAxis: CategoryAxis(
                                     labelRotation: 90,
-                                    labelPosition: LabelPosition.outside,
+                                    labelPosition:
+                                        ChartDataLabelPosition.outside,
                                     tickPosition: TickPosition.outside,
                                     edgeLabelPlacement: EdgeLabelPlacement.none,
                                     axisLine: AxisLine(
@@ -654,6 +875,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     )
                                   ],
                                 );
+                                */
                               } else {
                                 return new Center(
                                     child: Text("No hay datos.",
@@ -808,8 +1030,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                             return GestureDetector(
                               onTap: () {
                                 myTextUpdate.text = snapshot.data[index].meta;
-                                _showUpdateDialog(                                    
-                                    snapshot.data[index].id,
+                                _showUpdateDialog(snapshot.data[index].id,
                                     snapshot.data[index].meta);
                               },
                               child: Slidable(
@@ -1125,6 +1346,7 @@ class _ProgresoPageState extends State<ProgresoPage>
             ),
             body: TabBarView(
               controller: _tabController,
+              physics: NeverScrollableScrollPhysics(),
               children: [
                 /// TAB PESO
                 Stack(
@@ -1368,7 +1590,7 @@ Future<List<Progreso>> getProgreso() async {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "record", "token": global.usuario.token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    print(datos);    
+    print(datos);
 
     if (datos["status"] == 1) {
       list.clear();
