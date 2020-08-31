@@ -272,7 +272,7 @@ class _HomePageState extends State<HomePage> {
                       mensaje: recomendaciones);
                 },
                 child: Container(
-                  width: 150,
+                  width: MediaQuery.of(context).size.width / 2.25,//150,
                   height: 150,
                   color: Colors.transparent,
                   child: Column(
@@ -280,8 +280,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Image.asset(
-                        "assets/icons/recomendaciones.png",
-                        //width: MediaQuery.of(context).size.width * 0.2,
+                        "assets/icons/recomendaciones.png",                        
                         height: 80,
                       ),
                       Container(
@@ -314,7 +313,7 @@ class _HomePageState extends State<HomePage> {
                           builder: (context) => new ProgresoPage(2)));
                 },
                 child: Container(
-                  width: 150,
+                  width: MediaQuery.of(context).size.width / 2.25,//150,
                   height: 150,
                   color: Colors.transparent,
                   child: Column(
@@ -322,8 +321,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Image.asset(
-                        "assets/icons/recurso_8.png",
-                        //width: MediaQuery.of(context).size.width * 0.2,
+                        "assets/icons/recurso_8.png",                        
                         height: 80,
                       ),
                       FutureBuilder<Meta>(
@@ -422,7 +420,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
                 child: Container(
-                  width: 150,
+                  width: MediaQuery.of(context).size.width / 2.25,//150,
                   height: 150,
                   margin: EdgeInsets.only(left: 0),
                   child: Column(
@@ -430,8 +428,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Image.asset(
-                        "assets/icons/recurso_7.png",
-                        //width: MediaQuery.of(context).size.width * 0.2,
+                        "assets/icons/recurso_7.png",                        
                         height: 80,
                       ),
                       Container(
@@ -464,7 +461,7 @@ class _HomePageState extends State<HomePage> {
                           builder: (context) => new RestaurantesPage()));
                 },
                 child: Container(
-                  width: 150,
+                  width: MediaQuery.of(context).size.width / 2.25,//150,
                   height: 150,
                   margin: EdgeInsets.only(left: 0),
                   child: Column(
@@ -472,8 +469,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Image.asset(
-                        "assets/icons/recurso_6.png",
-                        //width: MediaQuery.of(context).size.width * 0.2,
+                        "assets/icons/recurso_6.png",                        
                         height: 80,
                       ),
                       Container(
@@ -749,7 +745,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    super.initState();
+    super.initState();    
     validaCuenta(global.usuario.token).then((_validada) {
       setState(() {
         validada = _validada;
@@ -766,7 +762,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         recomendaciones = _recomendaciones;
       });
-    });
+    });    
   }
 
   @override
@@ -775,7 +771,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {    
     return new WillPopScope(
       onWillPop: () {
         exit(0);
