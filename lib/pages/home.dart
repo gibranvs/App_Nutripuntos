@@ -348,7 +348,7 @@ class _HomePageState extends State<HomePage> {
                                       constraints: BoxConstraints(
                                           minWidth: 100, maxWidth: 100),
                                       child: AutoSizeText(
-                                        "Presiona para agregar reto",
+                                        "Presiona para agregar meta",
                                         textAlign: TextAlign.center,
                                         maxFontSize: 16,
                                         maxLines: 2,

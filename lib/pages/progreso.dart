@@ -940,7 +940,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                 constraints:
                                     BoxConstraints(minWidth: 80, maxWidth: 80),
                                 child: AutoSizeText(
-                                  "Presiona para agregar reto",
+                                  "Presiona para agregar meta",
                                   textAlign: TextAlign.center,
                                   maxFontSize: 20,
                                   maxLines: 2,
