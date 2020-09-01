@@ -940,7 +940,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                 constraints:
                                     BoxConstraints(minWidth: 80, maxWidth: 80),
                                 child: AutoSizeText(
-                                  "Presiona para agregar reto",
+                                  "Presiona para agregar meta",
                                   textAlign: TextAlign.center,
                                   maxFontSize: 20,
                                   maxLines: 2,
@@ -1139,7 +1139,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                             textAlign: TextAlign.center,
                                           ),
                                           content: Text(
-                                              '¿Seguro que desea borrar el reto "' +
+                                              '¿Seguro que desea borrar la meta "' +
                                                   snapshot.data[index].meta +
                                                   '"?',
                                               textAlign: TextAlign.center),
@@ -1240,7 +1240,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                           });
                     } else {
                       return new Text(
-                        "Aun no tienes retos.",
+                        "Aun no tienes metas.",
                         style: TextStyle(
                           color: hexToColor("#606060"),
                         ),
@@ -1248,7 +1248,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                     }
                   } else if (snapshot.hasError) {
                     return new Text(
-                      "Error al obtener retos anteriores.",
+                      "Error al obtener metas anteriores.",
                       style: TextStyle(
                         color: hexToColor("#606060"),
                       ),
@@ -1419,7 +1419,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                     ),
                     titulo("Próxima meta"),
                     retoActual(),
-                    subtitulo("Retos anteriores"),
+                    subtitulo("Metas anteriores"),
                     metas(),
                   ],
                 ),
@@ -1445,7 +1445,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                 autofocus: true,
                 cursorColor: hexToColor("#059696"),
                 decoration: new InputDecoration(
-                  labelText: 'Reto',
+                  labelText: 'Meta',
                   hintText: 'ej. -3 KG en un mes',
                 ),
               ),
@@ -1492,7 +1492,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                 autofocus: true,
                 cursorColor: hexToColor("#059696"),
                 decoration: new InputDecoration(
-                  labelText: 'Reto',
+                  labelText: 'Meta',
                   hintText: 'ej. -3 KG en un mes',
                 ),
               ),

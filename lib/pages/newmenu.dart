@@ -131,9 +131,9 @@ class menu extends StatelessWidget {
             ItemMenu(selected_index, 6, "Nutrichat",
                 "assets/icons/recurso_10.png", 35),
             ItemMenu(selected_index, 7, "Material de apoyo",
-                "assets/icons/recurso_10.png", 35),
+                "assets/icons/material.png", 35),
             ItemMenu(selected_index, 8, "Cerrar sesión",
-                "assets/icons/recurso_10.png", 35),
+                "assets/icons/exit.png", 28),
           ],
         ),
       ),
@@ -169,10 +169,10 @@ class ItemMenu extends StatelessWidget {
     }
 
     return Container(
-      decoration: decoration,
+      decoration: decoration,      
       child: ListTile(
         leading: Container(
-          height: size_imagen,
+          height: size_imagen,          
           child: new Image.asset(
             path_imagen,
             color: color_font,
