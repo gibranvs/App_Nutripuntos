@@ -321,7 +321,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Image.asset(
-                        "assets/icons/recurso_8.png",                        
+                        "assets/icons/recurso_6.png",                        
                         height: 80,
                       ),
                       FutureBuilder<Meta>(
@@ -469,7 +469,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Image.asset(
-                        "assets/icons/recurso_6.png",                        
+                        "assets/icons/recurso_8.png",                        
                         height: 80,
                       ),
                       Container(
