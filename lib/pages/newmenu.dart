@@ -169,10 +169,10 @@ class ItemMenu extends StatelessWidget {
     }
 
     return Container(
-      decoration: decoration,      
+      decoration: decoration,
       child: ListTile(
         leading: Container(
-          height: size_imagen,          
+          height: size_imagen,
           child: new Image.asset(
             path_imagen,
             color: color_font,
@@ -246,11 +246,17 @@ class ItemMenu extends StatelessWidget {
               );
               break;
             case 8:
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
-                ModalRoute.withName('/'),
-              );
+              db.DBManager.instance
+                  .updateLogueado(global.usuario.id, 0)
+                  .then((_) {
+                print("Cerrar sesión");
+                global.usuario.token = "";
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  ModalRoute.withName('/'),
+                );
+              });
               break;
           }
         },
