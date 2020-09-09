@@ -20,6 +20,17 @@ class _LoginPageState extends State<LoginPage> {
   final Data data = new Data(usr: "1", doctor: "2");
 
   @override
+  void initState() {
+    super.initState();
+    fetchDoctores().then((_result) {
+      setState(() {
+        listDoctores = _result;
+      });
+    });
+    setState(() {});
+  }
+
+  @override
   Doctor doctorSelect;
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -248,15 +259,26 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 Future<List<Doctor>> fetchDoctores() async {
+  List<Doctor> list = new List();
   final response = await http
       .post(global.server + '/aplicacion/api', body: {'tipo': 'get_doctores'});
   var datos = json.decode(utf8.decode(response.bodyBytes));
   //print(datos);
-  List responseJson = json.decode(utf8.decode(response.bodyBytes));
-  List<Doctor> doctoresList = createDoctoresList(responseJson);
-  return doctoresList;
+
+  for (int i = 0; i < datos.length; i++) {
+    String id = datos[i]["id"];
+    String nombre = datos[i]["nombre"];
+
+    Doctor doctor = new Doctor(id: id, nombre: nombre);
+    list.add(doctor);
+  }
+
+  //List responseJson = json.decode(utf8.decode(response.bodyBytes));
+  //List<Doctor> doctoresList = createDoctoresList(responseJson);
+  return list;
 }
 
+/*
 List<Doctor> createDoctoresList(List data) {
   List<Doctor> list = new List();
 
@@ -274,6 +296,7 @@ List<Doctor> createDoctoresList(List data) {
     listDoctores.add("No se pudo cargar la lista de especialistas.");
   return list;
 }
+*/
 
 class Doctor {
   String id;
