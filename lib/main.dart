@@ -19,7 +19,7 @@ void main() {
   runApp(new MaterialApp(
     title: "Nutripuntos",
     home: new MyApp(),
-    debugShowCheckedModeBanner: false,    
+    debugShowCheckedModeBanner: false,
     //routes: <String, WidgetBuilder>{'/HomeScreen': (BuildContext context) => new login.LoginPage()},
     theme: ThemeData(
       primaryColor: Color(0xFF059696),
@@ -68,12 +68,18 @@ class _MyAppState extends State<MyApp> {
           });
         } else {
           global.user_exist = false;
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+          /*
           fetchDoctores().then((_) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => LoginPage()),
             );
           });
+          */
         }
       });
     });
@@ -85,9 +91,9 @@ class _MyAppState extends State<MyApp> {
     //db.DBManager.instance.deleteAllMensajes();
     //db.DBManager.instance.deleteAllRetos();
     super.initState();
-    checkDevice().then((_){
+    checkDevice().then((_) {
       splashEnd();
-    });        
+    });
   }
 
   @override
