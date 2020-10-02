@@ -257,7 +257,7 @@ class DBManager {
     Database db = await database;
     var result = await db.rawInsert(
         'INSERT Into $tableRetos($columnIDUsuarioReto, $columnReto, $columnFecha, $columnStatus) VALUES(?,?,?,?)',
-        [_idUsuario, _reto, DateTime.now().toString(), "Ok"]);
+        [_idUsuario, _reto, DateTime.now().toString(), "Incompleta"]);
     return result;
   }
 
@@ -283,7 +283,7 @@ class DBManager {
         'SELECT * FROM $tableRetos WHERE $columnIDUsuarioReto = ?',
         [_idUsuario]);
 
-    for (int i = 0; i < res.length - 1; i++) {
+    for (int i = 0; i < res.length; i++) {
       list.add(Meta(
         id: res[i]["ID"],
           meta: res[i]["RETO"],

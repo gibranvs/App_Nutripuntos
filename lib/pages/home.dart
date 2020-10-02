@@ -324,9 +324,27 @@ class _HomePageState extends State<HomePage> {
                         "assets/icons/recurso_6.png",                        
                         height: 80,
                       ),
+                      Container(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      alignment: Alignment.topCenter,
+                                      margin: EdgeInsets.only(top: 0),
+                                      constraints: BoxConstraints(
+                                          minWidth: 100, maxWidth: 100),
+                                      child: AutoSizeText(
+                                        "Metas",
+                                        textAlign: TextAlign.center,
+                                        maxFontSize: 16,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.normal,
+                                            fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+/*
                       FutureBuilder<Meta>(
-                          future:
-                              db.DBManager.instance.getReto(global.usuario.id),
+                          future:db.DBManager.instance.getReto(global.usuario.id),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
@@ -396,6 +414,7 @@ class _HomePageState extends State<HomePage> {
                                           color: hexToColor("#606060"))));
                             }
                           }),
+                          */
                     ],
                   ),
                 ),
