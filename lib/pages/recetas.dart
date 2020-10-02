@@ -36,7 +36,7 @@ class _RecetasPageState extends State<RecetasPage> {
       height: 50,
       margin: EdgeInsets.only(top: 0),
       child: Container(
-        height: 45,
+        height: 43,
         width: MediaQuery.of(context).size.width * 0.9,
         alignment: Alignment.topLeft,
         child: Stack(
