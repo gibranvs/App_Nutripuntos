@@ -310,6 +310,15 @@ class DBManager {
     return true;
   }
 
+  Future<bool> setEstatusRetoOk(_idReto) async 
+  {
+    Database db = await database;
+    var result = await db.rawQuery(
+        "UPDATE $tableRetos SET $columnStatus = ? WHERE $columnIDReto = ?",
+        ["Ok", _idReto]);
+    return true;
+  }
+
   Future<bool> deleteAllRetos() async {
     Database db = await database;
     var result = await db.rawQuery("DELETE FROM $tableRetos");

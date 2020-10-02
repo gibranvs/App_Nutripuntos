@@ -1228,27 +1228,38 @@ class _ProgresoPageState extends State<ProgresoPage>
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         children: <Widget>[
-                                          (snapshot.data[index].status != "Ok") ?
+                                          (snapshot.data[index].status != "Ok")
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    myTextUpdate.text = snapshot
+                                                        .data[index].meta;
+                                                    _showUpdateDialog(
+                                                        snapshot.data[index].id,
+                                                        snapshot
+                                                            .data[index].meta);
+                                                  },
+                                                  child: Container(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    //width: MediaQuery.of(context).size.width * 0,
+                                                    height: 20,
+                                                    child: Icon(
+                                                      Icons.edit,
+                                                      color:
+                                                          hexToColor("#888888"),
+                                                    ),
+                                                  ),
+                                                )
+                                              : Offstage(),
                                           GestureDetector(
                                             onTap: () {
-                                              myTextUpdate.text =
-                                                  snapshot.data[index].meta;
-                                              _showUpdateDialog(
-                                                  snapshot.data[index].id,
-                                                  snapshot.data[index].meta);
+                                              db.DBManager.instance
+                                                  .setEstatusRetoOk(
+                                                      snapshot.data[index].id)
+                                                  .then((value) {
+                                                setState(() {});
+                                              });
                                             },
-                                            child: Container(
-                                              alignment: Alignment.centerRight,
-                                              //width: MediaQuery.of(context).size.width * 0,
-                                              height: 20,
-                                              child: Icon(
-                                                Icons.edit,
-                                                color: hexToColor("#888888"),
-                                              ),
-                                            ),
-                                          ) : Offstage(),
-                                          GestureDetector(
-                                            onTap: () {},
                                             child: Container(
                                               alignment: Alignment.centerRight,
                                               width: MediaQuery.of(context)
@@ -1257,8 +1268,12 @@ class _ProgresoPageState extends State<ProgresoPage>
                                                   0.1,
                                               height: 20,
                                               child: Icon(
-                                                Icons.check,
-                                                color: (snapshot.data[index].status == "Incompleta") ? hexToColor("#888888") : Colors.green,
+                                                Icons.thumb_up,
+                                                color: (snapshot.data[index]
+                                                            .status ==
+                                                        "Incompleta")
+                                                    ? hexToColor("#888888")
+                                                    : Colors.green,
                                               ),
                                             ),
                                           ),
