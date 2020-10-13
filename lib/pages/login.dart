@@ -13,8 +13,8 @@ import '../src/DBManager.dart' as db;
 var listDoctores = [];
 String currentText = "";
 List<String> suggestions = [];
-List<String> suggestions_id = [];
-TextEditingController especialista_controller;
+TextEditingController especialista_controller = new TextEditingController();
+GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
 
 class LoginPage extends StatefulWidget {
   @override
@@ -22,29 +22,27 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final Data data = new Data(usr: "1", doctor: "2");
-  GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
+  final Data data = new Data(usr: "1", doctor: "2");  
 
   @override
   void initState() {
     super.initState();
+    key = new GlobalKey();
     especialista_controller = new TextEditingController();
+    if(suggestions != null) suggestions.clear();
     fetchDoctores().then((_result) {
       setState(() {
         listDoctores = _result;
         for (var doc in listDoctores) {
-          suggestions.add(doc.nombre);
-          suggestions_id.add(doc.id);
+          suggestions.add(doc.nombre);          
         }
       });
-    });
-    
+    });    
   }
 
   @override
-  void dispose() {
+  void dispose() {    
     super.dispose();
-    especialista_controller.dispose();
   }
 
   @override
