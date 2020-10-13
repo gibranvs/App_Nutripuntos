@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nutripuntos_app/globals.dart' as global;
 import 'package:nutripuntos_app/src/usuario.dart';
+import 'package:nutripuntos_app/widgets/autocomplete_textfield.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'home.dart';
@@ -10,6 +11,10 @@ import '../src/MessageAlert.dart' as alert;
 import '../src/DBManager.dart' as db;
 
 var listDoctores = [];
+String currentText = "";
+List<String> suggestions = [];
+List<String> suggestions_id = [];
+TextEditingController especialista_controller;
 
 class LoginPage extends StatefulWidget {
   @override
@@ -18,16 +23,28 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final Data data = new Data(usr: "1", doctor: "2");
+  GlobalKey<AutoCompleteTextFieldState<String>> key = new GlobalKey();
 
   @override
   void initState() {
     super.initState();
+    especialista_controller = new TextEditingController();
     fetchDoctores().then((_result) {
       setState(() {
         listDoctores = _result;
+        for (var doc in listDoctores) {
+          suggestions.add(doc.nombre);
+          suggestions_id.add(doc.id);
+        }
       });
     });
-    setState(() {});
+    
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    especialista_controller.dispose();
   }
 
   @override
@@ -98,13 +115,32 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-                      child:
-                          //FutureBuilder<List<Doctor>>(
-                          //future: fetchDoctores(),
-                          //builder: (context, snapshot) {
-                          //if (snapshot.hasData) {
-                          //if(listDoctores.length > 0) {
-
+                      child: SimpleAutoCompleteTextField(
+                        key: key,
+                        decoration: new InputDecoration(
+                          hintText: "Busca a tu especialista",
+                          hintStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                        controller: especialista_controller,
+                        suggestions: suggestions,
+                        textChanged: (text) {
+                          currentText = text;
+                        },
+                        clearOnSubmit: false,
+                        textSubmitted: (text) => setState(() {                          
+                          String id;
+                          for (var d in listDoctores) {
+                            if (d.nombre == text) id = d.id;
+                          }
+                          Doctor doc = new Doctor(id: id, nombre: text);
+                          doctorSelect = doc;
+                        }),
+                        style: TextStyle(color: Colors.white),
+                      ),
+/*
                           DropdownButton<Doctor>(
                         iconSize: 0,
                         hint: Text(
@@ -129,21 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                           });
                         },
                       ),
-
-                      /*
-                            } else if (snapshot.hasError) {
-                              return Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 0, horizontal: 15),
-                                child: Text(
-                                    "En este momento no se pudo obtener la lista de especialistas disponibles." +
-                                        snapshot.error.toString()),
-                              );
-                            }
-                            */
-                      // By default, show a loading spinner
-                      //return new CircularProgressIndicator();
-                      //},),
+                      */
                     ),
                   ),
                   Container(
@@ -158,6 +180,13 @@ class _LoginPageState extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0)),
                       onPressed: () {
+                        String id;
+                          for (var d in listDoctores) {
+                            if (d.nombre == especialista_controller.text) id = d.id;
+                          }
+                          Doctor doc = new Doctor(id: id, nombre: especialista_controller.text);
+                          doctorSelect = doc;
+
                         check_login(global.text_email.text, doctorSelect);
                       },
                     ),
