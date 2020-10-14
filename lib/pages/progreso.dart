@@ -25,6 +25,9 @@ Future<List<Progreso>> progreso;
 LineChartBarData lineChartBarDataPeso;
 LineChartBarData lineChartBarDataGrasa;
 
+bool pendientes_selected = false;
+bool completos_selected = false;
+
 class ProgresoPage extends StatefulWidget {
   final int index_tab;
   ProgresoPage(this.index_tab);
@@ -47,23 +50,6 @@ class _ProgresoPageState extends State<ProgresoPage>
       margin: EdgeInsets.only(top: 20),
       child: Text(
         _titulo,
-        style: TextStyle(
-            color: hexToColor("#059696"),
-            fontWeight: FontWeight.bold,
-            fontSize: 16),
-      ),
-    );
-  }
-
-  ///
-  /// Label Subtítulo
-  ///
-  Container subtitulo(_subtitulo) {
-    return Container(
-      alignment: Alignment.topLeft,
-      margin: EdgeInsets.only(top: 200, left: 20),
-      child: Text(
-        _subtitulo,
         style: TextStyle(
             color: hexToColor("#059696"),
             fontWeight: FontWeight.bold,
@@ -1016,13 +1002,138 @@ class _ProgresoPageState extends State<ProgresoPage>
   }
 
   ///
+  /// Label Subtítulo
+  ///
+  Container subtitulo(_subtitulo) {
+    return Container(
+      alignment: Alignment.topLeft,
+      margin: EdgeInsets.only(top: 20, left: 20),
+      child: Text(
+        _subtitulo,
+        style: TextStyle(
+            color: hexToColor("#898989"),
+            fontWeight: FontWeight.bold,
+            fontSize: 16),
+      ),
+    );
+  }
+
+  ///
+  /// Row botones
+  ///
+  Widget row_botones() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(top: 50),
+      padding: EdgeInsets.only(left: 20),
+      alignment: Alignment.topLeft,
+      //height: 80,
+      child: Row(
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              _showDialog();
+            },
+            child: Container(
+              width: 60,
+              height: 60,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: hexToColor("#439495"),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                Icons.add_circle,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                completos_selected = false;
+                (pendientes_selected == false)
+                    ? pendientes_selected = true
+                    : pendientes_selected = false;
+              });
+            },
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: hexToColor("#F9FAFA"),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: (pendientes_selected == true)
+                    ? [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 8,
+                          offset: Offset(0, 0), // changes position of shadow
+                        ),
+                      ]
+                    : null,
+              ),
+              child: Icon(
+                Icons.access_time,
+                color: hexToColor("#888888"),
+                size: 30,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                pendientes_selected = false;
+                (completos_selected == false)
+                    ? completos_selected = true
+                    : completos_selected = false;
+              });
+            },
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: hexToColor("#67AD5C"),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: (completos_selected == true)
+                    ? [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 8,
+                          offset: Offset(0, 0), // changes position of shadow
+                        ),
+                      ]
+                    : null,
+              ),
+              child: Icon(
+                Icons.star,
+                color: Colors.yellow,
+                size: 30,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  ///
   /// List Metas
   ///
   Container metas() {
     return Container(
       width: MediaQuery.of(context).size.width,
       //height: MediaQuery.of(context).size.height,
-      margin: EdgeInsets.only(top: 230),
+      margin: EdgeInsets.only(top: 140),
       child: SingleChildScrollView(
         child: Align(
           alignment: Alignment.center,
@@ -1179,7 +1290,9 @@ class _ProgresoPageState extends State<ProgresoPage>
                               child: Card(
                                 margin: EdgeInsets.only(bottom: 15),
                                 elevation: 0,
-                                color: hexToColor("#f2f2f2"),
+                                color: (snapshot.data[index].status == "Ok")
+                                    ? hexToColor("#67AD5C")
+                                    : hexToColor("#f2f2f2"),
                                 child: Stack(
                                   alignment: Alignment.centerLeft,
                                   children: <Widget>[
@@ -1198,7 +1311,11 @@ class _ProgresoPageState extends State<ProgresoPage>
                                                 .toString(),
                                             style: TextStyle(
                                                 fontSize: 16,
-                                                color: hexToColor("#505050"),
+                                                color: (snapshot.data[index]
+                                                            .status ==
+                                                        "Ok")
+                                                    ? hexToColor("#ffffff")
+                                                    : hexToColor("#505050"),
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
@@ -1214,7 +1331,11 @@ class _ProgresoPageState extends State<ProgresoPage>
                                                 .toString(),
                                             style: TextStyle(
                                                 fontSize: 16,
-                                                color: hexToColor("#ababab"),
+                                                color: (snapshot.data[index]
+                                                            .status ==
+                                                        "Ok")
+                                                    ? hexToColor("#ffffff")
+                                                    : hexToColor("#ababab"),
                                                 fontWeight: FontWeight.normal),
                                           ),
                                         ),
@@ -1253,12 +1374,15 @@ class _ProgresoPageState extends State<ProgresoPage>
                                               : Offstage(),
                                           GestureDetector(
                                             onTap: () {
-                                              db.DBManager.instance
-                                                  .setEstatusRetoOk(
-                                                      snapshot.data[index].id)
-                                                  .then((value) {
-                                                setState(() {});
-                                              });
+                                              if (snapshot.data[index].status ==
+                                                  "Incompleta") {
+                                                db.DBManager.instance
+                                                    .setEstatusRetoOk(
+                                                        snapshot.data[index].id)
+                                                    .then((value) {
+                                                  setState(() {});
+                                                });
+                                              }
                                             },
                                             child: Container(
                                               alignment: Alignment.centerRight,
@@ -1267,14 +1391,18 @@ class _ProgresoPageState extends State<ProgresoPage>
                                                       .width *
                                                   0.1,
                                               height: 20,
-                                              child: Icon(
-                                                Icons.thumb_up,
-                                                color: (snapshot.data[index]
-                                                            .status ==
-                                                        "Incompleta")
-                                                    ? hexToColor("#888888")
-                                                    : Colors.green,
-                                              ),
+                                              child: (snapshot
+                                                          .data[index].status ==
+                                                      "Incompleta")
+                                                  ? Icon(
+                                                      Icons.thumb_up,
+                                                      color:
+                                                          hexToColor("#888888"),
+                                                    )
+                                                  : Icon(
+                                                      Icons.star,
+                                                      color: Colors.yellow,
+                                                    ),
                                             ),
                                           ),
                                         ],
@@ -1311,6 +1439,9 @@ class _ProgresoPageState extends State<ProgresoPage>
   @override
   void initState() {
     super.initState();
+
+    pendientes_selected = false;
+    completos_selected = false;
 
     lastGrasa = getLastGrasa();
     lastPeso = getLastPeso();
@@ -1464,9 +1595,10 @@ class _ProgresoPageState extends State<ProgresoPage>
                         ),
                       ),
                     ),
-                    titulo("Próxima meta"),
-                    retoActual(),
+                    //titulo("Próxima meta"),
+                    //retoActual(),
                     subtitulo("Metas"),
+                    row_botones(),
                     metas(),
                   ],
                 ),
