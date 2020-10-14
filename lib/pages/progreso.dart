@@ -678,11 +678,11 @@ class _ProgresoPageState extends State<ProgresoPage>
                                   ),
                                   belowBarData: BarAreaData(
                                     show: false,
-                                  ),
+                                  ),                                  
                                 );
 
                                 return LineChart(
-                                  LineChartData(
+                                  LineChartData(                                  
                                     lineTouchData: LineTouchData(
                                       touchTooltipData: LineTouchTooltipData(
                                         tooltipBgColor: Colors.white,
@@ -715,9 +715,9 @@ class _ProgresoPageState extends State<ProgresoPage>
                                               break;
                                           }
                                           return '';
-                                        },
-                                        rotateAngle: 90,
-                                      ),
+                                        },                                        
+                                        rotateAngle: 90,                                        
+                                      ),                                      
                                       leftTitles: SideTitles(
                                         showTitles: true,
                                         textStyle: TextStyle(
