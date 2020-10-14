@@ -296,7 +296,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                     /// CHART
                     Container(
                       padding: EdgeInsets.only(
-                        left: 30,
+                        left: 50,
                         right: 30,
                         top: 30,
                         bottom: 70,
@@ -336,7 +336,28 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     show: true,
                                   ),
                                   belowBarData: BarAreaData(
-                                    show: false,
+                                    show: true,
+                                    applyCutOffY: true,
+                                    cutOffY: 10,                                    
+                                    colors: [
+                                      Colors.transparent,
+                                    ],
+                                    gradientColorStops: [0.5, 1.0],
+                                    gradientFrom: const Offset(0, 0),
+                                    gradientTo: const Offset(0, 1),
+                                    spotsLine: BarAreaSpotsLine(
+                                      show: true,
+                                      flLineStyle: FlLine(
+                                        color: Colors.blue,
+                                        strokeWidth: 0.5,
+                                      ),
+                                      checkToShowSpotLine: (spot) {
+                                        if (spot.x == 0 || spot.x == 6) {
+                                          return false;
+                                        }
+                                        return true;
+                                      },
+                                    ),
                                   ),
                                 );
 
@@ -377,8 +398,8 @@ class _ProgresoPageState extends State<ProgresoPage>
                                         },
                                         rotateAngle: 90,
                                       ),
-                                      leftTitles: SideTitles(
-                                        showTitles: true,
+                                      leftTitles: SideTitles(                                        
+                                        showTitles: false,
                                         textStyle: TextStyle(
                                           color: hexToColor("#676767"),
                                           fontSize: 10,
@@ -410,8 +431,8 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     maxX: 4,
                                     //maxY: 4,
                                     minY: 0,
-                                    lineBarsData: [lineChartBarDataPeso],
-                                  ),
+                                    lineBarsData: [lineChartBarDataPeso],                                    
+                                  ),                                  
                                   swapAnimationDuration:
                                       const Duration(milliseconds: 250),
                                 );
@@ -637,7 +658,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                     /// CHART
                     Container(
                       padding: EdgeInsets.only(
-                        left: 30,
+                        left: 50,
                         right: 30,
                         top: 30,
                         bottom: 70,
@@ -676,13 +697,34 @@ class _ProgresoPageState extends State<ProgresoPage>
                                   dotData: FlDotData(
                                     show: true,
                                   ),
-                                  belowBarData: BarAreaData(
-                                    show: false,
-                                  ),                                  
+                                  belowBarData: BarAreaData(                                    
+                                    show: true,
+                                    applyCutOffY: true,
+                                    cutOffY: 10,                                    
+                                    colors: [
+                                      Colors.transparent,
+                                    ],
+                                    gradientColorStops: [0.5, 1.0],
+                                    gradientFrom: const Offset(0, 0),
+                                    gradientTo: const Offset(0, 1),
+                                    spotsLine: BarAreaSpotsLine(
+                                      show: true,
+                                      flLineStyle: FlLine(
+                                        color: Colors.blue,
+                                        strokeWidth: 0.5,
+                                      ),
+                                      checkToShowSpotLine: (spot) {
+                                        if (spot.x == 0 || spot.x == 6) {
+                                          return false;
+                                        }
+                                        return true;
+                                      },
+                                    ),
+                                  ),
                                 );
 
                                 return LineChart(
-                                  LineChartData(                                  
+                                  LineChartData(
                                     lineTouchData: LineTouchData(
                                       touchTooltipData: LineTouchTooltipData(
                                         tooltipBgColor: Colors.white,
@@ -715,11 +757,12 @@ class _ProgresoPageState extends State<ProgresoPage>
                                               break;
                                           }
                                           return '';
-                                        },                                        
-                                        rotateAngle: 90,                                        
-                                      ),                                      
+                                        },
+                                        rotateAngle: 90,
+                                      ),
                                       leftTitles: SideTitles(
-                                        showTitles: true,
+                                        interval: 10,
+                                        showTitles: false,
                                         textStyle: TextStyle(
                                           color: hexToColor("#676767"),
                                           fontSize: 10,
