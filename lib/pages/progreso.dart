@@ -1201,7 +1201,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                           shrinkWrap: true,
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
-                            final item = snapshot.data[index];
+                            //final item = snapshot.data[index];
                             return Slidable(
                               key: Key('s'),
                               actionExtentRatio: 0.25,
@@ -1272,64 +1272,78 @@ class _ProgresoPageState extends State<ProgresoPage>
                                   ],
                                 ),
                               ),
-                              secondaryActions: <Widget>[
-                                Card(
-                                  margin: EdgeInsets.only(bottom: 15),
-                                  elevation: 0,
-                                  color: Colors.red,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.delete,
-                                        color: Colors.white,
-                                      ),
-                                      Text(
-                                        'Borrar',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                              dismissal: SlidableDismissal(
-                                child: SlidableDrawerDismissal(),
-                                onWillDismiss: (actionType) {
-                                  return showDialog<bool>(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: Text(
-                                          'Advertencia',
-                                          textAlign: TextAlign.center,
-                                        ),
-                                        content: Text(
-                                            '¿Seguro que desea borrar la meta "' +
-                                                snapshot.data[index].meta +
-                                                '"?',
-                                            textAlign: TextAlign.center),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                              child: Text('Cancelar'),
-                                              onPressed: () => {
-                                                    Navigator.of(context)
-                                                        .pop(false),
-                                                  }),
-                                          FlatButton(
-                                              child: Text('Borrar'),
-                                              onPressed: () {
-                                                db.DBManager.instance
-                                                    .deleteReto(snapshot
-                                                        .data[index].id);
-                                                setState(() {});
-                                                Navigator.of(context).pop(true);
-                                              }),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                              ),
+                              secondaryActions:
+                                  (snapshot.data[index].status != "Ok")
+                                      ? <Widget>[
+                                          Card(
+                                            margin: EdgeInsets.only(bottom: 15),
+                                            elevation: 0,
+                                            color: Colors.red,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(
+                                                  Icons.delete,
+                                                  color: Colors.white,
+                                                ),
+                                                Text(
+                                                  'Borrar',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ]
+                                      : null,
+                              dismissal: (snapshot.data[index].status != "Ok")
+                                  ? SlidableDismissal(
+                                      child: SlidableDrawerDismissal(),
+                                      closeOnCanceled: true,
+                                      dragDismissible: true,
+                                      onWillDismiss: (actionType) {                                        
+                                          return showDialog<bool>(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  'Advertencia',
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                content: Text(
+                                                    '¿Seguro que desea borrar la meta "' +
+                                                        snapshot
+                                                            .data[index].meta +
+                                                        '"?',
+                                                    textAlign:
+                                                        TextAlign.center),
+                                                actions: <Widget>[
+                                                  FlatButton(
+                                                      child: Text('Cancelar'),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop(false);
+                                                        setState(() {});
+                                                      }),
+                                                  FlatButton(
+                                                      child: Text('Borrar'),
+                                                      onPressed: () {
+                                                        db.DBManager.instance
+                                                            .deleteReto(snapshot
+                                                                .data[index]
+                                                                .id);
+                                                        setState(() {});
+                                                        Navigator.of(context)
+                                                            .pop(true);
+                                                      }),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                      },
+                                    )
+                                  : null,
                               child: Card(
                                 margin: EdgeInsets.only(bottom: 15),
                                 elevation: 0,
