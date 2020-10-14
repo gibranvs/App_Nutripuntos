@@ -115,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                       padding: EdgeInsets.symmetric(vertical: 0, horizontal: 5),
                       child: SimpleAutoCompleteTextField(
                         key: key,
+                        minLength: 3,                      
                         decoration: new InputDecoration(
                           hintText: "Busca a tu especialista",
                           hintStyle: TextStyle(
