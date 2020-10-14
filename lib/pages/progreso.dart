@@ -338,7 +338,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                   belowBarData: BarAreaData(
                                     show: true,
                                     applyCutOffY: true,
-                                    cutOffY: 10,                                    
+                                    cutOffY: 10,
                                     colors: [
                                       Colors.transparent,
                                     ],
@@ -398,7 +398,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                         },
                                         rotateAngle: 90,
                                       ),
-                                      leftTitles: SideTitles(                                        
+                                      leftTitles: SideTitles(
                                         showTitles: false,
                                         textStyle: TextStyle(
                                           color: hexToColor("#676767"),
@@ -431,8 +431,8 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     maxX: 4,
                                     //maxY: 4,
                                     minY: 0,
-                                    lineBarsData: [lineChartBarDataPeso],                                    
-                                  ),                                  
+                                    lineBarsData: [lineChartBarDataPeso],
+                                  ),
                                   swapAnimationDuration:
                                       const Duration(milliseconds: 250),
                                 );
@@ -697,10 +697,10 @@ class _ProgresoPageState extends State<ProgresoPage>
                                   dotData: FlDotData(
                                     show: true,
                                   ),
-                                  belowBarData: BarAreaData(                                    
+                                  belowBarData: BarAreaData(
                                     show: true,
                                     applyCutOffY: true,
-                                    cutOffY: 10,                                    
+                                    cutOffY: 10,
                                     colors: [
                                       Colors.transparent,
                                     ],
