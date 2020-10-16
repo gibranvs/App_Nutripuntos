@@ -32,8 +32,6 @@ double min_peso = 0;
 double max_peso = 0;
 double min_grasa = 0;
 double max_grasa = 0;
-var pesos_ordenados = [];
-var grasas_ordenadas = [];
 
 class ProgresoPage extends StatefulWidget {
   final int index_tab;
@@ -327,11 +325,16 @@ class _ProgresoPageState extends State<ProgresoPage>
                                   double.parse(snapshot.data[1].peso),
                                   double.parse(snapshot.data[2].peso),
                                   double.parse(snapshot.data[3].peso)
-                                ];
-                                pesos_ordenados = pesos;                                
-                                pesos_ordenados.sort();                                
-                                min_peso = pesos_ordenados[0];
-                                max_peso = pesos_ordenados[pesos_ordenados.length-1];
+                                ];                                                                                            
+                                min_peso = pesos[0];
+                                max_peso = pesos[0];
+                                pesos.forEach((element) {
+                                  if(element > max_peso) max_peso = element;
+                                  if(element < min_peso) min_peso = element;
+                                });            
+                                print(pesos);
+                                print("min peso: " + min_peso.toString());
+                                print("max peso: " + max_peso.toString());          
                                 lineChartBarDataPeso = LineChartBarData(
                                   spots: [
                                     FlSpot(1, pesos[0]),
@@ -714,10 +717,15 @@ class _ProgresoPageState extends State<ProgresoPage>
                                   double.parse(snapshot.data[2].grasa),
                                   double.parse(snapshot.data[3].grasa)
                                 ];
-                                grasas_ordenadas = grasas;
-                                grasas_ordenadas.sort();
-                                min_grasa = grasas_ordenadas[0];
-                                max_grasa = grasas_ordenadas[grasas_ordenadas.length-1];
+                                min_grasa = grasas[0];
+                                max_grasa = grasas[0];
+                                grasas.forEach((element) {
+                                  if(element > max_grasa) max_grasa = element;
+                                  if(element < min_grasa) min_grasa = element;
+                                });            
+                                print(grasas);
+                                print("min grasa: " + min_grasa.toString());
+                                print("max grasa: " + max_grasa.toString());
                                 lineChartBarDataGrasa = LineChartBarData(
                                   spots: [
                                     FlSpot(1,
