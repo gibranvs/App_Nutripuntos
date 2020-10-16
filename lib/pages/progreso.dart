@@ -28,6 +28,13 @@ LineChartBarData lineChartBarDataGrasa;
 bool pendientes_selected = false;
 bool completos_selected = false;
 
+double min_peso = 0;
+double max_peso = 0;
+double min_grasa = 0;
+double max_grasa = 0;
+var pesos_ordenados = [];
+var grasas_ordenadas = [];
+
 class ProgresoPage extends StatefulWidget {
   final int index_tab;
   ProgresoPage(this.index_tab);
@@ -315,16 +322,22 @@ class _ProgresoPageState extends State<ProgresoPage>
                               );
                             } else if (snapshot.hasData) {
                               if (snapshot.data != null) {
+                                var pesos = [
+                                  double.parse(snapshot.data[0].peso),
+                                  double.parse(snapshot.data[1].peso),
+                                  double.parse(snapshot.data[2].peso),
+                                  double.parse(snapshot.data[3].peso)
+                                ];
+                                pesos_ordenados = pesos;                                
+                                pesos_ordenados.sort();                                
+                                min_peso = pesos_ordenados[0];
+                                max_peso = pesos_ordenados[pesos_ordenados.length-1];
                                 lineChartBarDataPeso = LineChartBarData(
                                   spots: [
-                                    FlSpot(
-                                        1, double.parse(snapshot.data[0].peso)),
-                                    FlSpot(
-                                        2, double.parse(snapshot.data[1].peso)),
-                                    FlSpot(
-                                        3, double.parse(snapshot.data[2].peso)),
-                                    FlSpot(
-                                        4, double.parse(snapshot.data[3].peso)),
+                                    FlSpot(1, pesos[0]),
+                                    FlSpot(2, pesos[1]),
+                                    FlSpot(3, pesos[2]),
+                                    FlSpot(4, pesos[3]),
                                   ],
                                   isCurved: false,
                                   colors: [
@@ -378,10 +391,18 @@ class _ProgresoPageState extends State<ProgresoPage>
                                       bottomTitles: SideTitles(
                                         showTitles: true,
                                         margin: 20,
+                                        /*
                                         textStyle: TextStyle(
                                           color: hexToColor("#676767"),
                                           fontSize: 12,
                                         ),
+                                        */
+                                        reservedSize: 30,
+                                        getTextStyles: (value) {
+                                          TextStyle(
+                                              color: hexToColor("#676767"),
+                                              fontSize: 9);
+                                        },
                                         getTitles: (value) {
                                           switch (value.toInt()) {
                                             case 1:
@@ -400,10 +421,17 @@ class _ProgresoPageState extends State<ProgresoPage>
                                       ),
                                       leftTitles: SideTitles(
                                         showTitles: false,
+                                        getTextStyles: (value) {
+                                          TextStyle(
+                                              color: hexToColor("#676767"),
+                                              fontSize: 9);
+                                        },
+                                        /*
                                         textStyle: TextStyle(
                                           color: hexToColor("#676767"),
                                           fontSize: 10,
                                         ),
+                                        */
                                         rotateAngle: 0,
                                         margin: 10,
                                       ),
@@ -427,10 +455,13 @@ class _ProgresoPageState extends State<ProgresoPage>
                                         ),
                                       ),
                                     ),
-                                    minX: 0,
-                                    maxX: 4,
+                                    //minX: 0,
+                                    //maxX: 4,
                                     //maxY: 4,
-                                    minY: 0,
+                                    minY: (min_peso > 0)
+                                        ? min_peso - 1
+                                        : min_peso,
+                                    maxY: max_peso + 1,
                                     lineBarsData: [lineChartBarDataPeso],
                                   ),
                                   swapAnimationDuration:
@@ -677,6 +708,16 @@ class _ProgresoPageState extends State<ProgresoPage>
                               );
                             } else if (snapshot.hasData) {
                               if (snapshot.data != null) {
+                                var grasas = [
+                                  double.parse(snapshot.data[0].grasa),
+                                  double.parse(snapshot.data[1].grasa),
+                                  double.parse(snapshot.data[2].grasa),
+                                  double.parse(snapshot.data[3].grasa)
+                                ];
+                                grasas_ordenadas = grasas;
+                                grasas_ordenadas.sort();
+                                min_grasa = grasas_ordenadas[0];
+                                max_grasa = grasas_ordenadas[grasas_ordenadas.length-1];
                                 lineChartBarDataGrasa = LineChartBarData(
                                   spots: [
                                     FlSpot(1,
@@ -740,10 +781,12 @@ class _ProgresoPageState extends State<ProgresoPage>
                                       bottomTitles: SideTitles(
                                         showTitles: true,
                                         margin: 20,
+                                        /*
                                         textStyle: TextStyle(
                                           color: hexToColor("#676767"),
                                           fontSize: 12,
                                         ),
+                                        */
                                         getTitles: (value) {
                                           switch (value.toInt()) {
                                             case 1:
@@ -759,14 +802,27 @@ class _ProgresoPageState extends State<ProgresoPage>
                                           return '';
                                         },
                                         rotateAngle: 90,
+                                        getTextStyles: (value) {
+                                          TextStyle(
+                                              color: hexToColor("#676767"),
+                                              fontSize: 9);
+                                        },
+                                        reservedSize: 30,
                                       ),
                                       leftTitles: SideTitles(
                                         interval: 10,
                                         showTitles: false,
+                                        getTextStyles: (value) {
+                                          TextStyle(
+                                              color: hexToColor("#676767"),
+                                              fontSize: 9);
+                                        },
+                                        /*
                                         textStyle: TextStyle(
                                           color: hexToColor("#676767"),
                                           fontSize: 10,
                                         ),
+                                        */
                                         rotateAngle: 0,
                                         margin: 10,
                                       ),
@@ -790,10 +846,13 @@ class _ProgresoPageState extends State<ProgresoPage>
                                         ),
                                       ),
                                     ),
-                                    minX: 0,
-                                    maxX: 4,
+                                    //minX: 0,
+                                    //maxX: 4,
                                     //maxY: 4,
-                                    minY: 0,
+                                    minY: (min_grasa > 0)
+                                        ? min_grasa - 1
+                                        : min_grasa,
+                                    maxY: max_grasa + 1,
                                     lineBarsData: [lineChartBarDataGrasa],
                                   ),
                                   swapAnimationDuration:
@@ -1302,45 +1361,43 @@ class _ProgresoPageState extends State<ProgresoPage>
                                       child: SlidableDrawerDismissal(),
                                       closeOnCanceled: true,
                                       dragDismissible: true,
-                                      onWillDismiss: (actionType) {                                        
-                                          return showDialog<bool>(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: Text(
-                                                  'Advertencia',
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                content: Text(
-                                                    '¿Seguro que desea borrar la meta "' +
-                                                        snapshot
-                                                            .data[index].meta +
-                                                        '"?',
-                                                    textAlign:
-                                                        TextAlign.center),
-                                                actions: <Widget>[
-                                                  FlatButton(
-                                                      child: Text('Cancelar'),
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop(false);
-                                                        setState(() {});
-                                                      }),
-                                                  FlatButton(
-                                                      child: Text('Borrar'),
-                                                      onPressed: () {
-                                                        db.DBManager.instance
-                                                            .deleteReto(snapshot
-                                                                .data[index]
-                                                                .id);
-                                                        setState(() {});
-                                                        Navigator.of(context)
-                                                            .pop(true);
-                                                      }),
-                                                ],
-                                              );
-                                            },
-                                          );
+                                      onWillDismiss: (actionType) {
+                                        return showDialog<bool>(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text(
+                                                'Advertencia',
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              content: Text(
+                                                  '¿Seguro que desea borrar la meta "' +
+                                                      snapshot
+                                                          .data[index].meta +
+                                                      '"?',
+                                                  textAlign: TextAlign.center),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                    child: Text('Cancelar'),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop(false);
+                                                      setState(() {});
+                                                    }),
+                                                FlatButton(
+                                                    child: Text('Borrar'),
+                                                    onPressed: () {
+                                                      db.DBManager.instance
+                                                          .deleteReto(snapshot
+                                                              .data[index].id);
+                                                      setState(() {});
+                                                      Navigator.of(context)
+                                                          .pop(true);
+                                                    }),
+                                              ],
+                                            );
+                                          },
+                                        );
                                       },
                                     )
                                   : null,
@@ -1496,7 +1553,10 @@ class _ProgresoPageState extends State<ProgresoPage>
   @override
   void initState() {
     super.initState();
-
+    min_peso = 0;
+    max_peso = 0;
+    min_grasa = 0;
+    max_grasa = 0;
     pendientes_selected = false;
     completos_selected = false;
 
