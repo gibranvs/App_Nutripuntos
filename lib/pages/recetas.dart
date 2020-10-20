@@ -36,19 +36,19 @@ class _RecetasPageState extends State<RecetasPage> {
       height: 50,
       margin: EdgeInsets.only(top: 0),
       child: Container(
-        height: 35,
+        height: 43,
         width: MediaQuery.of(context).size.width * 0.9,
         alignment: Alignment.topLeft,
         child: Stack(
           children: <Widget>[
             Container(
               width: MediaQuery.of(context).size.width,
-              height: 50,
+              //height: 30,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
                 color: Colors.white,
               ),
-              padding: EdgeInsets.only(bottom: 3),
+              padding: EdgeInsets.only(bottom: 2),
               child: TextField(
                 controller: global.text_busqueda_receta,
                 onChanged: (value) async {

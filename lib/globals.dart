@@ -22,6 +22,7 @@ String server = "http://c1370875.ferozo.com";
 bool user_exist;
 Usuario usuario;
 String num_citas = "0";
+bool validada = true;
 
 String dispositivo_utilizado = "";
 

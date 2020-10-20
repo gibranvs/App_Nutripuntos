@@ -24,7 +24,6 @@ import '../src/DBManager.dart' as db;
 
 File croppedFile;
 String recomendaciones = "";
-bool validada = false;
 
 class HomePage extends StatefulWidget {
   String prueba;
@@ -130,7 +129,7 @@ class _HomePageState extends State<HomePage> {
       padding: EdgeInsets.only(top: 0),
       margin: EdgeInsets.only(left: 0, top: 150),
       child: Text(
-        validada ? "Activo" : "Inactivo",
+        global.validada ? "Activo" : "Inactivo",
         style: TextStyle(fontSize: 14, color: Colors.white),
       ),
     );
@@ -272,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                       mensaje: recomendaciones);
                 },
                 child: Container(
-                  width: MediaQuery.of(context).size.width / 2.25,//150,
+                  width: MediaQuery.of(context).size.width / 2.25, //150,
                   height: 150,
                   color: Colors.transparent,
                   child: Column(
@@ -280,7 +279,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Image.asset(
-                        "assets/icons/recomendaciones.png",                        
+                        "assets/icons/recomendaciones.png",
                         height: 80,
                       ),
                       Container(
@@ -313,7 +312,7 @@ class _HomePageState extends State<HomePage> {
                           builder: (context) => new ProgresoPage(2)));
                 },
                 child: Container(
-                  width: MediaQuery.of(context).size.width / 2.25,//150,
+                  width: MediaQuery.of(context).size.width / 2.25, //150,
                   height: 150,
                   color: Colors.transparent,
                   child: Column(
@@ -321,12 +320,29 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Image.asset(
-                        "assets/icons/recurso_6.png",                        
+                        "assets/icons/recurso_6.png",
                         height: 80,
                       ),
+                      Container(
+                        alignment: Alignment.center,
+                        child: Container(
+                          alignment: Alignment.topCenter,
+                          margin: EdgeInsets.only(top: 0),
+                          constraints:
+                              BoxConstraints(minWidth: 100, maxWidth: 100),
+                          child: AutoSizeText(
+                            "Metas",
+                            textAlign: TextAlign.center,
+                            maxFontSize: 16,
+                            maxLines: 2,
+                            style: TextStyle(
+                                fontWeight: FontWeight.normal, fontSize: 16),
+                          ),
+                        ),
+                      ),
+/*
                       FutureBuilder<Meta>(
-                          future:
-                              db.DBManager.instance.getReto(global.usuario.id),
+                          future:db.DBManager.instance.getReto(global.usuario.id),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
@@ -396,6 +412,7 @@ class _HomePageState extends State<HomePage> {
                                           color: hexToColor("#606060"))));
                             }
                           }),
+                          */
                     ],
                   ),
                 ),
@@ -420,7 +437,7 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
                 child: Container(
-                  width: MediaQuery.of(context).size.width / 2.25,//150,
+                  width: MediaQuery.of(context).size.width / 2.25, //150,
                   height: 150,
                   margin: EdgeInsets.only(left: 0),
                   child: Column(
@@ -428,7 +445,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Image.asset(
-                        "assets/icons/recurso_7.png",                        
+                        "assets/icons/recurso_7.png",
                         height: 80,
                       ),
                       Container(
@@ -461,7 +478,7 @@ class _HomePageState extends State<HomePage> {
                           builder: (context) => new RestaurantesPage()));
                 },
                 child: Container(
-                  width: MediaQuery.of(context).size.width / 2.25,//150,
+                  width: MediaQuery.of(context).size.width / 2.25, //150,
                   height: 150,
                   margin: EdgeInsets.only(left: 0),
                   child: Column(
@@ -469,7 +486,7 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       Image.asset(
-                        "assets/icons/recurso_8.png",                        
+                        "assets/icons/recurso_8.png",
                         height: 80,
                       ),
                       Container(
@@ -745,12 +762,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    super.initState();    
+    super.initState();
+    global.validada = true;
     validaCuenta(global.usuario.token).then((_validada) {
       setState(() {
-        validada = _validada;
+        global.validada = _validada;
       });
-      if (validada == false)
+      if (global.validada == false)
         show_Dialog(
             context: context,
             titulo: "¡Lo sentimos! :(",
@@ -762,7 +780,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         recomendaciones = _recomendaciones;
       });
-    });    
+    });
   }
 
   @override
@@ -771,7 +789,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     return new WillPopScope(
       onWillPop: () {
         exit(0);
@@ -823,27 +841,28 @@ class _HomePageState extends State<HomePage> {
                     foto(),
                     nombre(),
                     estatus(),
+
+                    (global.validada == false)
+                        ? GestureDetector(
+                            onTap: () {
+                              show_Dialog(
+                                  context: context,
+                                  titulo: "¡Lo sentimos! :(",
+                                  mensaje:
+                                      "Tu plan de alimentación ya no está disponible, ponte en contacto con tu especialista para obtener uno nuevo.");
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height,
+                              color: Colors.transparent,
+                            ),
+                          )
+                        : Offstage(),
                   ],
                 ),
               ],
             ),
           ),
-          (validada == false)
-              ? GestureDetector(
-                  onTap: () {
-                    show_Dialog(
-                        context: context,
-                        titulo: "¡Lo sentimos! :(",
-                        mensaje:
-                            "Tu plan de alimentación ya no está disponible, ponte en contacto con tu especialista para obtener uno nuevo.");
-                  },
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    color: Colors.transparent,
-                  ),
-                )
-              : Offstage(),
         ],
       ),
     );

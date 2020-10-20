@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:nutripuntos_app/pages/progreso.dart';
 import 'package:nutripuntos_app/src/mensaje.dart';
 import 'package:nutripuntos_app/src/meta.dart';
 import 'package:nutripuntos_app/src/usuario.dart';
@@ -64,7 +65,7 @@ class DBManager {
 
   // open the database
   _initDatabase() async {
-    // The path_provider plugin gets the right directory for Android or iOS. 
+    // The path_provider plugin gets the right directory for Android or iOS.
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
 
     String path = join(documentsDirectory.path, _databaseName);
@@ -257,7 +258,7 @@ class DBManager {
     Database db = await database;
     var result = await db.rawInsert(
         'INSERT Into $tableRetos($columnIDUsuarioReto, $columnReto, $columnFecha, $columnStatus) VALUES(?,?,?,?)',
-        [_idUsuario, _reto, DateTime.now().toString(), "Ok"]);
+        [_idUsuario, _reto, DateTime.now().toString(), "Incompleta"]);
     return result;
   }
 
@@ -280,17 +281,41 @@ class DBManager {
     List<Meta> list = new List<Meta>();
     Database db = await database;
     var res = await db.rawQuery(
-        'SELECT * FROM $tableRetos WHERE $columnIDUsuarioReto = ?',
+        'SELECT * FROM $tableRetos WHERE $columnIDUsuarioReto = ? ORDER BY $columnFecha DESC',
         [_idUsuario]);
 
-    for (int i = 0; i < res.length - 1; i++) {
-      list.add(Meta(
-        id: res[i]["ID"],
-          meta: res[i]["RETO"],
-          status: res[i]["ESTATUS"],
-          fecha: new DateFormat("dd-MM-yyyy")
-              .format(DateTime.parse(res[i]["FECHA"]))
-              .toString()));
+    for (int i = 0; i < res.length; i++) {
+      if (completos_selected == false && pendientes_selected == false) {
+        list.add(Meta(
+            id: res[i]["ID"],
+            meta: res[i]["RETO"],
+            status: res[i]["ESTATUS"],
+            fecha: new DateFormat("dd-MM-yyyy")
+                .format(DateTime.parse(res[i]["FECHA"]))
+                .toString()));
+      }
+      if (completos_selected == true) {
+        if (res[i]["ESTATUS"] == "Ok") {
+          list.add(Meta(
+              id: res[i]["ID"],
+              meta: res[i]["RETO"],
+              status: res[i]["ESTATUS"],
+              fecha: new DateFormat("dd-MM-yyyy")
+                  .format(DateTime.parse(res[i]["FECHA"]))
+                  .toString()));
+        }
+      }
+      if (pendientes_selected == true) {
+        if (res[i]["ESTATUS"] != "Ok") {
+          list.add(Meta(
+              id: res[i]["ID"],
+              meta: res[i]["RETO"],
+              status: res[i]["ESTATUS"],
+              fecha: new DateFormat("dd-MM-yyyy")
+                  .format(DateTime.parse(res[i]["FECHA"]))
+                  .toString()));
+        }
+      }
     }
     return list;
   }
@@ -307,6 +332,14 @@ class DBManager {
     var result = await db.rawQuery(
         "UPDATE $tableRetos SET $columnReto = ? WHERE $columnIDReto = ?",
         [_newReto, _idReto]);
+    return true;
+  }
+
+  Future<bool> setEstatusRetoOk(_idReto) async {
+    Database db = await database;
+    var result = await db.rawQuery(
+        "UPDATE $tableRetos SET $columnStatus = ? WHERE $columnIDReto = ?",
+        ["Ok", _idReto]);
     return true;
   }
 

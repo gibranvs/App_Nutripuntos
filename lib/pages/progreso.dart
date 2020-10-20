@@ -25,6 +25,14 @@ Future<List<Progreso>> progreso;
 LineChartBarData lineChartBarDataPeso;
 LineChartBarData lineChartBarDataGrasa;
 
+bool pendientes_selected = false;
+bool completos_selected = false;
+
+double min_peso = 0;
+double max_peso = 0;
+double min_grasa = 0;
+double max_grasa = 0;
+
 class ProgresoPage extends StatefulWidget {
   final int index_tab;
   ProgresoPage(this.index_tab);
@@ -47,23 +55,6 @@ class _ProgresoPageState extends State<ProgresoPage>
       margin: EdgeInsets.only(top: 20),
       child: Text(
         _titulo,
-        style: TextStyle(
-            color: hexToColor("#059696"),
-            fontWeight: FontWeight.bold,
-            fontSize: 16),
-      ),
-    );
-  }
-
-  ///
-  /// Label Subtítulo
-  ///
-  Container subtitulo(_subtitulo) {
-    return Container(
-      alignment: Alignment.topLeft,
-      margin: EdgeInsets.only(top: 200, left: 20),
-      child: Text(
-        _subtitulo,
         style: TextStyle(
             color: hexToColor("#059696"),
             fontWeight: FontWeight.bold,
@@ -310,7 +301,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                     /// CHART
                     Container(
                       padding: EdgeInsets.only(
-                        left: 30,
+                        left: 50,
                         right: 30,
                         top: 30,
                         bottom: 70,
@@ -329,16 +320,27 @@ class _ProgresoPageState extends State<ProgresoPage>
                               );
                             } else if (snapshot.hasData) {
                               if (snapshot.data != null) {
+                                var pesos = [
+                                  double.parse(snapshot.data[0].peso),
+                                  double.parse(snapshot.data[1].peso),
+                                  double.parse(snapshot.data[2].peso),
+                                  double.parse(snapshot.data[3].peso)
+                                ];                                                                                            
+                                min_peso = pesos[0];
+                                max_peso = pesos[0];
+                                pesos.forEach((element) {
+                                  if(element > max_peso) max_peso = element;
+                                  if(element < min_peso) min_peso = element;
+                                });            
+                                print(pesos);
+                                print("min peso: " + min_peso.toString());
+                                print("max peso: " + max_peso.toString());          
                                 lineChartBarDataPeso = LineChartBarData(
                                   spots: [
-                                    FlSpot(
-                                        1, double.parse(snapshot.data[0].peso)),
-                                    FlSpot(
-                                        2, double.parse(snapshot.data[1].peso)),
-                                    FlSpot(
-                                        3, double.parse(snapshot.data[2].peso)),
-                                    FlSpot(
-                                        4, double.parse(snapshot.data[3].peso)),
+                                    FlSpot(1, pesos[0]),
+                                    FlSpot(2, pesos[1]),
+                                    FlSpot(3, pesos[2]),
+                                    FlSpot(4, pesos[3]),
                                   ],
                                   isCurved: false,
                                   colors: [
@@ -350,7 +352,28 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     show: true,
                                   ),
                                   belowBarData: BarAreaData(
-                                    show: false,
+                                    show: true,
+                                    applyCutOffY: true,
+                                    cutOffY: 10,
+                                    colors: [
+                                      Colors.transparent,
+                                    ],
+                                    gradientColorStops: [0.5, 1.0],
+                                    gradientFrom: const Offset(0, 0),
+                                    gradientTo: const Offset(0, 1),
+                                    spotsLine: BarAreaSpotsLine(
+                                      show: true,
+                                      flLineStyle: FlLine(
+                                        color: Colors.blue,
+                                        strokeWidth: 0.5,
+                                      ),
+                                      checkToShowSpotLine: (spot) {
+                                        if (spot.x == 0 || spot.x == 6) {
+                                          return false;
+                                        }
+                                        return true;
+                                      },
+                                    ),
                                   ),
                                 );
 
@@ -371,10 +394,18 @@ class _ProgresoPageState extends State<ProgresoPage>
                                       bottomTitles: SideTitles(
                                         showTitles: true,
                                         margin: 20,
+                                        /*
                                         textStyle: TextStyle(
                                           color: hexToColor("#676767"),
                                           fontSize: 12,
                                         ),
+                                        */
+                                        reservedSize: 30,
+                                        getTextStyles: (value) {
+                                          TextStyle(
+                                              color: hexToColor("#676767"),
+                                              fontSize: 9);
+                                        },
                                         getTitles: (value) {
                                           switch (value.toInt()) {
                                             case 1:
@@ -392,11 +423,18 @@ class _ProgresoPageState extends State<ProgresoPage>
                                         rotateAngle: 90,
                                       ),
                                       leftTitles: SideTitles(
-                                        showTitles: true,
+                                        showTitles: false,
+                                        getTextStyles: (value) {
+                                          TextStyle(
+                                              color: hexToColor("#676767"),
+                                              fontSize: 9);
+                                        },
+                                        /*
                                         textStyle: TextStyle(
                                           color: hexToColor("#676767"),
                                           fontSize: 10,
                                         ),
+                                        */
                                         rotateAngle: 0,
                                         margin: 10,
                                       ),
@@ -420,10 +458,13 @@ class _ProgresoPageState extends State<ProgresoPage>
                                         ),
                                       ),
                                     ),
-                                    minX: 0,
-                                    maxX: 4,
+                                    //minX: 0,
+                                    //maxX: 4,
                                     //maxY: 4,
-                                    minY: 0,
+                                    minY: (min_peso > 0)
+                                        ? min_peso - 1
+                                        : min_peso,
+                                    maxY: max_peso + 1,
                                     lineBarsData: [lineChartBarDataPeso],
                                   ),
                                   swapAnimationDuration:
@@ -651,7 +692,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                     /// CHART
                     Container(
                       padding: EdgeInsets.only(
-                        left: 30,
+                        left: 50,
                         right: 30,
                         top: 30,
                         bottom: 70,
@@ -670,6 +711,21 @@ class _ProgresoPageState extends State<ProgresoPage>
                               );
                             } else if (snapshot.hasData) {
                               if (snapshot.data != null) {
+                                var grasas = [
+                                  double.parse(snapshot.data[0].grasa),
+                                  double.parse(snapshot.data[1].grasa),
+                                  double.parse(snapshot.data[2].grasa),
+                                  double.parse(snapshot.data[3].grasa)
+                                ];
+                                min_grasa = grasas[0];
+                                max_grasa = grasas[0];
+                                grasas.forEach((element) {
+                                  if(element > max_grasa) max_grasa = element;
+                                  if(element < min_grasa) min_grasa = element;
+                                });            
+                                print(grasas);
+                                print("min grasa: " + min_grasa.toString());
+                                print("max grasa: " + max_grasa.toString());
                                 lineChartBarDataGrasa = LineChartBarData(
                                   spots: [
                                     FlSpot(1,
@@ -691,7 +747,28 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     show: true,
                                   ),
                                   belowBarData: BarAreaData(
-                                    show: false,
+                                    show: true,
+                                    applyCutOffY: true,
+                                    cutOffY: 10,
+                                    colors: [
+                                      Colors.transparent,
+                                    ],
+                                    gradientColorStops: [0.5, 1.0],
+                                    gradientFrom: const Offset(0, 0),
+                                    gradientTo: const Offset(0, 1),
+                                    spotsLine: BarAreaSpotsLine(
+                                      show: true,
+                                      flLineStyle: FlLine(
+                                        color: Colors.blue,
+                                        strokeWidth: 0.5,
+                                      ),
+                                      checkToShowSpotLine: (spot) {
+                                        if (spot.x == 0 || spot.x == 6) {
+                                          return false;
+                                        }
+                                        return true;
+                                      },
+                                    ),
                                   ),
                                 );
 
@@ -712,10 +789,12 @@ class _ProgresoPageState extends State<ProgresoPage>
                                       bottomTitles: SideTitles(
                                         showTitles: true,
                                         margin: 20,
+                                        /*
                                         textStyle: TextStyle(
                                           color: hexToColor("#676767"),
                                           fontSize: 12,
                                         ),
+                                        */
                                         getTitles: (value) {
                                           switch (value.toInt()) {
                                             case 1:
@@ -731,13 +810,27 @@ class _ProgresoPageState extends State<ProgresoPage>
                                           return '';
                                         },
                                         rotateAngle: 90,
+                                        getTextStyles: (value) {
+                                          TextStyle(
+                                              color: hexToColor("#676767"),
+                                              fontSize: 9);
+                                        },
+                                        reservedSize: 30,
                                       ),
                                       leftTitles: SideTitles(
-                                        showTitles: true,
+                                        interval: 10,
+                                        showTitles: false,
+                                        getTextStyles: (value) {
+                                          TextStyle(
+                                              color: hexToColor("#676767"),
+                                              fontSize: 9);
+                                        },
+                                        /*
                                         textStyle: TextStyle(
                                           color: hexToColor("#676767"),
                                           fontSize: 10,
                                         ),
+                                        */
                                         rotateAngle: 0,
                                         margin: 10,
                                       ),
@@ -761,10 +854,13 @@ class _ProgresoPageState extends State<ProgresoPage>
                                         ),
                                       ),
                                     ),
-                                    minX: 0,
-                                    maxX: 4,
+                                    //minX: 0,
+                                    //maxX: 4,
                                     //maxY: 4,
-                                    minY: 0,
+                                    minY: (min_grasa > 0)
+                                        ? min_grasa - 1
+                                        : min_grasa,
+                                    maxY: max_grasa + 1,
                                     lineBarsData: [lineChartBarDataGrasa],
                                   ),
                                   swapAnimationDuration:
@@ -918,6 +1014,26 @@ class _ProgresoPageState extends State<ProgresoPage>
                 image: DecorationImage(
                     image: Image.asset("assets/icons/Recurso_27.png").image)),
             child: //new Image.asset("assets/icons/Recurso_27.png"),
+
+                Container(
+              alignment: Alignment.center,
+              child: Container(
+                alignment: Alignment.center,
+                margin: EdgeInsets.only(top: 0),
+                constraints: BoxConstraints(minWidth: 80, maxWidth: 80),
+                child: AutoSizeText(
+                  "Presiona para agregar meta",
+                  textAlign: TextAlign.center,
+                  maxFontSize: 25,
+                  maxLines: 3,
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25),
+                ),
+              ),
+            ),
+            /*
                 FutureBuilder<Meta>(
                     future: db.DBManager.instance.getReto(global.usuario.id),
                     builder: (context, snapshot) {
@@ -988,6 +1104,132 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     TextStyle(color: hexToColor("#606060"))));
                       }
                     }),
+                    */
+          ),
+        ],
+      ),
+    );
+  }
+
+  ///
+  /// Label Subtítulo
+  ///
+  Container subtitulo(_subtitulo) {
+    return Container(
+      alignment: Alignment.topLeft,
+      margin: EdgeInsets.only(top: 20, left: 20),
+      child: Text(
+        _subtitulo,
+        style: TextStyle(
+            color: hexToColor("#898989"),
+            fontWeight: FontWeight.bold,
+            fontSize: 16),
+      ),
+    );
+  }
+
+  ///
+  /// Row botones
+  ///
+  Widget row_botones() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: EdgeInsets.only(top: 50),
+      padding: EdgeInsets.only(left: 20),
+      alignment: Alignment.topLeft,
+      //height: 80,
+      child: Row(
+        children: <Widget>[
+          GestureDetector(
+            onTap: () {
+              _showDialog();
+            },
+            child: Container(
+              width: 60,
+              height: 60,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: hexToColor("#439495"),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                Icons.add_circle,
+                color: Colors.white,
+                size: 30,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                completos_selected = false;
+                (pendientes_selected == false)
+                    ? pendientes_selected = true
+                    : pendientes_selected = false;
+              });
+            },
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: hexToColor("#F9FAFA"),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: (pendientes_selected == true)
+                    ? [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 8,
+                          offset: Offset(0, 0), // changes position of shadow
+                        ),
+                      ]
+                    : null,
+              ),
+              child: Icon(
+                Icons.access_time,
+                color: hexToColor("#888888"),
+                size: 30,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                pendientes_selected = false;
+                (completos_selected == false)
+                    ? completos_selected = true
+                    : completos_selected = false;
+              });
+            },
+            child: Container(
+              width: 60,
+              height: 60,
+              decoration: BoxDecoration(
+                color: hexToColor("#67AD5C"),
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: (completos_selected == true)
+                    ? [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 8,
+                          offset: Offset(0, 0), // changes position of shadow
+                        ),
+                      ]
+                    : null,
+              ),
+              child: Icon(
+                Icons.star,
+                color: Colors.yellow,
+                size: 30,
+              ),
+            ),
           ),
         ],
       ),
@@ -1001,7 +1243,7 @@ class _ProgresoPageState extends State<ProgresoPage>
     return Container(
       width: MediaQuery.of(context).size.width,
       //height: MediaQuery.of(context).size.height,
-      margin: EdgeInsets.only(top: 230),
+      margin: EdgeInsets.only(top: 140),
       child: SingleChildScrollView(
         child: Align(
           alignment: Alignment.center,
@@ -1026,214 +1268,269 @@ class _ProgresoPageState extends State<ProgresoPage>
                           shrinkWrap: true,
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
-                            final item = snapshot.data[index];
-                            return GestureDetector(
-                              onTap: () {
-                                myTextUpdate.text = snapshot.data[index].meta;
-                                _showUpdateDialog(snapshot.data[index].id,
-                                    snapshot.data[index].meta);
-                              },
-                              child: Slidable(
-                                key: Key('s'),
-                                actionExtentRatio: 0.25,
-                                actionPane: Card(
-                                  margin: EdgeInsets.only(bottom: 15),
-                                  elevation: 0,
-                                  color: hexToColor("#f2f2f2"),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 0, left: 20),
-                                            child: Container(
-                                              width: 180,
-                                              margin: EdgeInsets.only(top: 15),
-                                              child: Text(
-                                                snapshot.data[index].meta
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color:
-                                                        hexToColor("#505050"),
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 0, left: 20),
-                                            child: Container(
-                                              width: 200,
-                                              margin: EdgeInsets.all(10),
-                                              child: Text(
-                                                snapshot.data[index].fecha
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color:
-                                                        hexToColor("#ababab"),
-                                                    fontWeight:
-                                                        FontWeight.normal),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                            alignment: Alignment.centerRight,
-                                            margin: EdgeInsets.only(right: 0),
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.18,
-                                            height: 20,
-                                            child: Icon(
-                                              Icons.edit,
-                                              color: hexToColor("#888888"),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                secondaryActions: <Widget>[
-                                  Card(
-                                    margin: EdgeInsets.only(bottom: 15),
-                                    elevation: 0,
-                                    color: Colors.red,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                            //final item = snapshot.data[index];
+                            return Slidable(
+                              key: Key('s'),
+                              actionExtentRatio: 0.25,
+                              actionPane: Card(
+                                margin: EdgeInsets.only(bottom: 15),
+                                elevation: 0,
+                                color: hexToColor("#f2f2f2"),
+                                child: Row(
+                                  children: <Widget>[
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: <Widget>[
-                                        Icon(
-                                          Icons.delete,
-                                          color: Colors.white,
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 0, left: 20),
+                                          child: Container(
+                                            width: 180,
+                                            margin: EdgeInsets.only(top: 15),
+                                            child: Text(
+                                              snapshot.data[index].meta
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: hexToColor("#505050"),
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
                                         ),
-                                        Text(
-                                          'Borrar',
-                                          style: TextStyle(color: Colors.white),
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 0, left: 20),
+                                          child: Container(
+                                            width: 200,
+                                            margin: EdgeInsets.all(10),
+                                            child: Text(
+                                              snapshot.data[index].fecha
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: hexToColor("#ababab"),
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                            ),
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
-                                dismissal: SlidableDismissal(
-                                  child: SlidableDrawerDismissal(),
-                                  onWillDismiss: (actionType) {
-                                    return showDialog<bool>(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: Text(
-                                            'Advertencia',
-                                            textAlign: TextAlign.center,
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Container(
+                                          alignment: Alignment.centerRight,
+                                          margin: EdgeInsets.only(right: 0),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.18,
+                                          height: 20,
+                                          child: Icon(
+                                            Icons.edit,
+                                            color: hexToColor("#888888"),
                                           ),
-                                          content: Text(
-                                              '¿Seguro que desea borrar la meta "' +
-                                                  snapshot.data[index].meta +
-                                                  '"?',
-                                              textAlign: TextAlign.center),
-                                          actions: <Widget>[
-                                            FlatButton(
-                                                child: Text('Cancelar'),
-                                                onPressed: () => {
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              secondaryActions:
+                                  (snapshot.data[index].status != "Ok")
+                                      ? <Widget>[
+                                          Card(
+                                            margin: EdgeInsets.only(bottom: 15),
+                                            elevation: 0,
+                                            color: Colors.red,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(
+                                                  Icons.delete,
+                                                  color: Colors.white,
+                                                ),
+                                                Text(
+                                                  'Borrar',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ]
+                                      : null,
+                              dismissal: (snapshot.data[index].status != "Ok")
+                                  ? SlidableDismissal(
+                                      child: SlidableDrawerDismissal(),
+                                      closeOnCanceled: true,
+                                      dragDismissible: true,
+                                      onWillDismiss: (actionType) {
+                                        return showDialog<bool>(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text(
+                                                'Advertencia',
+                                                textAlign: TextAlign.center,
+                                              ),
+                                              content: Text(
+                                                  '¿Seguro que desea borrar la meta "' +
+                                                      snapshot
+                                                          .data[index].meta +
+                                                      '"?',
+                                                  textAlign: TextAlign.center),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                    child: Text('Cancelar'),
+                                                    onPressed: () {
                                                       Navigator.of(context)
-                                                          .pop(false),
+                                                          .pop(false);
+                                                      setState(() {});
                                                     }),
-                                            FlatButton(
-                                                child: Text('Borrar'),
-                                                onPressed: () {
-                                                  db.DBManager.instance
-                                                      .deleteReto(snapshot
-                                                          .data[index].id);
-                                                  setState(() {});
-                                                  Navigator.of(context)
-                                                      .pop(true);
-                                                }),
-                                          ],
+                                                FlatButton(
+                                                    child: Text('Borrar'),
+                                                    onPressed: () {
+                                                      db.DBManager.instance
+                                                          .deleteReto(snapshot
+                                                              .data[index].id);
+                                                      setState(() {});
+                                                      Navigator.of(context)
+                                                          .pop(true);
+                                                    }),
+                                              ],
+                                            );
+                                          },
                                         );
                                       },
-                                    );
-                                  },
-                                ),
-                                child: Card(
-                                  margin: EdgeInsets.only(bottom: 15),
-                                  elevation: 0,
-                                  color: hexToColor("#f2f2f2"),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 0, left: 20),
-                                            child: Container(
-                                              width: 180,
-                                              margin: EdgeInsets.only(top: 15),
-                                              child: Text(
-                                                snapshot.data[index].meta
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color:
-                                                        hexToColor("#505050"),
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
+                                    )
+                                  : null,
+                              child: Card(
+                                margin: EdgeInsets.only(bottom: 15),
+                                elevation: 0,
+                                color: (snapshot.data[index].status == "Ok")
+                                    ? hexToColor("#67AD5C")
+                                    : hexToColor("#f2f2f2"),
+                                child: Stack(
+                                  alignment: Alignment.centerLeft,
+                                  children: <Widget>[
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Container(
+                                          //width: 180,
+                                          margin: EdgeInsets.only(
+                                            top: 10,
+                                            left: 20,
                                           ),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 0, left: 20),
-                                            child: Container(
-                                              width: 200,
-                                              margin: EdgeInsets.all(10),
-                                              child: Text(
-                                                snapshot.data[index].fecha
-                                                    .toString(),
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    color:
-                                                        hexToColor("#ababab"),
-                                                    fontWeight:
-                                                        FontWeight.normal),
-                                              ),
-                                            ),
+                                          child: Text(
+                                            snapshot.data[index].meta
+                                                .toString(),
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: (snapshot.data[index]
+                                                            .status ==
+                                                        "Ok")
+                                                    ? hexToColor("#ffffff")
+                                                    : hexToColor("#505050"),
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                        ],
+                                        ),
+                                        Container(
+                                          //width: 200,
+                                          margin: EdgeInsets.only(
+                                            top: 10,
+                                            bottom: 10,
+                                            left: 20,
+                                          ),
+                                          child: Text(
+                                            snapshot.data[index].fecha
+                                                .toString(),
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: (snapshot.data[index]
+                                                            .status ==
+                                                        "Ok")
+                                                    ? hexToColor("#ffffff")
+                                                    : hexToColor("#ababab"),
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                        right: 20,
                                       ),
-                                      Column(
+                                      child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                            MainAxisAlignment.end,
                                         children: <Widget>[
-                                          Container(
-                                            alignment: Alignment.centerRight,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.18,
-                                            height: 20,
-                                            child: Icon(
-                                              Icons.edit,
-                                              color: hexToColor("#888888"),
+                                          (snapshot.data[index].status != "Ok")
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    myTextUpdate.text = snapshot
+                                                        .data[index].meta;
+                                                    _showUpdateDialog(
+                                                        snapshot.data[index].id,
+                                                        snapshot
+                                                            .data[index].meta);
+                                                  },
+                                                  child: Container(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    //width: MediaQuery.of(context).size.width * 0,
+                                                    height: 20,
+                                                    child: Icon(
+                                                      Icons.edit,
+                                                      color:
+                                                          hexToColor("#888888"),
+                                                    ),
+                                                  ),
+                                                )
+                                              : Offstage(),
+                                          GestureDetector(
+                                            onTap: () {
+                                              if (snapshot.data[index].status ==
+                                                  "Incompleta") {
+                                                db.DBManager.instance
+                                                    .setEstatusRetoOk(
+                                                        snapshot.data[index].id)
+                                                    .then((value) {
+                                                  setState(() {});
+                                                });
+                                              }
+                                            },
+                                            child: Container(
+                                              alignment: Alignment.centerRight,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.1,
+                                              height: 20,
+                                              child: (snapshot
+                                                          .data[index].status ==
+                                                      "Incompleta")
+                                                  ? Icon(
+                                                      Icons.thumb_up,
+                                                      color:
+                                                          hexToColor("#888888"),
+                                                    )
+                                                  : Icon(
+                                                      Icons.star,
+                                                      color: Colors.yellow,
+                                                    ),
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             );
@@ -1248,7 +1545,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                     }
                   } else if (snapshot.hasError) {
                     return new Text(
-                      "Error al obtener metas anteriores.",
+                      "Error al obtener metas.",
                       style: TextStyle(
                         color: hexToColor("#606060"),
                       ),
@@ -1264,6 +1561,12 @@ class _ProgresoPageState extends State<ProgresoPage>
   @override
   void initState() {
     super.initState();
+    min_peso = 0;
+    max_peso = 0;
+    min_grasa = 0;
+    max_grasa = 0;
+    pendientes_selected = false;
+    completos_selected = false;
 
     lastGrasa = getLastGrasa();
     lastPeso = getLastPeso();
@@ -1417,9 +1720,10 @@ class _ProgresoPageState extends State<ProgresoPage>
                         ),
                       ),
                     ),
-                    titulo("Próxima meta"),
-                    retoActual(),
-                    subtitulo("Metas anteriores"),
+                    //titulo("Próxima meta"),
+                    //retoActual(),
+                    subtitulo("Metas"),
+                    row_botones(),
                     metas(),
                   ],
                 ),

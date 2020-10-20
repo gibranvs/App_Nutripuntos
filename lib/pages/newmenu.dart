@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nutripuntos_app/pages/pdf_material.dart';
@@ -168,6 +169,112 @@ class ItemMenu extends StatelessWidget {
       color_font = hexToColor("#888888");
     }
 
+    Future<T> show_Dialog<T>({
+      @required BuildContext context,
+      @required String titulo,
+      @required String mensaje,
+    }) {
+      return showGeneralDialog(
+        context: context,
+        pageBuilder: (BuildContext buildContext, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          return Builder(builder: (BuildContext context) {
+            return Container(
+              width: 400,
+              height: 600,
+              alignment: Alignment.center,
+              margin: EdgeInsets.only(
+                left: 30,
+                right: 30,
+                top: MediaQuery.of(context).size.height * 0.3,
+                bottom: MediaQuery.of(context).size.height * 0.3,
+              ),
+              decoration: new BoxDecoration(
+                color: hexToColor("#505050"),
+                borderRadius: new BorderRadius.all(
+                  const Radius.circular(20.0),
+                ),
+              ),
+              child: Column(
+                children: <Widget>[
+                  /// BOTÓN CERRAR
+                  Container(
+                    width: double.infinity,
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(
+                          top: 20,
+                          right: 20,
+                        ),
+                        child: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        /// TEXT TÍTULO GRUPO
+                        Container(
+                          alignment: Alignment.topCenter,
+                          child: Text(
+                            titulo,
+                            style: TextStyle(
+                              decoration: TextDecoration.none,
+                              fontFamily: "Arial",
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        /// TEXT INTRUCCIÓN
+                        Container(
+                          alignment: Alignment.topCenter,
+                          margin: EdgeInsets.only(top: 30),
+                          child: SizedBox(
+                            width: 270,
+                            child: AutoSizeText(
+                              mensaje,
+                              //maxLines: 3,
+                              textAlign: TextAlign.center,
+                              wrapWords: false,
+                              style: TextStyle(
+                                decoration: TextDecoration.none,
+                                fontFamily: "Arial",
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          });
+        },
+        barrierDismissible: true,
+        barrierLabel: "",
+        barrierColor: null,
+        transitionDuration: const Duration(milliseconds: 150),
+      );
+    }
+
     return Container(
       decoration: decoration,
       child: ListTile(
@@ -187,63 +294,126 @@ class ItemMenu extends StatelessWidget {
           global.selected_index = index_item;
           switch (index_item) {
             case 1:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PlanPage(0),
-                ),
-              );
+              if (global.validada == true) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PlanPage(0),
+                  ),
+                );
+              } else {
+                Scaffold.of(context).openEndDrawer();
+                show_Dialog(
+                    context: context,
+                    titulo: "¡Lo sentimos! :(",
+                    mensaje:
+                        "Tu plan de alimentación ya no está disponible, ponte en contacto con tu especialista para obtener uno nuevo.");
+              }
               break;
             case 2:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProgresoPage(0),
-                ),
-              );
+              if (global.validada == true) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProgresoPage(0),
+                  ),
+                );
+              } else {
+                Scaffold.of(context).openEndDrawer();
+                show_Dialog(
+                    context: context,
+                    titulo: "¡Lo sentimos! :(",
+                    mensaje:
+                        "Tu plan de alimentación ya no está disponible, ponte en contacto con tu especialista para obtener uno nuevo.");
+              }
               break;
             case 3:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AgendaPage(),
-                ),
-              );
+              if (global.validada == true) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AgendaPage(),
+                  ),
+                );
+              } else {
+                Scaffold.of(context).openEndDrawer();
+                show_Dialog(
+                    context: context,
+                    titulo: "¡Lo sentimos! :(",
+                    mensaje:
+                        "Tu plan de alimentación ya no está disponible, ponte en contacto con tu especialista para obtener uno nuevo.");
+              }
               break;
             case 4:
-              global.text_busqueda_receta.text = "";
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RecetasPage(),
-                ),
-              );
+              if (global.validada == true) {
+                global.text_busqueda_receta.text = "";
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RecetasPage(),
+                  ),
+                );
+              } else {
+                Scaffold.of(context).openEndDrawer();
+                show_Dialog(
+                    context: context,
+                    titulo: "¡Lo sentimos! :(",
+                    mensaje:
+                        "Tu plan de alimentación ya no está disponible, ponte en contacto con tu especialista para obtener uno nuevo.");
+              }
               break;
             case 5:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RestaurantesPage(),
-                ),
-              );
+              if (global.validada == true) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RestaurantesPage(),
+                  ),
+                );
+              } else {
+                Scaffold.of(context).openEndDrawer();
+                show_Dialog(
+                    context: context,
+                    titulo: "¡Lo sentimos! :(",
+                    mensaje:
+                        "Tu plan de alimentación ya no está disponible, ponte en contacto con tu especialista para obtener uno nuevo.");
+              }
               break;
             case 6:
-              //global.list_mensajes = new List<Mensaje>();
-              global.text_mensaje.text = "";
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => NutriochatPage(),
-                ),
-              );
+              if (global.validada == true) {
+                //global.list_mensajes = new List<Mensaje>();
+                global.text_mensaje.text = "";
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NutriochatPage(),
+                  ),
+                );
+              } else {
+                Scaffold.of(context).openEndDrawer();
+                show_Dialog(
+                    context: context,
+                    titulo: "¡Lo sentimos! :(",
+                    mensaje:
+                        "Tu plan de alimentación ya no está disponible, ponte en contacto con tu especialista para obtener uno nuevo.");
+              }
               break;
             case 7:
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PDFMaterialPage(),
-                ),
-              );
+              if (global.validada == true) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PDFMaterialPage(),
+                  ),
+                );
+              } else {
+                Scaffold.of(context).openEndDrawer();
+                show_Dialog(
+                    context: context,
+                    titulo: "¡Lo sentimos! :(",
+                    mensaje:
+                        "Tu plan de alimentación ya no está disponible, ponte en contacto con tu especialista para obtener uno nuevo.");
+              }
               break;
             case 8:
               db.DBManager.instance

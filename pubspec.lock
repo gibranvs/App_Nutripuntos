@@ -163,7 +163,7 @@ packages:
       name: fl_chart
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.1"
+    version: "0.12.0"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -210,7 +210,11 @@ packages:
       name: flutter_slidable
       url: "https://pub.dartlang.org"
     source: hosted
+<<<<<<< HEAD
     version: "0.5.5"
+=======
+    version: "0.5.7"
+>>>>>>> 7a5e99ec5d1196459b1f7cee71d87ec7cf73b6b4
   flutter_svg:
     dependency: transitive
     description:
