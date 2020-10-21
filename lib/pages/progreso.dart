@@ -325,16 +325,16 @@ class _ProgresoPageState extends State<ProgresoPage>
                                   double.parse(snapshot.data[1].peso),
                                   double.parse(snapshot.data[2].peso),
                                   double.parse(snapshot.data[3].peso)
-                                ];                                                                                            
+                                ];
                                 min_peso = pesos[0];
                                 max_peso = pesos[0];
                                 pesos.forEach((element) {
-                                  if(element > max_peso) max_peso = element;
-                                  if(element < min_peso) min_peso = element;
-                                });            
+                                  if (element > max_peso) max_peso = element;
+                                  if (element < min_peso) min_peso = element;
+                                });
                                 print(pesos);
                                 print("min peso: " + min_peso.toString());
-                                print("max peso: " + max_peso.toString());          
+                                print("max peso: " + max_peso.toString());
                                 lineChartBarDataPeso = LineChartBarData(
                                   spots: [
                                     FlSpot(1, pesos[0]),
@@ -720,9 +720,9 @@ class _ProgresoPageState extends State<ProgresoPage>
                                 min_grasa = grasas[0];
                                 max_grasa = grasas[0];
                                 grasas.forEach((element) {
-                                  if(element > max_grasa) max_grasa = element;
-                                  if(element < min_grasa) min_grasa = element;
-                                });            
+                                  if (element > max_grasa) max_grasa = element;
+                                  if (element < min_grasa) min_grasa = element;
+                                });
                                 print(grasas);
                                 print("min grasa: " + min_grasa.toString());
                                 print("max grasa: " + max_grasa.toString());
@@ -1189,7 +1189,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                     : null,
               ),
               child: Icon(
-                Icons.access_time,
+                Icons.track_changes,
                 color: hexToColor("#888888"),
                 size: 30,
               ),
@@ -1275,140 +1275,188 @@ class _ProgresoPageState extends State<ProgresoPage>
                               actionPane: Card(
                                 margin: EdgeInsets.only(bottom: 15),
                                 elevation: 0,
-                                color: hexToColor("#f2f2f2"),
-                                child: Row(
+                                color: (snapshot.data[index].status == "Ok")
+                                    ? hexToColor("#67AD5C")
+                                    : hexToColor("#f2f2f2"),
+                                child: Stack(
+                                  alignment: Alignment.centerLeft,
                                   children: <Widget>[
                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: <Widget>[
-                                        Padding(
-                                          padding:
-                                              EdgeInsets.only(top: 0, left: 20),
-                                          child: Container(
-                                            width: 180,
-                                            margin: EdgeInsets.only(top: 15),
-                                            child: Text(
-                                              snapshot.data[index].meta
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: hexToColor("#505050"),
-                                                  fontWeight: FontWeight.bold),
-                                            ),
+                                        Container(
+                                          //width: 180,
+                                          margin: EdgeInsets.only(
+                                            top: 10,
+                                            left: 20,
+                                          ),
+                                          child: Text(
+                                            snapshot.data[index].meta
+                                                .toString(),
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: (snapshot.data[index]
+                                                            .status ==
+                                                        "Ok")
+                                                    ? hexToColor("#ffffff")
+                                                    : hexToColor("#505050"),
+                                                fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                        Padding(
-                                          padding:
-                                              EdgeInsets.only(top: 0, left: 20),
-                                          child: Container(
-                                            width: 200,
-                                            margin: EdgeInsets.all(10),
-                                            child: Text(
-                                              snapshot.data[index].fecha
-                                                  .toString(),
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: hexToColor("#ababab"),
-                                                  fontWeight:
-                                                      FontWeight.normal),
-                                            ),
+                                        Container(
+                                          //width: 200,
+                                          margin: EdgeInsets.only(
+                                            top: 10,
+                                            bottom: 10,
+                                            left: 20,
+                                          ),
+                                          child: Text(
+                                            snapshot.data[index].fecha
+                                                .toString(),
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: (snapshot.data[index]
+                                                            .status ==
+                                                        "Ok")
+                                                    ? hexToColor("#ffffff")
+                                                    : hexToColor("#ababab"),
+                                                fontWeight: FontWeight.normal),
                                           ),
                                         ),
                                       ],
                                     ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Container(
-                                          alignment: Alignment.centerRight,
-                                          margin: EdgeInsets.only(right: 0),
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.18,
-                                          height: 20,
-                                          child: Icon(
-                                            Icons.edit,
-                                            color: hexToColor("#888888"),
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                        right: 20,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: <Widget>[
+                                          (snapshot.data[index].status != "Ok")
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    myTextUpdate.text = snapshot
+                                                        .data[index].meta;
+                                                    _showUpdateDialog(
+                                                        snapshot.data[index].id,
+                                                        snapshot
+                                                            .data[index].meta);
+                                                  },
+                                                  child: Container(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    //width: MediaQuery.of(context).size.width * 0,
+                                                    height: 20,
+                                                    child: Icon(
+                                                      Icons.edit,
+                                                      color:
+                                                          hexToColor("#888888"),
+                                                    ),
+                                                  ),
+                                                )
+                                              : Offstage(),
+                                          GestureDetector(
+                                            onTap: () {
+                                              if (snapshot.data[index].status ==
+                                                  "Incompleta") {
+                                                db.DBManager.instance
+                                                    .setEstatusRetoOk(
+                                                        snapshot.data[index].id)
+                                                    .then((value) {
+                                                  setState(() {});
+                                                });
+                                              }
+                                            },
+                                            child: Container(
+                                              alignment: Alignment.centerRight,
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.1,
+                                              height: 20,
+                                              child: (snapshot
+                                                          .data[index].status ==
+                                                      "Incompleta")
+                                                  ? Icon(
+                                                      Icons.thumb_up,
+                                                      color:
+                                                          hexToColor("#888888"),
+                                                    )
+                                                  : Icon(
+                                                      Icons.star,
+                                                      color: Colors.yellow,
+                                                    ),
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                              secondaryActions:
-                                  (snapshot.data[index].status != "Ok")
-                                      ? <Widget>[
-                                          Card(
-                                            margin: EdgeInsets.only(bottom: 15),
-                                            elevation: 0,
-                                            color: Colors.red,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                Icon(
-                                                  Icons.delete,
-                                                  color: Colors.white,
-                                                ),
-                                                Text(
-                                                  'Borrar',
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ]
-                                      : null,
-                              dismissal: (snapshot.data[index].status != "Ok")
-                                  ? SlidableDismissal(
-                                      child: SlidableDrawerDismissal(),
-                                      closeOnCanceled: true,
-                                      dragDismissible: true,
-                                      onWillDismiss: (actionType) {
-                                        return showDialog<bool>(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title: Text(
-                                                'Advertencia',
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              content: Text(
-                                                  '¿Seguro que desea borrar la meta "' +
-                                                      snapshot
-                                                          .data[index].meta +
-                                                      '"?',
-                                                  textAlign: TextAlign.center),
-                                              actions: <Widget>[
-                                                FlatButton(
-                                                    child: Text('Cancelar'),
-                                                    onPressed: () {
-                                                      Navigator.of(context)
-                                                          .pop(false);
-                                                      setState(() {});
-                                                    }),
-                                                FlatButton(
-                                                    child: Text('Borrar'),
-                                                    onPressed: () {
-                                                      db.DBManager.instance
-                                                          .deleteReto(snapshot
-                                                              .data[index].id);
-                                                      setState(() {});
-                                                      Navigator.of(context)
-                                                          .pop(true);
-                                                    }),
-                                              ],
-                                            );
-                                          },
-                                        );
-                                      },
-                                    )
-                                  : null,
+                              secondaryActions: <Widget>[
+                                Card(
+                                  margin: EdgeInsets.only(bottom: 15),
+                                  elevation: 0,
+                                  color: Colors.red,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Icon(
+                                        Icons.delete,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        'Borrar',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                              dismissal: SlidableDismissal(
+                                child: SlidableDrawerDismissal(),
+                                closeOnCanceled: true,
+                                dragDismissible: true,
+                                onWillDismiss: (actionType) {
+                                  return showDialog<bool>(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text(
+                                          'Advertencia',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        content: Text(
+                                            '¿Seguro que desea borrar la meta "' +
+                                                snapshot.data[index].meta +
+                                                '"?',
+                                            textAlign: TextAlign.center),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                              child: Text('Cancelar'),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(false);
+                                                setState(() {});
+                                              }),
+                                          FlatButton(
+                                              child: Text('Borrar'),
+                                              onPressed: () {
+                                                db.DBManager.instance
+                                                    .deleteReto(snapshot
+                                                        .data[index].id);
+                                                setState(() {});
+                                                Navigator.of(context).pop(true);
+                                              }),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
                               child: Card(
                                 margin: EdgeInsets.only(bottom: 15),
                                 elevation: 0,
@@ -1567,6 +1615,8 @@ class _ProgresoPageState extends State<ProgresoPage>
     max_grasa = 0;
     pendientes_selected = false;
     completos_selected = false;
+
+    //db.DBManager.instance.deleteAllRetos();
 
     lastGrasa = getLastGrasa();
     lastPeso = getLastPeso();
