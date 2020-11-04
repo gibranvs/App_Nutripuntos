@@ -927,7 +927,7 @@ Future<bool> validaCuenta(_token) async {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "validar_cuenta", "token": _token});
     var datos = json.decode(utf8.decode(response.bodyBytes));
-    print(datos);
+    //print(datos);
     if (datos["status"] == 0)
       return false;
     else
