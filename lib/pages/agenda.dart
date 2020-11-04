@@ -227,7 +227,8 @@ class _AgendaPageState extends State<AgendaPage> {
                       ),
                     ),
                     expanded: FutureBuilder<List<Citas>>(
-                        future: citasPasadas, //getCitasPasadas(global.usuario.token),
+                        future:
+                            citasPasadas, //getCitasPasadas(global.usuario.token),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -412,7 +413,8 @@ class _AgendaPageState extends State<AgendaPage> {
                       ),
                     ),
                     expanded: FutureBuilder<List<Citas>>(
-                        future: proximasCitas, //getCitasProximas(global.usuario.token),
+                        future:
+                            proximasCitas, //getCitasProximas(global.usuario.token),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -570,8 +572,8 @@ class _AgendaPageState extends State<AgendaPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    proximasCitas = getCitasProximas(global.usuario.token);
     citasPasadas = getCitasPasadas(global.usuario.token);
+    proximasCitas = getCitasProximas(global.usuario.token);
   }
 
   @override
@@ -675,7 +677,6 @@ class _AgendaPageState extends State<AgendaPage> {
                       ],
                     ),
                     calendarCarousel(),
-                    
                   ],
                 ),
 
@@ -711,65 +712,17 @@ class _AgendaPageState extends State<AgendaPage> {
       ),
     );
   }
-}
 
-Future<List<Citas>> getAllCitas(_token) async {
-  try {
-    var response = await http.post(global.server + "/aplicacion/api",
-        body: {"tipo": "consultas", "token": _token});
-    var datos = json.decode(utf8.decode(response.bodyBytes));
-    print(datos);
-    List<Citas> list_citas = new List<Citas>();
-    _markedDates.clear();
-    for (int i = 0; i < datos["response"].length; i++) {
-      //print(datos["response"][i]);
-      list_citas.add(Citas(
-          objetivo: datos["response"][i]["objetivo"],
-          horario: new DateFormat("h:mm a")
-              .format(DateTime.parse(datos["response"][i]["fecha"]))
-              .toString(),
-          fecha: new DateFormat("dd-MMM-yyyy G")
-              .format(DateTime.parse(datos["response"][i]["fecha"]))
-              .toString()
-              .toUpperCase()));
-
-      _markedDates.add(new DateTime(
-          int.parse(new DateFormat("dd-MM-yyyy")
-              .format(DateTime.parse(datos["response"][i]["fecha"]))
-              .toString()
-              .split("-")[2]),
-          int.parse(new DateFormat("dd-MM-yyyy")
-              .format(DateTime.parse(datos["response"][i]["fecha"]))
-              .toString()
-              .split("-")[1]),
-          int.parse(new DateFormat("dd-MM-yyyy")
-              .format(DateTime.parse(datos["response"][i]["fecha"]))
-              .toString()
-              .split("-")[0])));
-    }
-    return list_citas;
-  } catch (e) {
-    print("Error getAllCitas " + e.toString());
-  }
-}
-
-Future<List<Citas>> getCitasPasadas(_token) async {
-  var timeNow = DateTime.now();
-  var timeCita;
-
-  try {
-    var response = await http.post(global.server + "/aplicacion/api",
-        body: {"tipo": "consultas", "token": _token});
-    var datos = json.decode(utf8.decode(response.bodyBytes));
-    //print(datos);
-    List<Citas> list_citas = new List<Citas>();
-    for (int i = 0; i < datos["response"].length; i++) {
-      //print(datos["response"][i]);
-      timeCita = DateTime.parse(datos["response"][i]["fecha"]);
-      //print(timeNow);
-      //print(timeCita);
-      //print(timeNow.difference(timeCita).inDays.toString());
-      if (timeNow.difference(timeCita).inDays > 0) {
+  Future<List<Citas>> getAllCitas(_token) async {
+    try {
+      var response = await http.post(global.server + "/aplicacion/api",
+          body: {"tipo": "consultas", "token": _token});
+      var datos = json.decode(utf8.decode(response.bodyBytes));
+      //print(datos);
+      List<Citas> list_citas = new List<Citas>();
+      _markedDates.clear();
+      for (int i = 0; i < datos["response"].length; i++) {
+        //print(datos["response"][i]);
         list_citas.add(Citas(
             objetivo: datos["response"][i]["objetivo"],
             horario: new DateFormat("h:mm a")
@@ -779,46 +732,125 @@ Future<List<Citas>> getCitasPasadas(_token) async {
                 .format(DateTime.parse(datos["response"][i]["fecha"]))
                 .toString()
                 .toUpperCase()));
-      }
-      //FieldValue.serverTimestamp();
-    }
-    return list_citas;
-  } catch (e) {
-    print("Error getCitasPasadas " + e.toString());
-  }
-}
 
-Future<List<Citas>> getCitasProximas(_token) async {
-  var timeNow = DateTime.now();
-  var timeCita;
-
-  try {
-    var response = await http.post(global.server + "/aplicacion/api",
-        body: {"tipo": "consultas", "token": _token});
-    var datos = json.decode(utf8.decode(response.bodyBytes));
-    //print(datos);
-    List<Citas> list_citas = new List<Citas>();
-    for (int i = 0; i < datos["response"].length; i++) {
-      //print(datos["response"][i]);
-      timeCita = DateTime.parse(datos["response"][i]["fecha"]);
-      //print(timeNow);
-      //print(timeCita);
-      //print(timeNow.difference(timeCita).inDays.toString());
-      if (timeNow.difference(timeCita).inDays < 0) {
-        list_citas.add(Citas(
-            objetivo: datos["response"][i]["objetivo"],
-            horario: new DateFormat("h:mm a")
-                .format(DateTime.parse(datos["response"][i]["fecha"]))
-                .toString(),
-            fecha: new DateFormat("dd-MMM-yyyy G")
+        _markedDates.add(new DateTime(
+            int.parse(new DateFormat("dd-MM-yyyy")
                 .format(DateTime.parse(datos["response"][i]["fecha"]))
                 .toString()
-                .toUpperCase()));
+                .split("-")[2]),
+            int.parse(new DateFormat("dd-MM-yyyy")
+                .format(DateTime.parse(datos["response"][i]["fecha"]))
+                .toString()
+                .split("-")[1]),
+            int.parse(new DateFormat("dd-MM-yyyy")
+                .format(DateTime.parse(datos["response"][i]["fecha"]))
+                .toString()
+                .split("-")[0])));
       }
+      return list_citas;
+    } catch (e) {
+      print("Error getAllCitas " + e.toString());
     }
-    return list_citas;
-  } catch (e) {
-    print("Error getCitasPasadas " + e.toString());
+  }
+
+  Future<List<Citas>> getCitasPasadas(_token) async {
+    var timeNow = DateTime.now();
+    var timeCita;
+
+    try {
+      var response = await http.post(global.server + "/aplicacion/api",
+          body: {"tipo": "consultas", "token": _token});
+      var datos = json.decode(utf8.decode(response.bodyBytes));
+      //print(datos);
+      List<Citas> list_citas = new List<Citas>();
+      for (int i = 0; i < datos["response"].length; i++) {
+        //print(datos["response"][i]);
+        timeCita = DateTime.parse(datos["response"][i]["fecha"]);
+        //print(timeNow);
+        //print(timeCita);
+        //print(timeNow.difference(timeCita).inDays.toString());
+        if (timeNow.difference(timeCita).inDays > 0) {
+          list_citas.add(Citas(
+              objetivo: datos["response"][i]["objetivo"],
+              horario: new DateFormat("h:mm a")
+                  .format(DateTime.parse(datos["response"][i]["fecha"]))
+                  .toString(),
+              fecha: new DateFormat("dd-MMM-yyyy G")
+                  .format(DateTime.parse(datos["response"][i]["fecha"]))
+                  .toString()
+                  .toUpperCase()));
+
+          _markedDates.add(new DateTime(
+              int.parse(new DateFormat("dd-MM-yyyy")
+                  .format(DateTime.parse(datos["response"][i]["fecha"]))
+                  .toString()
+                  .split("-")[2]),
+              int.parse(new DateFormat("dd-MM-yyyy")
+                  .format(DateTime.parse(datos["response"][i]["fecha"]))
+                  .toString()
+                  .split("-")[1]),
+              int.parse(new DateFormat("dd-MM-yyyy")
+                  .format(DateTime.parse(datos["response"][i]["fecha"]))
+                  .toString()
+                  .split("-")[0])));
+        }
+        setState(() {});
+      }
+      return list_citas;
+    } catch (e) {
+      print("Error getCitasPasadas " + e.toString());
+    }
+  }
+
+  Future<List<Citas>> getCitasProximas(_token) async {
+    var timeNow = DateTime.now();
+    var timeCita;
+
+    try {
+      var response = await http.post(global.server + "/aplicacion/api",
+          body: {"tipo": "consultas", "token": _token});
+      var datos = json.decode(utf8.decode(response.bodyBytes));
+      //print(datos);
+      List<Citas> list_citas = new List<Citas>();
+      _markedDates.clear();
+      for (int i = 0; i < datos["response"].length; i++) {
+        print("Entra aquí");
+        print(datos["response"][i]);
+        timeCita = DateTime.parse(datos["response"][i]["fecha"]);
+        //print(timeNow);
+        //print(timeCita);
+        //print(timeNow.difference(timeCita).inDays.toString());
+        if (timeNow.difference(timeCita).inDays < 0) {
+          list_citas.add(Citas(
+              objetivo: datos["response"][i]["objetivo"],
+              horario: new DateFormat("h:mm a")
+                  .format(DateTime.parse(datos["response"][i]["fecha"]))
+                  .toString(),
+              fecha: new DateFormat("dd-MMM-yyyy G")
+                  .format(DateTime.parse(datos["response"][i]["fecha"]))
+                  .toString()
+                  .toUpperCase()));
+
+          _markedDates.add(new DateTime(
+              int.parse(new DateFormat("dd-MM-yyyy")
+                  .format(DateTime.parse(datos["response"][i]["fecha"]))
+                  .toString()
+                  .split("-")[2]),
+              int.parse(new DateFormat("dd-MM-yyyy")
+                  .format(DateTime.parse(datos["response"][i]["fecha"]))
+                  .toString()
+                  .split("-")[1]),
+              int.parse(new DateFormat("dd-MM-yyyy")
+                  .format(DateTime.parse(datos["response"][i]["fecha"]))
+                  .toString()
+                  .split("-")[0])));
+        }
+        setState(() {});
+      }
+      return list_citas;
+    } catch (e) {
+      print("Error getCitasPasadas " + e.toString());
+    }
   }
 }
 
