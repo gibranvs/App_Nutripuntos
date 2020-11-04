@@ -12,10 +12,9 @@ import 'package:intl/intl.dart';
 import 'newmenu.dart' as newmenu;
 import 'package:http/http.dart' as http;
 
-List<DateTime> _markedDates = new List<DateTime>();
-
-Future<List<Citas>> proximasCitas;
-Future<List<Citas>> citasPasadas;
+CalendarData data_calendario;
+Citas cita_seleccionada;
+DateTime selectedDatetime;
 
 class AgendaPage extends StatefulWidget {
   @override
@@ -35,10 +34,11 @@ class _AgendaPageState extends State<AgendaPage> {
       childAspectRatio: 1.5,
       showHeader: true,
       markedDateShowIcon: false,
-      markedDates: _markedDates,
+      selectedDateTime: selectedDatetime,
+      markedDates: (data_calendario != null) ? data_calendario.fechas : [],
       locale: "es_ES",
       markedDateWidget: Container(
-        margin: EdgeInsets.only(top: 22, left: 18),
+        margin: EdgeInsets.only(top: 22, left: 19.5),
         child: Icon(
           Icons.brightness_1,
           size: 9,
@@ -51,7 +51,7 @@ class _AgendaPageState extends State<AgendaPage> {
       todayButtonColor: hexToColor("#059696"),
       weekendTextStyle: TextStyle(fontSize: 12, color: hexToColor("#666666")),
       iconColor: hexToColor("#059696"),
-      selectedDayButtonColor: hexToColor("#059696"),
+      selectedDayButtonColor: hexToColor("#cdcdcd"),
       headerTextStyle: TextStyle(
           fontSize: 18,
           color: hexToColor("#059696"),
@@ -66,6 +66,19 @@ class _AgendaPageState extends State<AgendaPage> {
       ),
       nextDaysTextStyle: TextStyle(fontSize: 14, color: Colors.transparent),
       prevDaysTextStyle: TextStyle(fontSize: 14, color: Colors.transparent),
+      onDayPressed: (date, list) async {
+        var fecha = date.toString().split(" ")[0];
+        //print(fecha);
+        setState(() {
+          cita_seleccionada = null;
+          selectedDatetime = date;
+        });
+        getCita(fecha).then((_cita) {
+          setState(() {
+            cita_seleccionada = _cita;
+          });
+        });
+      },
     );
   }
 
@@ -78,98 +91,64 @@ class _AgendaPageState extends State<AgendaPage> {
       alignment: Alignment.topCenter,
       margin: const EdgeInsets.only(top: 10),
       padding: EdgeInsets.all(10),
-      child: FutureBuilder<List<Citas>>(
-        future: proximasCitas, //getCitasProximas(global.usuario.token),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                semanticsLabel: "Loading",
-                backgroundColor: hexToColor("#cdcdcd"),
-              ),
-            );
-          } else if (snapshot.hasData) {
-            if (snapshot.data.length > 0) {
-              return Card(
-                color: hexToColor("#f2f2f2"),
-                elevation: 0,
-                child: Row(
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: 12, left: 15, bottom: 2),
-                          child: Text(
-                            snapshot.data[0].fecha.toString().split("-")[0] +
-                                "\n" +
-                                snapshot.data[0].fecha.toString().split("-")[1],
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF059696)),
-                          ),
+      child: (cita_seleccionada != null)
+          ? Card(
+              color: hexToColor("#f2f2f2"),
+              elevation: 0,
+              child: Row(
+                children: <Widget>[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 12, left: 15, bottom: 2),
+                        child: Text(
+                          cita_seleccionada.fecha.toString().split("-")[0] +
+                              "\n" +
+                              cita_seleccionada.fecha.toString().split("-")[1],
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF059696)),
                         ),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: 2, left: 15, bottom: 12),
-                          child: Text(snapshot.data[0].horario.toString()),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: 12, left: 25, bottom: 4),
-                          child: Text(
-                            "Próxima cita",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              EdgeInsets.only(top: 4, left: 25, bottom: 12),
-                          child: Text(snapshot.data[0].objetivo.toString()),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              return Card(
-                color: hexToColor("#f2f2f2"),
-                elevation: 0,
-                child: Center(
-                  child: Text(
-                    "No tienes citas pendientes.",
-                    style: TextStyle(
-                      color: hexToColor("#606060"),
-                    ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 2, left: 15, bottom: 12),
+                        child: Text(cita_seleccionada.horario.toString()),
+                      ),
+                    ],
                   ),
-                ),
-              );
-            }
-          } else if (snapshot.hasError) {
-            return Card(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 12, left: 25, bottom: 4),
+                        child: Text(
+                          "Próxima cita",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 4, left: 25, bottom: 12),
+                        child: Text(cita_seleccionada.objetivo.toString()),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            )
+          : Card(
               color: hexToColor("#f2f2f2"),
               elevation: 0,
               child: Center(
                 child: Text(
-                  "Error al obtener citas pendientes.",
+                  "No tienes citas pendientes.",
                   style: TextStyle(
                     color: hexToColor("#606060"),
                   ),
                 ),
               ),
-            );
-          }
-        },
-      ),
+            ),
     );
   }
 
@@ -227,8 +206,7 @@ class _AgendaPageState extends State<AgendaPage> {
                       ),
                     ),
                     expanded: FutureBuilder<List<Citas>>(
-                        future:
-                            citasPasadas, //getCitasPasadas(global.usuario.token),
+                        future: getCitasPasadas(global.usuario.token),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -413,8 +391,7 @@ class _AgendaPageState extends State<AgendaPage> {
                       ),
                     ),
                     expanded: FutureBuilder<List<Citas>>(
-                        future:
-                            proximasCitas, //getCitasProximas(global.usuario.token),
+                        future: getCitasProximas(global.usuario.token),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -572,8 +549,12 @@ class _AgendaPageState extends State<AgendaPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    citasPasadas = getCitasPasadas(global.usuario.token);
-    proximasCitas = getCitasProximas(global.usuario.token);
+    cita_seleccionada = null;
+    getAllMarkers(global.usuario.token).then((_data) {
+      setState(() {
+        data_calendario = _data;
+      });
+    });
   }
 
   @override
@@ -713,14 +694,15 @@ class _AgendaPageState extends State<AgendaPage> {
     );
   }
 
-  Future<List<Citas>> getAllCitas(_token) async {
+  Future<CalendarData> getAllMarkers(_token) async {
     try {
       var response = await http.post(global.server + "/aplicacion/api",
           body: {"tipo": "consultas", "token": _token});
       var datos = json.decode(utf8.decode(response.bodyBytes));
       //print(datos);
       List<Citas> list_citas = new List<Citas>();
-      _markedDates.clear();
+      List<DateTime> list_markers = new List<DateTime>();
+      CalendarData data;
       for (int i = 0; i < datos["response"].length; i++) {
         //print(datos["response"][i]);
         list_citas.add(Citas(
@@ -733,7 +715,7 @@ class _AgendaPageState extends State<AgendaPage> {
                 .toString()
                 .toUpperCase()));
 
-        _markedDates.add(new DateTime(
+        list_markers.add(new DateTime(
             int.parse(new DateFormat("dd-MM-yyyy")
                 .format(DateTime.parse(datos["response"][i]["fecha"]))
                 .toString()
@@ -747,9 +729,28 @@ class _AgendaPageState extends State<AgendaPage> {
                 .toString()
                 .split("-")[0])));
       }
-      return list_citas;
+      data = new CalendarData(fechas: list_markers, citas: list_citas);
+      return data;
     } catch (e) {
-      print("Error getAllCitas " + e.toString());
+      print("Error getAllMarkers " + e.toString());
+    }
+  }
+
+  Future<Citas> getCita(_fecha) async {
+    try {
+      for (var c in data_calendario.citas) {
+        var f = new DateFormat("dd-MMM-yyyy G")
+            .format(DateTime.parse(_fecha))
+            .toString()
+            .toUpperCase();
+        //print("F1 : " + f + "  F2: " + c.fecha);
+        if (f == c.fecha) {
+          //print(c.fecha);
+          return c;
+        }
+      }
+    } catch (e) {
+      print("Error getCita " + e.toString());
     }
   }
 
@@ -779,22 +780,7 @@ class _AgendaPageState extends State<AgendaPage> {
                   .format(DateTime.parse(datos["response"][i]["fecha"]))
                   .toString()
                   .toUpperCase()));
-
-          _markedDates.add(new DateTime(
-              int.parse(new DateFormat("dd-MM-yyyy")
-                  .format(DateTime.parse(datos["response"][i]["fecha"]))
-                  .toString()
-                  .split("-")[2]),
-              int.parse(new DateFormat("dd-MM-yyyy")
-                  .format(DateTime.parse(datos["response"][i]["fecha"]))
-                  .toString()
-                  .split("-")[1]),
-              int.parse(new DateFormat("dd-MM-yyyy")
-                  .format(DateTime.parse(datos["response"][i]["fecha"]))
-                  .toString()
-                  .split("-")[0])));
         }
-        setState(() {});
       }
       return list_citas;
     } catch (e) {
@@ -812,10 +798,8 @@ class _AgendaPageState extends State<AgendaPage> {
       var datos = json.decode(utf8.decode(response.bodyBytes));
       //print(datos);
       List<Citas> list_citas = new List<Citas>();
-      _markedDates.clear();
       for (int i = 0; i < datos["response"].length; i++) {
-        print("Entra aquí");
-        print(datos["response"][i]);
+        //sprint(datos["response"][i]);
         timeCita = DateTime.parse(datos["response"][i]["fecha"]);
         //print(timeNow);
         //print(timeCita);
@@ -830,22 +814,7 @@ class _AgendaPageState extends State<AgendaPage> {
                   .format(DateTime.parse(datos["response"][i]["fecha"]))
                   .toString()
                   .toUpperCase()));
-
-          _markedDates.add(new DateTime(
-              int.parse(new DateFormat("dd-MM-yyyy")
-                  .format(DateTime.parse(datos["response"][i]["fecha"]))
-                  .toString()
-                  .split("-")[2]),
-              int.parse(new DateFormat("dd-MM-yyyy")
-                  .format(DateTime.parse(datos["response"][i]["fecha"]))
-                  .toString()
-                  .split("-")[1]),
-              int.parse(new DateFormat("dd-MM-yyyy")
-                  .format(DateTime.parse(datos["response"][i]["fecha"]))
-                  .toString()
-                  .split("-")[0])));
         }
-        setState(() {});
       }
       return list_citas;
     } catch (e) {
@@ -860,4 +829,10 @@ class Citas {
   String fecha;
 
   Citas({this.objetivo, this.horario, this.fecha});
+}
+
+class CalendarData {
+  List<DateTime> fechas;
+  List<Citas> citas;
+  CalendarData({this.fechas, this.citas});
 }
