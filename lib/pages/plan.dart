@@ -297,7 +297,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
     return (opciones_dieta != null)
         ? Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height - 356,
+            //height: MediaQuery.of(context).size.height - 356,
             child: SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(
@@ -555,12 +555,34 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                       ),
                     ),
                     child: Container(
-                      child: Column(
+                      child: Stack(
                         children: <Widget>[
-                          titulo1(snapshot.data[i].titulo1),
-                          botones(snapshot.data[i].boton),
-                          titulo2(snapshot.data[i].titulo2),
-                          sugerencias(context, snapshot.data[i].index),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: 20,
+                              top: 0,
+                            ),
+                            child: titulo1(snapshot.data[i].titulo1),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              top: 40,
+                            ),
+                            child: botones(snapshot.data[i].boton),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: 20,
+                              top: 135,
+                            ),
+                            child: titulo2(snapshot.data[i].titulo2),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                              top: 190,
+                            ),
+                            child: sugerencias(context, snapshot.data[i].index),
+                          ),
                         ],
                       ),
                     ),
@@ -854,16 +876,30 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                                         }),
                                   );
                                 } else {
-                                  return new Text(
-                                      "No hay sugerencias de alimentos para este grupo.",
-                                      style: TextStyle(
-                                          color: hexToColor("#606060")));
+                                  return Text(
+                                    "No hay sugerencias de alimentos para este grupo.",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      decoration: TextDecoration.none,
+                                      fontFamily: "Arial",
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
                                 }
                               } else if (snapshot.hasError) {
-                                return new Text(
-                                    "Error al obtener sugerencias de alimentos del grupo.",
-                                    style: TextStyle(
-                                        color: hexToColor("#606060")));
+                                return Text(
+                                  "Error al obtener sugerencias de alimentos del grupo.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    decoration: TextDecoration.none,
+                                    fontFamily: "Arial",
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                );
                               }
                             }),
                       ),
