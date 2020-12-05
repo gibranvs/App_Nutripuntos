@@ -24,7 +24,11 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
+	<key>NSPhotoLibraryUsageDescription</key>	
+	<string>Foto de perfil para la APP</string>
+	<key>NSCameraUsageDescription</key>	
+	<string>Foto de perfil para la APP</string>
+	<key>NSMicrophoneUsageDescription</key>	
 	<string>Foto de perfil para la APP</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
