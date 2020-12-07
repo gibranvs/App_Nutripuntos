@@ -17,7 +17,8 @@ import 'pages/nutriochat.dart';
 import 'pages/recetas.dart';
 import 'src/DBManager.dart' as db;
 
-String server = "http://c1370875.ferozo.com";
+//String server = "http://c1370875.ferozo.com";
+String server = "https://www.nutripuntos.com";
 
 bool user_exist;
 Usuario usuario;

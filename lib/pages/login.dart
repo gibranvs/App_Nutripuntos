@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
     fetchDoctores().then((_result) {
       setState(() {
         listDoctores = _result;
-        print(listDoctores);
+        //print(listDoctores);
         for (var doc in listDoctores) {
           suggestions.add(doc.nombre);          
         }
@@ -292,7 +292,7 @@ Future<List<Doctor>> fetchDoctores() async {
   final response = await http
       .post(global.server + '/aplicacion/api', body: {'tipo': 'get_doctores'});
   var datos = json.decode(utf8.decode(response.bodyBytes));
-  print(datos);
+  //print(datos);
 
   for (int i = 0; i < datos.length; i++) {
     String id = datos[i]["id"];
