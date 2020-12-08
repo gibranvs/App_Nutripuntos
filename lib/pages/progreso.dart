@@ -321,7 +321,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                             } else if (snapshot.hasData) {
                               if (snapshot.data != null) {
                                 var pesos = [];
-                                var spots = [];
+                                List<FlSpot> spots = new List<FlSpot>();
                                 for (int p = 0; p < snapshot.data.length; p++) {
                                   pesos.add(double.parse(snapshot.data[p].peso));
                                   spots.add(FlSpot(
@@ -725,7 +725,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                             } else if (snapshot.hasData) {
                               if (snapshot.data != null) {
                                 var grasas = [];
-                                var spots = [];
+                                List<FlSpot> spots = new List<FlSpot>();
                                 for (int g = 0; g < snapshot.data.length; g++) {
                                   grasas.add(double.parse(snapshot.data[g].grasa));
                                   spots.add(FlSpot(
