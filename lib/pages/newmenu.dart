@@ -22,28 +22,27 @@ class menu extends StatelessWidget {
   ///
   /// Stack datos
   ///
-  Stack datos(_context) {
-    return Stack(
+  Widget datos(_context) {
+    return Row(
       children: <Widget>[
-        Row(
+        Column(
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                /// LABEL NOMBRE
-                Container(
-                  padding: EdgeInsets.only(top: 70, left: 20),
-                  child: Text(
-                    global.usuario.nombre + " " + global.usuario.apellidos,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF059696),
-                    ),
-                  ),
+            /// LABEL NOMBRE
+            Container(
+              padding: EdgeInsets.only(top: 70, left: 20),
+              child: Text(
+                global.usuario.nombre + " " + global.usuario.apellidos,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF059696),
                 ),
+              ),
+            ),
 
-                /// LABEL CERRAR SESIÓN
-                /*
+            /// LABEL CERRAR SESIÓN
+            /*
                 Container(
                   padding: EdgeInsets.only(top: 5, left: 20),
                   child: GestureDetector(
@@ -68,43 +67,37 @@ class menu extends StatelessWidget {
                   ),
                 ),
                 */
-              ],
-            ),
           ],
         ),
-        Row(
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                //print("Back");
-                if (global.selected_index == 0)
-                  Navigator.pop(_context);
-                else {
-                  global.selected_index = 0;
-                  Navigator.push(_context,
-                      MaterialPageRoute(builder: (context) => HomePage()));
-                }
-              },
-              child: Padding(
-                padding: EdgeInsets.only(top: 50, left: 180, bottom: 50),
-                child: Container(
-                  height: 80,
-                  width: 80,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFF059696), width: 6),
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    image: global.image_foto == null
-                        ? DecorationImage(
-                            image: AssetImage("assets/images/photo.jpg"),
-                            fit: BoxFit.cover,
-                          )
-                        : global.image_foto,
-                  ),
-                ),
+        GestureDetector(
+          onTap: () {
+            //print("Back");
+            if (global.selected_index == 0)
+              Navigator.pop(_context);
+            else {
+              global.selected_index = 0;
+              Navigator.push(_context,
+                  MaterialPageRoute(builder: (context) => HomePage()));
+            }
+          },
+          child: Padding(
+            padding: EdgeInsets.only(top: 50, left: 180, bottom: 50),
+            child: Container(
+              height: 80,
+              width: 80,
+              decoration: BoxDecoration(
+                border: Border.all(color: Color(0xFF059696), width: 6),
+                color: Colors.white,
+                shape: BoxShape.circle,
+                image: global.image_foto == null
+                    ? DecorationImage(
+                        image: AssetImage("assets/images/photo.jpg"),
+                        fit: BoxFit.cover,
+                      )
+                    : global.image_foto,
               ),
-            )
-          ],
+            ),
+          ),
         ),
       ],
     );

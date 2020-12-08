@@ -320,12 +320,22 @@ class _ProgresoPageState extends State<ProgresoPage>
                               );
                             } else if (snapshot.hasData) {
                               if (snapshot.data != null) {
+                                var pesos = [];
+                                var spots = [];
+                                for (int p = 0; p < snapshot.data.length; p++) {
+                                  pesos.add(snapshot.data[p].peso);
+                                  spots.add(FlSpot(
+                                      double.parse((p + 1).toString()),
+                                      double.parse(snapshot.data[p].peso)));
+                                }
+                                /*                  
                                 var pesos = [
                                   double.parse(snapshot.data[0].peso),
                                   double.parse(snapshot.data[1].peso),
                                   double.parse(snapshot.data[2].peso),
                                   double.parse(snapshot.data[3].peso)
                                 ];
+                               */
                                 min_peso = pesos[0];
                                 max_peso = pesos[0];
                                 pesos.forEach((element) {
@@ -336,12 +346,15 @@ class _ProgresoPageState extends State<ProgresoPage>
                                 print("min peso: " + min_peso.toString());
                                 print("max peso: " + max_peso.toString());
                                 lineChartBarDataPeso = LineChartBarData(
+                                  spots: spots,
+                                  /*
                                   spots: [
                                     FlSpot(1, pesos[0]),
                                     FlSpot(2, pesos[1]),
                                     FlSpot(3, pesos[2]),
                                     FlSpot(4, pesos[3]),
                                   ],
+                                  */
                                   isCurved: false,
                                   colors: [
                                     hexToColor("#059696"),
@@ -711,12 +724,22 @@ class _ProgresoPageState extends State<ProgresoPage>
                               );
                             } else if (snapshot.hasData) {
                               if (snapshot.data != null) {
+                                var grasas = [];
+                                var spots = [];
+                                for (int g = 0; g < snapshot.data.length; g++) {
+                                  grasas.add(snapshot.data[g].grasa);
+                                  spots.add(FlSpot(
+                                      double.parse((g + 1).toString()),
+                                      double.parse(snapshot.data[g].grasa)));
+                                }
+                                /*
                                 var grasas = [
                                   double.parse(snapshot.data[0].grasa),
                                   double.parse(snapshot.data[1].grasa),
                                   double.parse(snapshot.data[2].grasa),
                                   double.parse(snapshot.data[3].grasa)
                                 ];
+                                */
                                 min_grasa = grasas[0];
                                 max_grasa = grasas[0];
                                 grasas.forEach((element) {
@@ -727,7 +750,9 @@ class _ProgresoPageState extends State<ProgresoPage>
                                 print("min grasa: " + min_grasa.toString());
                                 print("max grasa: " + max_grasa.toString());
                                 lineChartBarDataGrasa = LineChartBarData(
-                                  spots: [
+                                  spots: spots,
+                                  /*
+                                  [
                                     FlSpot(1,
                                         double.parse(snapshot.data[0].grasa)),
                                     FlSpot(2,
@@ -737,6 +762,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     FlSpot(4,
                                         double.parse(snapshot.data[3].grasa)),
                                   ],
+                                  */
                                   isCurved: false,
                                   colors: [
                                     hexToColor("#059696"),
