@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nutripuntos_app/pages/pdf_material.dart';
@@ -23,67 +24,43 @@ class menu extends StatelessWidget {
   /// Stack datos
   ///
   Widget datos(_context) {
+    double width_drawer = double.infinity;
+    print(width_drawer);
     return Container(
       width: double.infinity,
-      child: Row(
+      margin: EdgeInsets.only(top: 40, left: 0),
+      child: Stack(
+        alignment: Alignment.centerLeft,
         children: <Widget>[
-          Column(
-            children: <Widget>[
-              /// LABEL NOMBRE
-              Container(
-                padding: EdgeInsets.only(top: 70, left: 20),
-                child: Text(
-                  global.usuario.nombre + " " + global.usuario.apellidos,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF059696),
-                  ),
-                ),
+          Container(
+            width: MediaQuery.of(_context).size.width * 0.55,
+            alignment: Alignment.centerLeft,
+            padding: EdgeInsets.only(left: 20),
+            child: Text(
+              global.usuario.nombre + " " + global.usuario.apellidos,
+              overflow: TextOverflow.clip,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF059696),
               ),
-
-              /// LABEL CERRAR SESIÓN
-              /*
-                  Container(
-                    padding: EdgeInsets.only(top: 5, left: 20),
-                    child: GestureDetector(
-                      onTap: () {
-                        db.DBManager.instance
-                            .updateLogueado(global.usuario.id, 0)
-                            .then((_) {
-                          print("Cerrar sesión");
-                          global.usuario.token = "";
-                          Navigator.push(
-                              _context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginPage()));
-                        });
-                      },
-                      child: Text(
-                        "Cerrar sesión",
-                        style: TextStyle(
-                          color: Color(0xFF059696),
-                        ),
-                      ),
-                    ),
-                  ),
-                  */
-            ],
+            ),
           ),
-          GestureDetector(
-            onTap: () {
-              //print("Back");
-              if (global.selected_index == 0)
-                Navigator.pop(_context);
-              else {
-                global.selected_index = 0;
-                Navigator.push(_context,
-                    MaterialPageRoute(builder: (context) => HomePage()));
-              }
-            },
-            child: Padding(
-              padding: EdgeInsets.only(top: 50, left: 180, bottom: 50),
+          Container(
+            width: double.infinity,
+            alignment: Alignment.centerRight,
+            padding: EdgeInsets.only(right: 10),
+            child: GestureDetector(
+              onTap: () {
+                //print("Back");
+                if (global.selected_index == 0)
+                  Navigator.pop(_context);
+                else {
+                  global.selected_index = 0;
+                  Navigator.push(_context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                }
+              },
               child: Container(
                 height: 80,
                 width: 80,

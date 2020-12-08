@@ -85,6 +85,7 @@ class _ProgresoPageState extends State<ProgresoPage>
               child: FutureBuilder<String>(
                   future: lastPeso, //getLastPeso(),
                   builder: (context, snapshot) {
+                    print(snapshot.hasData);
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
                         child: CircularProgressIndicator(
@@ -122,10 +123,20 @@ class _ProgresoPageState extends State<ProgresoPage>
                           ],
                         );
                       } else {
-                        return new Text("No existe",
-                            style: TextStyle(color: hexToColor("#606060")));
+                        return Container(
+                            alignment: Alignment.center,
+                            child: Text("No hay datos",
+                                style:
+                                    TextStyle(color: hexToColor("#606060"))));
                       }
-                    } else if (snapshot.hasError) {
+                    } else {
+                      return Container(
+                          alignment: Alignment.center,
+                          child: Text("No hay datos",
+                              style: TextStyle(color: hexToColor("#606060"))));
+                    }
+
+                    if (snapshot.hasError) {
                       return new Text("Error al obtener",
                           style: TextStyle(color: hexToColor("#606060")));
                     }
@@ -152,6 +163,7 @@ class _ProgresoPageState extends State<ProgresoPage>
           borderRadius: BorderRadius.all(Radius.circular(15)),
         ),
         child: Stack(
+          alignment: Alignment.center,
           children: <Widget>[
             Container(
               alignment: Alignment.topCenter,
@@ -159,6 +171,7 @@ class _ProgresoPageState extends State<ProgresoPage>
               child: FutureBuilder<String>(
                   future: lastGrasa, // getLastGrasa(),
                   builder: (context, snapshot) {
+                    print(snapshot);
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
                         child: CircularProgressIndicator(
@@ -196,10 +209,19 @@ class _ProgresoPageState extends State<ProgresoPage>
                           ],
                         );
                       } else {
-                        return new Text("No existe",
-                            style: TextStyle(color: hexToColor("#606060")));
+                        return Container(
+                            alignment: Alignment.center,
+                            child: Text("No hay datos",
+                                style:
+                                    TextStyle(color: hexToColor("#606060"))));
                       }
-                    } else if (snapshot.hasError) {
+                    } else {
+                      return Container(
+                          alignment: Alignment.center,
+                          child: Text("No hay datos",
+                              style: TextStyle(color: hexToColor("#606060"))));
+                    }
+                    if (snapshot.hasError) {
                       return new Text("Error al obtener",
                           style: TextStyle(color: hexToColor("#606060")));
                     }
@@ -319,16 +341,20 @@ class _ProgresoPageState extends State<ProgresoPage>
                                 ),
                               );
                             } else if (snapshot.hasData) {
-                              if (snapshot.data != null) {
+                              if (snapshot.data != null &&
+                                  snapshot.data.length > 0) {
                                 var pesos = [];
                                 List<FlSpot> spots = new List<FlSpot>();
-                                for (int p = 0; p <= snapshot.data.length; p++) {
-                                  pesos.add(double.parse(snapshot.data[p].peso));
+                                print(snapshot.data.length);
+                                for (int p = 0; p < snapshot.data.length; p++) {
+                                  print(snapshot.data[p].peso);
+                                  pesos
+                                      .add(double.parse(snapshot.data[p].peso));
                                   spots.add(FlSpot(
                                       double.parse((p + 1).toString()),
                                       double.parse(snapshot.data[p].peso)));
                                 }
-                                /*                  
+                                /*
                                 var pesos = [
                                   double.parse(snapshot.data[0].peso),
                                   double.parse(snapshot.data[1].peso),
@@ -530,8 +556,8 @@ class _ProgresoPageState extends State<ProgresoPage>
                                     ),
                                     double.parse(snapshot.data[3].peso),
                                   ),
-                                ];                                
-                                
+                                ];
+
                                 return SfCartesianChart(
                                   plotAreaBorderWidth: 1,
                                   tooltipBehavior: TooltipBehavior(
@@ -723,11 +749,13 @@ class _ProgresoPageState extends State<ProgresoPage>
                                 ),
                               );
                             } else if (snapshot.hasData) {
-                              if (snapshot.data != null) {
+                              if (snapshot.data != null &&
+                                  snapshot.data.length > 0) {
                                 var grasas = [];
                                 List<FlSpot> spots = new List<FlSpot>();
-                                for (int g = 0; g <= snapshot.data.length; g++) {
-                                  grasas.add(double.parse(snapshot.data[g].grasa));
+                                for (int g = 0; g < snapshot.data.length; g++) {
+                                  grasas.add(
+                                      double.parse(snapshot.data[g].grasa));
                                   spots.add(FlSpot(
                                       double.parse((g + 1).toString()),
                                       double.parse(snapshot.data[g].grasa)));
@@ -2028,7 +2056,7 @@ Future<List<Progreso>> getProgreso() async {
                     .toString(),
                 anio: DateTime.parse(datos["response"][i]["fecha"]).year));
           } else {
-            list.removeAt(list.length - 1);
+            //list.removeAt(list.length - 1);
             list.add(Progreso(
                 peso: datos["response"][i]["peso"].toString(),
                 grasa: datos["response"][i]["grasa"].toString(),
