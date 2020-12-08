@@ -323,7 +323,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                 var pesos = [];
                                 var spots = [];
                                 for (int p = 0; p < snapshot.data.length; p++) {
-                                  pesos.add(snapshot.data[p].peso);
+                                  pesos.add(double.parse(snapshot.data[p].peso));
                                   spots.add(FlSpot(
                                       double.parse((p + 1).toString()),
                                       double.parse(snapshot.data[p].peso)));
@@ -727,7 +727,7 @@ class _ProgresoPageState extends State<ProgresoPage>
                                 var grasas = [];
                                 var spots = [];
                                 for (int g = 0; g < snapshot.data.length; g++) {
-                                  grasas.add(snapshot.data[g].grasa);
+                                  grasas.add(double.parse(snapshot.data[g].grasa));
                                   spots.add(FlSpot(
                                       double.parse((g + 1).toString()),
                                       double.parse(snapshot.data[g].grasa)));
