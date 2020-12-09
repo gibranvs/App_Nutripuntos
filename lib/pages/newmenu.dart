@@ -28,12 +28,12 @@ class menu extends StatelessWidget {
     print(width_drawer);
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.only(top: 40, left: 0),
+      margin: EdgeInsets.only(top: 50, left: 0, bottom: 50),
       child: Stack(
         alignment: Alignment.centerLeft,
         children: <Widget>[
           Container(
-            width: MediaQuery.of(_context).size.width * 0.55,
+            width: MediaQuery.of(_context).size.width * 0.50,
             alignment: Alignment.centerLeft,
             padding: EdgeInsets.only(left: 20),
             child: Text(
