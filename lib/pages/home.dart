@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:nutripuntos_app/pages/progreso.dart';
 import 'package:flutter/services.dart';
 import 'package:nutripuntos_app/src/meta.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'dart:async';
 import 'newmenu.dart' as newmenu;
 import 'package:nutripuntos_app/globals.dart' as global;
@@ -940,7 +941,7 @@ Future<bool> validaCuenta(_token) async {
 Future<List<Citas>> getCitasProximas(_token) async {
   var timeNow = DateTime.now();
   var timeCita;
-
+  initializeDateFormatting('es');
   try {
     var response = await http.post(global.server + "/aplicacion/api",
         body: {"tipo": "consultas", "token": _token});

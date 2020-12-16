@@ -160,7 +160,7 @@ class OpcionDetallePage extends StatelessWidget {
                           shrinkWrap: true,
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
-                            return Card(
+                            return (snapshot.data[index].nombre != "") ? Card(
                               color: hexToColor("#f2f2f2"),
                               margin: EdgeInsets.only(top: 0, bottom: 15),
                               elevation: 0,
@@ -235,7 +235,7 @@ class OpcionDetallePage extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                            );
+                            ) : Offstage();
                           });
                     } else {
                       return new Text("No hay sugerencias de comida.",

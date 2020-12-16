@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:nutripuntos_app/pages/home.dart';
 import '../src/HexToColor.dart';
 import 'package:nutripuntos_app/flutter_calendar_carousel.dart' as calendar;
@@ -791,7 +792,7 @@ class _AgendaPageState extends State<AgendaPage> {
   Future<List<Citas>> getCitasProximas(_token) async {
     var timeNow = DateTime.now();
     var timeCita;
-
+    initializeDateFormatting('es');
     try {
       var response = await http.post(global.server + "/aplicacion/api",
           body: {"tipo": "consultas", "token": _token});
