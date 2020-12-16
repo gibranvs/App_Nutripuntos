@@ -810,10 +810,18 @@ class _AgendaPageState extends State<AgendaPage> {
               horario: new DateFormat("h:mm a")
                   .format(DateTime.parse(datos["response"][i]["fecha"]))
                   .toString(),
-              fecha: new DateFormat("dd-MMM-yyyy G")
-                  .format(DateTime.parse(datos["response"][i]["fecha"]))
-                  .toString()
-                  .toUpperCase()));
+              /*
+            fecha: new DateFormat("dd-MMM-yyyy G")
+                .format(DateTime.parse(datos["response"][i]["fecha"]))
+                .toString()
+                .toUpperCase()
+                */
+                fecha: new DateFormat.yMMMMd('es')
+                .format(DateTime.parse(datos["response"][i]["fecha"]))
+                .toString()
+                .replaceAll(' de ', '-')
+                .toUpperCase()
+                  ));
         }
       }
       return list_citas;
