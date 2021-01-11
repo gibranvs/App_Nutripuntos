@@ -125,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                           border: InputBorder.none,
                         ),
                         controller: especialista_controller,
-                        suggestions: suggestions,
+                        suggestions: suggestions,                        
                         textChanged: (text) {
                           currentText = text;
                         },
