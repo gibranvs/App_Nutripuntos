@@ -602,6 +602,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                         onTap: (index) async {
                           global.current_tab = index;
                           await getColoresComida(index).then((_colores) {
+                            //print(_colores);
                             if (_colores != null) {
                               colores = _colores;
                               valor_naranja = colores.naranja;
@@ -958,7 +959,7 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
       var response = await http.post(global.server + "/aplicacion/api",
           body: {"tipo": "dieta", "token": global.usuario.token});
       var datos = json.decode(utf8.decode(response.bodyBytes));
-
+      print(datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]);
       if (datos["status"] == 1) {
         //print(datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]);
         //for (int comida = 0;comida < datos["response"]["dieta"]["pts_dia"].length;comida++) {
@@ -971,11 +972,11 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                   .contains('.') ==
               true) {
             if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]
-                        ["azul"]
+                        ["azul"].toString()
                     .split('.')[1] ==
                 "0")
               azul = datos["response"]["dieta"]["pts_dia"][_index_comida]
-                      ["puntos"]["azul"]
+                      ["puntos"]["azul"].toString()
                   .split('.')[0];
             else
               azul = datos["response"]["dieta"]["pts_dia"][_index_comida]
@@ -997,11 +998,11 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                   .contains('.') ==
               true) {
             if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]
-                        ["naranja"]
+                        ["naranja"].toString()
                     .split('.')[1] ==
                 "0")
               naranja = datos["response"]["dieta"]["pts_dia"][_index_comida]
-                      ["puntos"]["naranja"]
+                      ["puntos"]["naranja"].toString()
                   .split('.')[0];
             else
               naranja = datos["response"]["dieta"]["pts_dia"][_index_comida]
@@ -1023,11 +1024,11 @@ class _PlanPageState extends State<PlanPage> with TickerProviderStateMixin {
                   .contains('.') ==
               true) {
             if (datos["response"]["dieta"]["pts_dia"][_index_comida]["puntos"]
-                        ["amarillo"]
+                        ["amarillo"].toString()
                     .split('.')[1] ==
                 "0")
               amarillo = datos["response"]["dieta"]["pts_dia"][_index_comida]
-                      ["puntos"]["amarillo"]
+                      ["puntos"]["amarillo"].toString()
                   .split('.')[0];
             else
               amarillo = datos["response"]["dieta"]["pts_dia"][_index_comida]
