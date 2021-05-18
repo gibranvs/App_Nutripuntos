@@ -39,7 +39,9 @@ class _RecetaPageState extends State<RecetaPage> {
             _context, MaterialPageRoute(builder: (_context) => RecetasPage()));
       },
       child: Container(
-        alignment: Alignment.topLeft,
+        alignment: Alignment.center,
+        width: 40,
+        height: 40,
         margin: EdgeInsets.only(top: 40, left: 15),
         child: Icon(Icons.arrow_back, color: Colors.white),
       ),
@@ -163,18 +165,19 @@ class _RecetaPageState extends State<RecetaPage> {
                           margin: EdgeInsets.all(20),
                           color: hexToColor("#f2f2f2"),
                           child: ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
+                              physics: BouncingScrollPhysics(),
                               shrinkWrap: true,
                               itemCount: snapshot.data.length,
                               itemBuilder: (context, index) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: EdgeInsets.all(15),
-                                      child: SizedBox(
-                                        width: 270,
-                                        child: AutoSizeText(
+                                return SingleChildScrollView(
+                                  child: Stack(
+                                    //crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.all(15),
+                                        child:
+                                            //width: 270,
+                                            AutoSizeText(
                                           snapshot.data[index].cantidad +
                                               " " +
                                               snapshot.data[index].unidad
@@ -183,15 +186,16 @@ class _RecetaPageState extends State<RecetaPage> {
                                               snapshot.data[index].nombre
                                                   .toString(),
                                           maxLines: 3,
-                                          wrapWords: false,
+                                          wrapWords: false,                                          
                                           style: TextStyle(
-                                              fontSize: 14,
-                                              color: hexToColor("#78c826"),
-                                              fontWeight: FontWeight.bold),
+                                            fontSize: 15,
+                                            color: hexToColor("#78c826"),
+                                            fontWeight: FontWeight.bold,                                            
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 );
                               }),
                         );
@@ -242,54 +246,50 @@ class _RecetaPageState extends State<RecetaPage> {
             ),
           ),
         ),
-        Column(
-          children: <Widget>[
-            Flexible(
-              child: FutureBuilder<Detalle_Receta>(
-                  future: detalle, //getDetallesReceta(idReceta),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          semanticsLabel: "Loading",
-                          backgroundColor: hexToColor("#cdcdcd"),
+        FutureBuilder<Detalle_Receta>(
+            future: detalle, //getDetallesReceta(idReceta),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    semanticsLabel: "Loading",
+                    backgroundColor: hexToColor("#cdcdcd"),
+                  ),
+                );
+              } else if (snapshot.hasData) {
+                if (snapshot.data != null) {
+                  return Card(
+                    margin: EdgeInsets.all(20),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    elevation: 0,
+                    color: hexToColor("#f2f2f2"),
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Container(
+                        padding: EdgeInsets.all(15),
+                        child: Text(
+                          snapshot.data.preparacion.toString(),
+                          textAlign: TextAlign.justify,
+                          style: TextStyle(
+                              color: hexToColor("#78c826"),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15),
                         ),
-                      );
-                    } else if (snapshot.hasData) {
-                      if (snapshot.data != null) {
-                        return Card(
-                          margin: EdgeInsets.all(20),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          elevation: 0,
-                          color: hexToColor("#f2f2f2"),
-                          child: Container(
-                            padding: EdgeInsets.all(15),
-                            child: Text(
-                              snapshot.data.preparacion.toString(),
-                              textAlign: TextAlign.justify,
-                              style: TextStyle(
-                                  color: hexToColor("#78c826"),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14),
-                            ),
-                          ),
-                        );
-                      } else {
-                        return new Text("No existe preparación para la receta.",
-                            style: TextStyle(color: hexToColor("#606060")));
-                      }
-                    } else if (snapshot.hasError) {
-                      return new Text(
-                          "Error al obtener preparación para la receta.",
-                          style: TextStyle(color: hexToColor("#606060")));
-                    }
-                  }),
-            ),
-          ],
-        ),
+                      ),
+                    ),
+                  );
+                } else {
+                  return new Text("No existe preparación para la receta.",
+                      style: TextStyle(color: hexToColor("#606060")));
+                }
+              } else if (snapshot.hasError) {
+                return new Text("Error al obtener preparación para la receta.",
+                    style: TextStyle(color: hexToColor("#606060")));
+              }
+            }),
       ],
     );
   }
@@ -326,10 +326,10 @@ class _RecetaPageState extends State<RecetaPage> {
                 color: Color(0xFF059696),
                 child: Stack(
                   children: <Widget>[
-                    back(),
                     icono(),
                     nombre(),
                     puntos(),
+                    back(),
                   ],
                 ),
               ),
@@ -365,6 +365,7 @@ class _RecetaPageState extends State<RecetaPage> {
             ),
           ),
           body: TabBarView(
+            physics: NeverScrollableScrollPhysics(),
             children: [
               ingredientes(),
               preparacion(),

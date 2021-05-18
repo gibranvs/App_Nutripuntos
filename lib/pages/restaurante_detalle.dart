@@ -51,10 +51,12 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
             context, MaterialPageRoute(builder: (_) => RestaurantesPage()));
       },
       child: Container(
-        alignment: Alignment.topLeft,
+        alignment: Alignment.center,
+        width: 40,
+        height: 40,
         margin: EdgeInsets.only(
           top: 40,
-          left: 20,
+          left: 20,          
         ),
         child: Icon(Icons.arrow_back, color: Colors.white),
       ),
@@ -459,12 +461,12 @@ class _RestauranteDetallePage extends State<RestauranteDetallePage> {
         child: Stack(
           children: <Widget>[
             header(),
-            back(),
             fondoFoto(),
             foto(),
             nombre(),
             subtitulo(),
             platillos(),
+            back(),
           ],
         ),
       ),
